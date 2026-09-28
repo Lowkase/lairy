@@ -8,8 +8,8 @@ Vocabulary follows `CONTEXT.md`. Decisions: `docs/prd.md` and `docs/adr/`.
 
 ## 1. Tickets, branches and merging
 
-- Tickets live in GitHub Issues, titled `LDS-XXX · <title>`, grouped by milestone. Dependencies are listed in each issue as `Blocked by: #<n>`. Never start a ticket whose blockers are open.
-- Work in milestone order. Within a milestone, take the lowest-numbered unblocked `ready-for-agent` ticket.
+- Tickets live in GitHub Issues, titled `LDS-XXX · <title>`. Dependencies are GitHub blocking links. Never start a ticket whose blockers are open.
+- Any open `ready-for-agent` ticket whose blockers are all closed can be picked up.
 - One ticket per branch: `issue/LDS-XXX-short-slug`. Commits start with the ticket ID: `LDS-XXX: <what changed>`.
 - Open a PR that closes the issue (`Closes #<n>`). The PR body lists what was done, each acceptance criterion checked, decisions made and anything flagged.
 - **Merging:**
@@ -27,8 +27,8 @@ Vocabulary follows `CONTEXT.md`. Decisions: `docs/prd.md` and `docs/adr/`.
 
 ## 2. Using the prototype
 
-- `reference/prototype/` is read-only. It is never imported, built or linted (ADR-0005).
-- Navigate it through `reference/INDEX.md`. Read only the line ranges a ticket needs.
+- The prototype is `archive/v1/Workspace Shell.dc.html` and its runtime `support.js`. `archive/` is read-only: never edited, imported, built or linted (ADR-0005).
+- Navigate it through `reference/INDEX.md`. Read only the line ranges a ticket needs. For how the prototype's docs pages are built, read `archive/v1/NOTES.md`.
 - **Never copy markup or inline styles.** Read the prototype to understand appearance and behaviour, then build fresh from tokens and the content entry.
 - Any value in the prototype with no matching token: flag it in the PR. Never hard-code it.
 - Compare against `reference/screenshots/` with the docs app's `/dev/compare/[entry]` route. Differences caused by `docs/prd.md` §8 corrections are expected. Unexpected differences get fixed or flagged.

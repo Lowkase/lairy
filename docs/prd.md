@@ -10,7 +10,7 @@ This document is the stable "what and why." It changes rarely and only by Cory's
 
 ## 1. Product summary
 
-Lairy is a design system with the visual language of an operator console: dark-first, monospaced, amber-accented, with a locked 2px corner. It already exists as a single-file interactive prototype (`reference/prototype/`) that doubles as a design system docs site.
+Lairy is a design system with the visual language of an operator console: dark-first, monospaced, amber-accented, with a locked 2px corner. It already exists as a single-file interactive prototype (`archive/v1/`) that doubles as a design system docs site.
 
 This project turns that prototype into a production design system that:
 
@@ -43,7 +43,7 @@ The design system is the product. Apps built with it (starting with Lairy, the p
 
 ## 5. Source material
 
-`reference/prototype/Workspace_Shell_dc.html` (+ `support.js`, its runtime) is the **spec and reference implementation**. It is never imported, built or linted. Key facts:
+`archive/v1/Workspace Shell.dc.html` (+ `support.js`, its runtime) is the **spec and reference implementation**. `archive/v1/NOTES.md` records how its docs pages are built (page header, the nine sections, measured anatomy diagrams) and is spec too. It is never imported, built or linted. Key facts:
 
 - Runs React 18 and Babel from a CDN; needs a network connection and must be served over HTTP.
 - Navigation is internal state, not URLs. Reaching a page means clicking through the nav.
@@ -80,8 +80,9 @@ packages/tokens      DTCG token source → CSS variables, TS exports, Tailwind t
 packages/content     Zod schemas + content entries (tokens, foundations, components, patterns)
 packages/ui          React components, icons, component examples
 packages/mcp         MCP server (stdio) reading packages/content
-packages/eslint-plugin  Lairy lint rules (milestone M5)
-reference/           Prototype, INDEX.md, baseline screenshots — never built
+packages/eslint-plugin  Lairy lint rules
+reference/           INDEX.md, baseline screenshots, harvest report about the prototype — never built
+archive/             Prototype (v1) and an earlier plan (v2) — reference only, never edited or built
 docs/                PRD, ADRs, build guide, agent-skill config (docs/agents/)
 CONTEXT.md           Glossary
 ```
@@ -250,7 +251,7 @@ Decisions that are hard to reverse, surprising without context, and a real trade
 | D14 | Keep the prototype's CSS variable names | ADR-0008 |
 | D15 | Prototype prose carried verbatim, except size/spacing literals mapped to tokens | ADR-0009 |
 | D16 | Screenshot comparison is a review aid, not a gate — the port intentionally corrects sizes and spacing | This PRD |
-| D17 | Knowledge layer (tokens, content, MCP) before components — useful to agents immediately | This PRD |
+| D17 | ~~Knowledge layer (tokens, content, MCP) before components~~ Superseded: tracer-bullet slices, starting with Callout through every layer | ADR-0010 |
 | D18 | Tickets in GitHub Issues; a branch and PR per ticket; tickets labelled `review:cory` wait for Cory, others merge after code review and green CI | `docs/build-guide.md` |
 | D19 | Claude Code proposes the phone shell; Cory reviews before dependent work — no phone design exists to port | This PRD, §8.6 |
 | D20 | Own icon set, ported from the prototype — the glyphs are part of Lairy's identity | This PRD, §8.7 |

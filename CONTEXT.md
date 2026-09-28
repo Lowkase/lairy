@@ -32,9 +32,9 @@ The project's own words, each with one meaning. Starter version drafted from pla
 
 **Line** — Borders, dividers, hairlines and HUD corner brackets.
 
-**Amber** — The primary accent. Marks the one thing that is live, alerting or the primary action in a view. *Also called:* accent.
+**Amber** — The primary accent: the colour of acting. Marks the primary action and the one thing that is live or alerting in a view. *Also called:* accent.
 
-**Ice** — The secondary accent. Marks data, chart links and informational state. *Also called:* accent-2.
+**Ice** — The secondary accent: the colour of referring. Marks what informs rather than acts. Where it may and may not appear is a rule of the Color foundation. *Also called:* accent-2.
 
 **Alarm** — The colour of a broken or failed state. Identical in every theme by design.
 
@@ -104,7 +104,7 @@ The project's own words, each with one meaning. Starter version drafted from pla
 
 ## The build
 
-**Prototype** — The single-file interactive mockup in `reference/prototype/`. The spec and reference implementation, never source code.
+**Prototype** — The single-file interactive mockup in `archive/v1/`. The spec and reference implementation, never source code.
 
 **Baseline** — The screenshots of every prototype page, captured once, used for side-by-side review.
 
