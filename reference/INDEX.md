@@ -12,6 +12,8 @@ Maps every Foundation, Component and Pattern page in `archive/v1/Workspace Shell
 
 **Finding a page's template block.** Every Foundation and Component page is one `<sc-if value="{{ pgXxx }}">` (components) or `<sc-if value="{{ fdXxx }}">` (foundations) block, sibling blocks back-to-back in `compPages()`/`fdPages()` order. Grep `sc-if value="{{ pgTable`, or jump straight to the range in §4/§5 below. Patterns other than "Titles & descriptions" have no page of their own — see §6.
 
+**HTML comment markers.** Above page-level (`pgXxx`/`fdXxx`), the template also carries plain `<!-- LABEL -->` comments at the section and shell-chrome level — `<!-- FOUNDATIONS -->` (449), `<!-- COMPONENTS -->` (2971), `<!-- PATTERNS: Titles & descriptions -->` (13210), `<!-- PATTERNS: placeholders -->` (13366), `<!-- left dock -->` (128), `<!-- sub nav rail -->` (155), `<!-- top status bar -->` (179), `<!-- SYSTEM OVERLAYS -->` (13482), `<!-- COMMAND BAR -->` (13539), plus view-level ones (`<!-- HOME / LAUNCHER -->` 250, `<!-- WORKSPACE -->` 303) and a few nested ones inside the workspace view (`<!-- metric row -->` 341, `<!-- focus grid -->` 13408, `<!-- AI-assist widget -->` 13450). There is no comment per individual page — only per section/region — so use these to find the right neighbourhood, then the `pgXxx`/`fdXxx` sc-if for the exact page. `grep -n '<!--'` on the file lists all of them at once; §3 below is built from that list.
+
 **Finding a page's logic.** Two conventions, by page type:
 - **Foundations**: `<key>Docs()` method (e.g. `colorDocs()`, `motDocs()`) holding `Content`/`Tokens` as local `const`s, plus a **separate** top-level `<key>Related()` method (e.g. `colorRelated()`, `a11yRelated()`) — Related is never inlined for foundations.
 - **Charts** (the 7 Visualization components) and **Callout / Scrollbar / Usage card**: one self-contained `<key>Docs()` method per page (e.g. `blockDocs()`, `calloutDocs()`) holding `Anatomy`/`Data`/`Tokens`/`Related`/`A11y`/`Log` as local `const`s — everything for that page in one place.
@@ -68,7 +70,7 @@ Logic: `dockIcon()` (16944), `_tick()`/clock (16930), lifecycle (`componentDidMo
 
 Each is one `<sc-if value="{{ fdXxx }}">` block. All nine have a `<key>Docs()` method (Content + Tokens as local consts) plus a separate `<key>Related()` method — see §1's convention note.
 
-| Page | Template | `Docs()` | `Related()` | Other |
+| Page | Template | `Docs()` | `Related()` | Shared helpers |
 |---|---|---|---|---|
 | Color | 453–721 | `colorDocs()` 14600 (`colorContent` 14610) | `colorRelated()` 14532 | `dsTokens()` 14796 — full token catalog table; `contrast()` 14629, `a11yContrast()` 14641 |
 | Typography | 722–985 | `typoDocs()` 15178 (`typoContent` 15184, `typoTokens` 15195) | `typoRelated()` 14897 | `dsType()` 14887 — type scale table |
