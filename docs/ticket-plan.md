@@ -35,15 +35,15 @@ Vocabulary follows `CONTEXT.md`. Scope and decisions: `docs/prd.md` and `docs/ad
 - **Review:** No — bootstrap: commit directly to `main` (no CI yet)
 - **Context:** docs/prd.md §6.1, §6.2
 - **Acceptance:**
-  - Git repo exists with a GitHub remote. If none, `git init -b main` and `gh repo create lairy --private --source=. --remote=origin`.
+  - Git repo exists with its GitHub remote (`Lowkase/lairy`, already set up).
   - pnpm workspace and Turborepo configured; `typecheck`, `lint`, `test`, `build`, `dev` pipelines defined.
   - Shared `tsconfig` (strict), ESLint and Prettier config at the root.
   - Empty packages created with `package.json` and entry files: `packages/tokens`, `packages/content`, `packages/ui`, `packages/mcp`.
   - `apps/docs` is a Next.js App Router app (current stable) that renders a placeholder page.
-  - The prototype moved with `git mv` from `init/` to `reference/prototype/` (both `Workspace_Shell_dc.html` and `support.js`).
+  - The prototype moved with `git mv` from `archive/v1/` to `reference/prototype/`: `Workspace Shell.dc.html` renamed to `Workspace_Shell_dc.html`, and `support.js`.
   - `reference/README.md` states: the prototype is the spec, never imported/built/linted; known deviations are in docs/prd.md §8.
   - `reference/` is excluded from lint, typecheck and build.
-  - Existing `CLAUDE.md`, `CONTEXT.md` and `docs/` are left intact (the scaffold adds to them, never overwrites).
+  - Existing `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md` and `docs/` are left intact (the scaffold adds to them, never overwrites).
   - `pnpm turbo run typecheck lint test build` passes.
 
 ### LDS-002 · CI

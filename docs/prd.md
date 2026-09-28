@@ -2,7 +2,7 @@
 
 **Owner:** Cory McKinnon
 **Status:** Approved for build
-**Companion files:** `CLAUDE.md` (guardrails), `CONTEXT.md` (glossary), `docs/adr/` (architecture decisions), `docs/build-guide.md` (Lairy-specific build rules). Work is tracked in GitHub Issues.
+**Companion files:** `AGENTS.md` (guardrails; `CLAUDE.md` imports it), `CONTEXT.md` (glossary), `docs/adr/` (architecture decisions), `docs/build-guide.md` (Lairy-specific build rules). Work is tracked in GitHub Issues.
 
 This document is the stable "what and why." It changes rarely and only by Cory's decision. Vocabulary follows `CONTEXT.md`; where this document and an ADR disagree, the ADR wins.
 

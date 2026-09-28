@@ -1,6 +1,6 @@
 # Lairy build guide
 
-The generic workflow (picking a ticket, implementing, reviewing) is handled by the agent skills listed in `CLAUDE.md`. This guide holds what those skills can't know: how work on **this** design system is done.
+The generic workflow (picking a ticket, implementing, reviewing) is handled by the agent skills listed in `AGENTS.md`. This guide holds what those skills can't know: how work on **this** design system is done.
 
 Vocabulary follows `CONTEXT.md`. Decisions: `docs/prd.md` and `docs/adr/`.
 
