@@ -1,13 +1,12 @@
 # Ticket plan — input for `/to-tickets`
 
-This is a **one-time input**, not a tracker. It holds the sequencing, dependencies and acceptance criteria worked out during planning. Once `/to-tickets` has published these to GitHub Issues, GitHub is the only source of status and this file is deleted in the same commit.
+This is a **one-time input**, not a tracker. It holds the acceptance criteria, review points and dependencies worked out during planning. Once `/to-tickets` has published tickets to GitHub Issues, GitHub is the only source of status and this file is deleted in the same commit.
 
 **Instructions for `/to-tickets`:**
-- Publish one GitHub issue per ticket below, keeping the `LDS-XXX` ID at the start of the title so references survive.
-- Create one GitHub milestone per `M` section and assign each issue to it.
-- Record dependencies in each issue body as `Blocked by: #<issue>` using the published issue numbers.
-- Apply `ready-for-agent` to every ticket. Also apply `review:cory` where the ticket says **Review: Cory** — those PRs wait for Cory instead of merging on green.
-- Carry the acceptance criteria and context references into the issue body verbatim.
+- Slice the work as tracer bullets (ADR-0010). The first slice after setup is **Slice 1 · Callout end to end**, below. The milestone sections after it are **material**, not the build order: reuse their acceptance criteria, context references and review points, and re-cut them into slices that widen the path Slice 1 opens.
+- Record dependencies as GitHub blocking links. No milestones.
+- Title each issue `LDS-XXX · <title>`, numbered in the new order. The IDs below are planning labels and are not kept.
+- Apply `ready-for-agent` to every ticket. Also apply `review:cory` where a ticket says **Review: Cory**. Those PRs wait for Cory instead of merging on green.
 
 Vocabulary follows `CONTEXT.md`. Scope and decisions: `docs/prd.md` and `docs/adr/`. Build rules: `docs/build-guide.md`.
 
@@ -40,9 +39,9 @@ Vocabulary follows `CONTEXT.md`. Scope and decisions: `docs/prd.md` and `docs/ad
   - Shared `tsconfig` (strict), ESLint and Prettier config at the root.
   - Empty packages created with `package.json` and entry files: `packages/tokens`, `packages/content`, `packages/ui`, `packages/mcp`.
   - `apps/docs` is a Next.js App Router app (current stable) that renders a placeholder page.
-  - The prototype moved with `git mv` from `archive/v1/` to `reference/prototype/`: `Workspace Shell.dc.html` renamed to `Workspace_Shell_dc.html`, and `support.js`.
-  - `reference/README.md` states: the prototype is the spec, never imported/built/linted; known deviations are in docs/prd.md §8.
-  - `reference/` is excluded from lint, typecheck and build.
+  - `archive/` is left exactly as it is. The prototype stays at `archive/v1/`.
+  - `reference/README.md` states: `reference/` holds what we build about the prototype (index, screenshots, harvest report, scripts); the prototype itself is `archive/v1/`, the spec, never imported/built/linted; known deviations are in docs/prd.md §8.
+  - `archive/` and `reference/` are excluded from lint, typecheck and build.
   - Existing `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md` and `docs/` are left intact (the scaffold adds to them, never overwrites).
   - `pnpm turbo run typecheck lint test build` passes.
 
@@ -72,6 +71,21 @@ Vocabulary follows `CONTEXT.md`. Scope and decisions: `docs/prd.md` and `docs/ad
   - A Playwright script in `reference/scripts/` serves the prototype over HTTP, clicks through the design system nav, and captures every Foundation, Component and Pattern page in dark and light themes at 1440px width (full-page).
   - Screenshots saved to `reference/screenshots/<section>/<entry>--<theme>.png`, committed.
   - README notes the script needs network access (CDN React/Babel) and is run manually, not in CI.
+
+---
+
+## Slice 1 · Callout end to end
+
+Blocked by the setup tickets (scaffold, CI, prototype index). Takes one component through every layer before anything widens (ADR-0010). Baseline screenshots, the full token harvest and the token decisions review come after, as widening work.
+
+1. **Callout's tokens.** The colour roles in both themes, the type styles and spacing steps Callout uses, and the radius, taken by hand from the prototype's `:root` blocks and Callout's markup per docs/prd.md §8. DTCG source, Style Dictionary build, Tailwind theme with defaults removed. Values not yet decided are listed in the PR.
+2. **Content schema, the Callout entry and a Toast stub.** The schema and build-time validation from LDS-005 below. The Callout entry is extracted per build guide §3. Toast is a `draft` stub, linked from Callout as `often-confused-with`. **Review: Cory** (schema shape and the Callout entry).
+3. **Callout component.** Port procedure (build guide §4) steps 1–7.
+4. **Callout docs page.** Renders from the entry, with live examples, extracted props, and the page structure in `archive/v1/NOTES.md`.
+5. **Callout registry item.** Served from the docs app. A blank Next.js app installs it through the shadcn CLI and renders it with `@lairy/tokens`.
+6. **MCP server with `get_component` and `suggest_alternative`.** Reads content. The PR shows the answer to "what should I use to tell someone an export failed, and why not a toast?" using only tool output. `.mcp.json` registers it for Claude Code.
+
+The Color foundation entry is not in this slice. Foundations come in the first widening slice.
 
 ---
 
