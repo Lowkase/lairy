@@ -36,3 +36,17 @@ docs/                   PRD, ADRs, build guide, agent-skill config
 ```
 
 The prototype is too large to read whole. Use `reference/INDEX.md` and read only the line ranges you need.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for Lowkase/lairy, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical labels, used as-is: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
