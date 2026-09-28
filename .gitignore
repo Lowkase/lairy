@@ -1,1 +1,19 @@
 .DS_Store
+
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+.next/
+out/
+
+# tooling caches
+.turbo/
+*.tsbuildinfo
+
+# env
+.env*.local
+
+# logs
+*.log
