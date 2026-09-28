@@ -5,12 +5,22 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./css/*": "./src/css/*"
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "generate": "node build.mjs",
+    "build": "pnpm run generate && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.3",
+    "style-dictionary": "^5.5.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2"
   }
 }

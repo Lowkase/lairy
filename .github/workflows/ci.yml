@@ -43,3 +43,9 @@ jobs:
 
       - name: Build
         run: pnpm turbo run build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter docs exec playwright install --with-deps chromium
+
+      - name: E2E and accessibility tests
+        run: pnpm --filter docs exec playwright test

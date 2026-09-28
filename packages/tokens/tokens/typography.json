@@ -1,0 +1,53 @@
+{
+  "font": {
+    "heading": {
+      "$type": "fontFamily",
+      "$value": "'Space Grotesk', sans-serif",
+      "$description": "Headings and titles."
+    },
+    "body": {
+      "$type": "fontFamily",
+      "$value": "'IBM Plex Mono', monospace",
+      "$description": "Body copy, the system default."
+    }
+  },
+  "weight": {
+    "regular": { "$type": "fontWeight", "$value": 400 },
+    "semibold": { "$type": "fontWeight", "$value": 600 }
+  },
+  "text": {
+    "small": {
+      "$type": "dimension",
+      "$value": "13px",
+      "$description": "Type style Small. Rows, hints, buttons, card body."
+    },
+    "label": {
+      "$type": "dimension",
+      "$value": "12px",
+      "$description": "Type style Label. Uppercase panel headers and chips."
+    },
+    "callout-title": {
+      "$type": "dimension",
+      "$value": "14.5px",
+      "$description": "Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR.",
+      "$extensions": { "lairy": { "flagged": true } }
+    }
+  },
+  "leading": {
+    "small": { "$type": "number", "$value": 1.5, "$description": "Leading for Small — the Typography foundation's documented value. The prototype's own Callout body used 1.55; documented foundations win (ADR-0005), so 1.5 is used and the difference is flagged." },
+    "label": { "$type": "number", "$value": 1.4, "$description": "Leading for Label." },
+    "callout-title": {
+      "$type": "number",
+      "$value": 1.2,
+      "$description": "Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review.",
+      "$extensions": { "lairy": { "flagged": true } }
+    }
+  },
+  "tracking": {
+    "tight-6": {
+      "$type": "dimension",
+      "$value": "0.06em",
+      "$description": "Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2)."
+    }
+  }
+}

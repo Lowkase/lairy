@@ -6,7 +6,13 @@ node_modules/
 # build outputs
 dist/
 .next/
+.next-e2e/
 out/
+
+# test outputs
+test-results/
+playwright-report/
+blob-report/
 
 # tooling caches
 .turbo/

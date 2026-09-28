@@ -1,0 +1,26 @@
+{
+  "alarm": {
+    "$type": "color",
+    "$value": "#ff8f6b",
+    "$description": "Alarm. The colour of a broken or failed state, and only that. Written literally in the prototype rather than themed, deliberately: no theme may redefine what \"broken\" looks like.",
+    "$extensions": { "lairy": { "themeable": false, "role": "alarm" } }
+  },
+  "alarm-soft": {
+    "$type": "color",
+    "$value": "rgba(255, 143, 107, 0.1)",
+    "$description": "Alarm fill, low opacity. Non-themeable, same reasoning as --alarm.",
+    "$extensions": { "lairy": { "themeable": false, "role": "alarm" } }
+  },
+  "alarm-line": {
+    "$type": "color",
+    "$value": "rgba(255, 143, 107, 0.4)",
+    "$description": "Alarm border/line, reduced opacity. Non-themeable, same reasoning as --alarm.",
+    "$extensions": { "lairy": { "themeable": false, "role": "alarm" } }
+  },
+  "alarm-ink": {
+    "$type": "color",
+    "$value": "#07090b",
+    "$description": "Text/icon colour for content on a solid --alarm fill (the primary action button on Warning/Error). Not in the prototype: renderCallout() used var(--bg) for this, which fails AA in the light theme (2.03:1) since --bg is themeable but --alarm is not. Non-themeable by necessity — proposed pending the token decisions ticket, flagged in the PR.",
+    "$extensions": { "lairy": { "themeable": false, "role": "alarm", "flagged": true } }
+  }
+}

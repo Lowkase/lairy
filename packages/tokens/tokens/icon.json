@@ -1,0 +1,10 @@
+{
+  "icon": {
+    "callout": {
+      "$type": "dimension",
+      "$value": "17px",
+      "$description": "Icon width/height used by Callout, harvested from the prototype's calloutIcon() (17×17). No Icons foundation size scale exists yet (LDS-017); flagged as a proposed value pending that ticket.",
+      "$extensions": { "lairy": { "flagged": true } }
+    }
+  }
+}
