@@ -1,0 +1,56 @@
+{
+  "bg": {
+    "$type": "color",
+    "$value": "#f3f4f5",
+    "$description": "Ground, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ground" } }
+  },
+  "fg": {
+    "$type": "color",
+    "$value": "#0e1216",
+    "$description": "Text rank 1, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "dim": {
+    "$type": "color",
+    "$value": "#333c45",
+    "$description": "Text rank 2, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "border-2": {
+    "$type": "color",
+    "$value": "rgba(0, 0, 0, 0.32)",
+    "$description": "Line, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "accent": {
+    "$type": "color",
+    "$value": "#9a6208",
+    "$description": "Amber, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-soft": {
+    "$type": "color",
+    "$value": "rgba(154, 98, 8, 0.1)",
+    "$description": "Amber fill, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-line": {
+    "$type": "color",
+    "$value": "rgba(154, 98, 8, 0.42)",
+    "$description": "Amber border/line, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-2": {
+    "$type": "color",
+    "$value": "#0d6d92",
+    "$description": "Ice, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  },
+  "accent-2-line": {
+    "$type": "color",
+    "$value": "rgba(13, 109, 146, 0.42)",
+    "$description": "Ice border/line, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  }
+}

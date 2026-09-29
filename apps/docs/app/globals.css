@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "@lairy/tokens/css/tokens.css";
+@import "@lairy/tokens/css/tailwind-theme.css";
+
+/* Tailwind's automatic content detection doesn't cross into sibling
+   workspace packages — classes used only in packages/ui (or packages/content)
+   would otherwise never get generated. */
+@source "../../../packages/ui/src";
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}

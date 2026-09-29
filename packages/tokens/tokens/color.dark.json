@@ -1,0 +1,56 @@
+{
+  "bg": {
+    "$type": "color",
+    "$value": "#07090b",
+    "$description": "Ground. The page background beneath every surface. Dark is the default theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ground" } }
+  },
+  "fg": {
+    "$type": "color",
+    "$value": "#f2f5f8",
+    "$description": "Text rank 1 (highest). Titles and primary content.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "dim": {
+    "$type": "color",
+    "$value": "#c6ced6",
+    "$description": "Text rank 2. Body copy, one step below --fg.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "border-2": {
+    "$type": "color",
+    "$value": "rgba(255, 255, 255, 0.28)",
+    "$description": "Line. An edge that has to be found — emphasised over --border.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "accent": {
+    "$type": "color",
+    "$value": "#f7bd63",
+    "$description": "Amber. The primary accent: the colour of acting.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-soft": {
+    "$type": "color",
+    "$value": "rgba(247, 189, 99, 0.16)",
+    "$description": "Amber fill, low opacity.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-line": {
+    "$type": "color",
+    "$value": "rgba(247, 189, 99, 0.5)",
+    "$description": "Amber border/line.",
+    "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
+  },
+  "accent-2": {
+    "$type": "color",
+    "$value": "#7fd8ff",
+    "$description": "Ice. The secondary accent: the colour of referring.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  },
+  "accent-2-line": {
+    "$type": "color",
+    "$value": "rgba(127, 216, 255, 0.5)",
+    "$description": "Ice border/line.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "radius": {
+    "$type": "dimension",
+    "$value": "2px",
+    "$description": "The system radius. Locked — does not nest, never scales with size (AGENTS.md rule 5)."
+  }
+}
