@@ -12,7 +12,7 @@ jobs:
     # 6 hours before GitHub's own timeout cancelled it. This job-level bound
     # is the fallback if that ever recurs; the per-step timeouts below on the
     # Playwright steps are the first line of defense.
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,7 +74,10 @@ jobs:
           exit 1
 
       - name: E2E and accessibility tests
-        timeout-minutes: 5
+        # LDS-007's registry seam test scaffolds a throwaway Next.js app,
+        # runs two real npm installs and the shadcn CLI, then builds it —
+        # well past what the other four tests need.
+        timeout-minutes: 10
         run: pnpm --filter docs exec playwright test
 
       - name: Stop docs server
