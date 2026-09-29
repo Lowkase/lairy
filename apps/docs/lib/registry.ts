@@ -75,6 +75,12 @@ function buildCalloutItem(): RegistryItem {
     type: "registry:ui",
     title: entry.meta.name,
     description: entry.purpose,
+    // Hand-maintained, not derived from packages/ui/package.json: that
+    // file's `dependencies` will end up aggregating every component's
+    // needs once more than one exists, which isn't the same list as what
+    // *this* item's files import — keep this in sync with what
+    // callout.tsx/callout-icon.tsx/cn.ts actually import instead.
+    //
     // Bare names (no version): the shadcn CLI skips a dependency that's
     // already present in the target project's package.json instead of
     // re-resolving it from the npm registry. @lairy/tokens isn't published
