@@ -53,6 +53,33 @@ jobs:
         timeout-minutes: 5
         run: pnpm --filter docs exec playwright install --with-deps chromium
 
+      # Playwright's webServer manages next start/dev itself, but Next forks a
+      # next-server child that escapes the process group Playwright signals on
+      # teardown — confirmed with both next dev and next start: the 4 tests
+      # pass in ~2s, then the step hangs until GitHub's own orphan-process
+      # cleanup (a 6-hour timeout, or the 5-minute step timeout that replaced
+      # it) kills the leftover next-server. Starting and stopping the server
+      # ourselves, outside Playwright, sidesteps it: reuseExistingServer means
+      # Playwright only ever finds a server already up here and never spawns
+      # one of its own to leak.
+      - name: Start docs server
+        run: |
+          pnpm --filter docs exec next start --port 4310 &
+          echo $! > /tmp/next.pid
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:4310 > /dev/null && exit 0
+            sleep 1
+          done
+          echo "docs server never became ready" >&2
+          exit 1
+
       - name: E2E and accessibility tests
         timeout-minutes: 5
         run: pnpm --filter docs exec playwright test
+
+      - name: Stop docs server
+        if: always()
+        run: |
+          kill "$(cat /tmp/next.pid)" 2>/dev/null || true
+          pkill -f "next-server" 2>/dev/null || true
+          pkill -f "next start" 2>/dev/null || true
