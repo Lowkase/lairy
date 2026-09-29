@@ -2,6 +2,8 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
+  '@modelcontextprotocol/inspector': true
+  esbuild: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - "@turbo/darwin-64@2.11.5"
@@ -22,3 +24,4 @@ minimumReleaseAgeExclude:
   - "@typescript-eslint/visitor-keys@8.71.0"
   - turbo@2.11.5
   - typescript-eslint@8.71.0
+  - '@modelcontextprotocol/sdk@1.31.0'

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "lairy": {
+      "command": "pnpm",
+      "args": ["--filter", "@lairy/mcp", "exec", "tsx", "src/stdio.ts"]
+    }
+  }
+}
