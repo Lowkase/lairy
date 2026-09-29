@@ -29,6 +29,16 @@
       "$type": "dimension",
       "$value": "18px",
       "$description": "Spacing ramp step 18."
+    },
+    "22": {
+      "$type": "dimension",
+      "$value": "22px",
+      "$description": "Spacing ramp step 22."
+    },
+    "32": {
+      "$type": "dimension",
+      "$value": "32px",
+      "$description": "Spacing ramp step 32."
     }
   }
 }

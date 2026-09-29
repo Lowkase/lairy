@@ -17,11 +17,35 @@
     "$description": "Text rank 2, light theme.",
     "$extensions": { "lairy": { "themeable": true, "role": "text" } }
   },
+  "mute": {
+    "$type": "color",
+    "$value": "#586269",
+    "$description": "Text rank 3, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "faint": {
+    "$type": "color",
+    "$value": "#767f88",
+    "$description": "Text rank 4, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "border": {
+    "$type": "color",
+    "$value": "rgba(0, 0, 0, 0.2)",
+    "$description": "Line, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
   "border-2": {
     "$type": "color",
     "$value": "rgba(0, 0, 0, 0.32)",
     "$description": "Line, light theme.",
     "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "panel": {
+    "$type": "color",
+    "$value": "rgba(0, 0, 0, 0.02)",
+    "$description": "Surface, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
   },
   "accent": {
     "$type": "color",
