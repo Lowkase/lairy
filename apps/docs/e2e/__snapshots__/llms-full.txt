@@ -1,0 +1,94 @@
+# Lairy — full reference
+
+> Lairy is a design system with the visual language of an operator console: dark-first, monospaced, amber-accented, with a locked 2px corner.
+
+# Components
+
+## Callout
+
+Status: stable · Version: 1.0.0 · Updated: 18 Sept 2026 · /components/callout
+
+Purpose: Reports a standing condition inside the panel or flow it belongs to.
+
+### Description
+
+A Callout reports a standing condition inside the panel or flow it belongs to, and stays until the operator acts on it or clears it.
+
+It is Toast’s persistent counterpart: where a toast reports what just happened and leaves on its own in 3.2 seconds, a Callout stays exactly because the condition it names is still true. That is also the line against Modal — a Callout never blocks the rest of the page, and if the operator must answer before doing anything else, the message needed a modal, not a card.
+
+### Anatomy
+
+1. Icon — Names the tone at a glance, in the tone’s own colour. It is the fastest thing in the card to scan and the only place shape (not just colour) carries the tone — info, success, warning and error each get a distinct glyph.
+2. Title — One short line stating the fact or outcome. It sits beside the icon, never above or below it, so the two read as a single unit before the body is reached at all.
+3. Body — One to two sentences of context in --dim. This is where the detail an operator needs actually lives — the title is the headline, the body is the story.
+4. Actions — Zero, one or two buttons — at most one of them primary. Optional by design: an info or success callout often has nothing to do about it and should carry none.
+
+### Variants
+
+- Info (--accent-2, --accent-2-line): A fact worth putting on the record — a schedule, a queue position, a setting that changed. Ice, because it refers to something rather than asking for anything.
+- Success (--accent, --accent-line, --accent-soft): A completed check or a ready result — the one tone allowed the acting colour, and only because what it reports is itself an outcome, not a pending decision.
+- Warning (--alarm, --alarm-line): Something worth knowing about that has not yet broken. The tone Toast intentionally has none of — a warning that must stay visible is exactly the case a self-dismissing corner message cannot serve.
+- Error (--alarm, --alarm-soft): Something stopped and needs a decision. The same colour as Warning, one step darker and filled — intensity carries the escalation, not a new hue.
+
+There is no Neutral tone here the way Toast has one — a Callout that claims no colour at all reads as unfinished, since it always sits inside a panel that already supplies neutral chrome.
+
+### Use when
+
+- A condition is standing, not momentary — it should still be true if the operator looks back in five minutes.
+- The message belongs inside the panel or flow it is about, not floating over everything.
+- Zero, one or two actions are enough to resolve or acknowledge it.
+
+### Use something else when
+
+- toast: The news is transient and does not need to persist — that is a Toast.
+- modal: The operator must answer before doing anything else — that is a Modal.
+- badge: The fact is a small, permanent label on a row — that is a Badge, not a card.
+
+### Content rules
+
+- Title the fact, not the feeling — "Export failed", never "Uh oh!" or "Something went wrong."
+- Keep the body to one or two sentences. If it needs a third, it is a panel, not a callout.
+- Name what happens if the operator does nothing, when that matters — "No action required yet" is doing real work above.
+- At most one action reads as primary. A second action, if present, is always the lesser one — dismiss, view, cancel.
+- Match the tone to the state, not to how urgent the writer feels — a routine reminder is Info even in a stressful week.
+
+### Examples
+
+- [demo] Info
+- [demo] Success
+- [demo] Warning
+- [demo] Error
+- [good] Fact-based title — Title states the fact plainly. An operator scanning the panel knows exactly what happened without reading the body.
+- [bad] Feelings-first title — A feelings-first title and casual body read as unfinished copy, not a system report — name the fact, not the reaction to it.
+- [good] One action — One action, unstyled as secondary since nothing here is urgent enough to demand a primary button.
+- [bad] Two actions, no primary — Two actions with no clear primary compete for attention — a warning this routine should offer at most one way forward.
+- [good] Error tone on a failure — Error tone on a run that stopped and needs a decision. Colour, icon and copy all agree.
+- [bad] Success tone on a failure — The same failure in the Success tone — amber and a checkmark on a message that says nothing finished. Tone must match the state, not the writer’s mood.
+
+### Accessibility
+
+- Role by tone: Warning and Error carry role="alert" so assistive tech announces them on arrival. Info and Success carry role="status", announced politely without interrupting.
+- Colour never alone: Every tone pairs its colour with a distinct icon shape and states its own severity in words — "Retry" and "no action required yet" carry the finding on their own.
+- Focus order: Actions are reachable by keyboard in the order shown, primary first. A dismiss control, when present, is always last in the tab order.
+- Never auto-dismissed: Unlike Toast, a Callout never times out on its own — if it should disappear by itself, it was a Toast to begin with.
+
+### Tokens
+
+- --accent-2: Info icon and title.
+- --accent, --accent-line, --accent-soft: Success icon, title and fill — the one tone sharing the acting colour.
+- --alarm, --alarm-line: Warning icon and border at reduced opacity, no fill.
+- --alarm, --alarm-soft: Error icon, border and a low-opacity fill — the same hue as Warning, one step stronger.
+- --dim: Body text across every tone.
+
+### Related
+
+- toast (often-confused-with): The transient counterpart. Reach for Toast when the message should be gone in a few seconds on its own.
+- modal (contrasts-with): Where a Callout escalates once a decision must block everything else on the page.
+- badge (alternative): The flat alternative. A one-word status on a row is a badge before it is ever a card.
+- card (composes-with): The container a Callout usually sits inside, rather than replaces.
+
+### Changelog
+
+- v1.0.0 (18 Sept 2026): First specification. Named Callout to sit next to Toast without colliding, and given a Warning tone Toast deliberately omits — built from the same accent and #ff8f6b tokens Toast already established, split into two intensities rather than a new hue, to keep the amber-and-one-other-colour rule intact.
+
+---

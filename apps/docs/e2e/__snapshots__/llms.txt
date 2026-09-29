@@ -1,0 +1,7 @@
+# Lairy
+
+> Lairy is a design system with the visual language of an operator console: dark-first, monospaced, amber-accented, with a locked 2px corner.
+
+## Components
+
+- [Callout](/components/callout): Reports a standing condition inside the panel or flow it belongs to.
