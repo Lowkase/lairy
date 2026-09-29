@@ -8,6 +8,11 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    # A lingering next-server process once left a step's stdout pipe open for
+    # 6 hours before GitHub's own timeout cancelled it. This job-level bound
+    # is the fallback if that ever recurs; the per-step timeouts below on the
+    # Playwright steps are the first line of defense.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +50,9 @@ jobs:
         run: pnpm turbo run build
 
       - name: Install Playwright browsers
+        timeout-minutes: 5
         run: pnpm --filter docs exec playwright install --with-deps chromium
 
       - name: E2E and accessibility tests
+        timeout-minutes: 5
         run: pnpm --filter docs exec playwright test
