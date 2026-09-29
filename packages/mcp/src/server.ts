@@ -45,7 +45,7 @@ export function createServer(): McpServer {
     {
       title: "Get a component entry",
       description:
-        "The full content entry for one component: anatomy, variants, usage, content rules, accessibility notes, token usage, relationships and useInstead rows (resolved to the target's name), and every example's source code, read from its file and returned as text.",
+        "The full content entry for one component: anatomy, variants, usage, content rules, accessibility notes, token usage, relationships and useInstead rows (resolved to the target's name), every example's source code (read from its file and returned as text), and its real props — extracted from source via react-docgen-typescript and merged with any prop guidance, so the documented API can never disagree with the real one.",
       inputSchema: {
         id: z.string().min(1).describe('The component\'s id, e.g. "callout".'),
       },

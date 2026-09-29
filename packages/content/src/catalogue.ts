@@ -4,11 +4,42 @@ import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
 import { modal } from "./entries/components/modal";
 import { toast } from "./entries/components/toast";
+import { extractProps, type ExtractedProp } from "./props";
 
 /** Every populated entry. Token/Foundation/Pattern entries join this list as
  * their tickets land (docs/prd.md §7) — the schemas already exist
  * (./schema/token, ./schema/foundation, ./schema/pattern). */
 const components: ComponentEntry[] = [callout, toast, modal, badge, card];
+
+/** One extracted prop, with its content-authored guidance note merged in
+ * by name (docs/prd.md §7.2 — "annotations on extracted props only, never
+ * a hand-written prop table"). */
+export interface ComponentProp extends ExtractedProp {
+  guidance?: string;
+}
+
+/** Extracts `entry`'s real props and merges in its `propGuidance` by prop
+ * name. Throws when guidance names a prop that isn't part of the extracted
+ * API (LDS-009 acceptance criterion: "guidance naming an unknown prop fails
+ * the build") — the one check that makes D5 ("documented API can never
+ * disagree with the real one") actually hold. Returns undefined for a
+ * component with no `ui` implementation yet, in which case there is
+ * nothing to check `propGuidance` against. */
+function buildComponentProps(entry: ComponentEntry): ComponentProp[] | undefined {
+  const extracted = extractProps(entry.meta.id);
+  if (!extracted) return undefined;
+
+  const guidanceByProp = new Map(entry.propGuidance.map((g) => [g.prop, g.note]));
+  for (const propName of guidanceByProp.keys()) {
+    if (!extracted.some((prop) => prop.name === propName)) {
+      throw new Error(
+        `@lairy/content: "${entry.meta.id}" propGuidance names unknown prop "${propName}" — it isn't part of the component's extracted API (docs/prd.md D5, LDS-009).`,
+      );
+    }
+  }
+
+  return extracted.map((prop) => ({ ...prop, guidance: guidanceByProp.get(prop.name) }));
+}
 
 /** Exported for its own tests (catalogue.test.ts) — duplicate ids and
  * dangling relationship/useInstead targets, run against synthetic entries
@@ -38,6 +69,8 @@ export function validateCatalogue(entries: ComponentEntry[]): Map<string, Compon
         );
       }
     }
+    // Throws if propGuidance names a prop the extracted API doesn't have.
+    buildComponentProps(entry);
   }
 
   return byId;
@@ -55,4 +88,12 @@ export function listComponents(): ComponentEntry[] {
 
 export function getComponent(id: string): ComponentEntry | undefined {
   return componentsById.get(id);
+}
+
+/** Extracted props merged with `propGuidance`, by component id. Undefined
+ * for a component with no `ui` implementation yet (docs/prd.md D5,
+ * LDS-009). */
+export function getComponentProps(id: string): ComponentProp[] | undefined {
+  const entry = componentsById.get(id);
+  return entry && buildComponentProps(entry);
 }

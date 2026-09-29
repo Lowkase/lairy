@@ -116,6 +116,16 @@ export const callout = ComponentEntrySchema.parse({
       text: "Match the tone to the state, not to how urgent the writer feels — a routine reminder is Info even in a stressful week.",
     },
   ],
+  propGuidance: [
+    {
+      prop: "tone",
+      note: "Match the tone to the state, not to how urgent the writer feels (Content rule 5).",
+    },
+    {
+      prop: "actions",
+      note: "At most one action reads as primary — the first item in the array (Content rule 4).",
+    },
+  ],
   examples: [
     {
       id: "info",
@@ -254,5 +264,6 @@ export const callout = ComponentEntrySchema.parse({
     "The Tones section's `tokens` arrays reflect the shipped component (packages/ui/src/callout/callout.tsx), not the prototype's own renderCallout(), and don't always match this entry's verbatim `tokens[].usage` / `variants[].description` prose word for word: the shipped Title is always --fg (never tone-coloured), unlike the prototype's docs-page specimens and the Info/Success token-row text (\"icon and title\"); and Warning's icon renders in full --alarm rather than the reduced intensity its token-row text describes. Prose is kept verbatim per ADR-0009; flagged here rather than silently reconciled.",
     "Toast, Modal and Badge stub entries use CONTEXT.md's own glossary sentence as their `purpose`, verbatim. Card has no glossary entry, so its stub `purpose` is paraphrased from this entry's own Related-card sentence about it — flagged, pending Card's own ticket (LDS-022).",
     "New docs-page tokens (--panel, --border, --mute, --faint; the Micro/Body/Section/Doc title type styles; two tracking steps) were added to packages/tokens for this ticket rather than invented inline. Section's leading (1.3) is a harvested, flagged value — docs/prd.md §8.2 leaves this style's leading as \"per prototype\" with no fixed figure.",
+    "`propGuidance` (LDS-009) has no prototype counterpart — the prototype never documented a JS API. Its two notes are short annotations on the `tone` and `actions` props, paraphrasing this entry's own Content rules 5 and 4 rather than being extracted verbatim from anywhere; `title` and `children` are left unannotated since their extracted JSDoc descriptions (in packages/ui/src/callout/callout.tsx) already say what's needed.",
   ],
 });

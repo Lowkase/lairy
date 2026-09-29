@@ -4,3 +4,4 @@ export * from "./schema/foundation";
 export * from "./schema/pattern";
 export * from "./schema/token";
 export * from "./catalogue";
+export * from "./props";

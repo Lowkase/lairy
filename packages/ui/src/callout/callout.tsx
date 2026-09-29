@@ -75,6 +75,7 @@ const calloutVariants = cva(
 
 export interface CalloutProps
   extends Omit<ComponentProps<"div">, "title">, VariantProps<typeof calloutVariants> {
+  /** Which standing condition this callout reports (Callout Variants). */
   tone: CalloutTone;
   /** One short line stating the fact or outcome (Callout Content rule 1). */
   title: ReactNode;

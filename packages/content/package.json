@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@lairy/tokens": "workspace:*",
+    "react-docgen-typescript": "^2.4.0",
     "zod": "^4.6.5"
   }
 }

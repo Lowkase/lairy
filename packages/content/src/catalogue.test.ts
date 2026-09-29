@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ComponentEntrySchema } from "./schema/component";
-import { getComponent, listComponents, validateCatalogue } from "./catalogue";
+import { getComponent, getComponentProps, listComponents, validateCatalogue } from "./catalogue";
 
 const validEntry = {
   meta: {
@@ -143,5 +143,45 @@ describe("catalogue (duplicate ids and dangling relationship targets)", () => {
     const relationship = callout?.relationships.find((r) => r.target === "toast");
     expect(relationship?.kind).toBe("often-confused-with");
     expect(relationship?.text).toBeTruthy();
+  });
+});
+
+describe("props extraction (LDS-009)", () => {
+  it("fails the build when propGuidance names a prop the extracted API doesn't have", () => {
+    const withBadGuidance = ComponentEntrySchema.parse({
+      ...validEntry,
+      meta: { ...validEntry.meta, id: "callout" },
+      propGuidance: [{ prop: "notARealProp", note: "x" }],
+    });
+    expect(() => validateCatalogue([withBadGuidance])).toThrow(/propGuidance names unknown prop/);
+  });
+
+  it("passes when propGuidance names a prop the extracted API really has", () => {
+    const withRealGuidance = ComponentEntrySchema.parse({
+      ...validEntry,
+      meta: { ...validEntry.meta, id: "callout" },
+      propGuidance: [{ prop: "tone", note: "x" }],
+    });
+    expect(() => validateCatalogue([withRealGuidance])).not.toThrow();
+  });
+
+  it("skips the propGuidance check for a component with no ui implementation yet", () => {
+    const draftWithGuidance = ComponentEntrySchema.parse({
+      ...validEntry,
+      propGuidance: [{ prop: "whatever", note: "x" }],
+    });
+    expect(() => validateCatalogue([draftWithGuidance])).not.toThrow();
+  });
+
+  it("getComponentProps extracts Callout's real props, merged with its propGuidance", () => {
+    const props = getComponentProps("callout");
+    expect(props?.map((p) => p.name).sort()).toEqual(["actions", "children", "title", "tone"]);
+    const tone = props?.find((p) => p.name === "tone");
+    expect(tone?.required).toBe(true);
+    expect(tone?.guidance).toContain("Match the tone to the state");
+  });
+
+  it("getComponentProps is undefined for a draft component with no ui implementation", () => {
+    expect(getComponentProps("toast")).toBeUndefined();
   });
 });
