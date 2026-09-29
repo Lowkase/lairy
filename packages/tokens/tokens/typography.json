@@ -31,6 +31,26 @@
       "$value": "14.5px",
       "$description": "Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR.",
       "$extensions": { "lairy": { "flagged": true } }
+    },
+    "micro": {
+      "$type": "dimension",
+      "$value": "11px",
+      "$description": "Type style Micro. The hard floor (AGENTS.md rule 6) — nothing in Lairy is set smaller. Section numbers, meta labels, captions, uppercase codes."
+    },
+    "body": {
+      "$type": "dimension",
+      "$value": "14px",
+      "$description": "Type style Body. Rows and paragraphs — the docs page's own prose, distinct from a component's Small body text."
+    },
+    "section": {
+      "$type": "dimension",
+      "$value": "17px",
+      "$description": "Type style Section. Docs page section titles, and the docs page's opening sentence (docs/prd.md §8.2's default mapping snaps its 19px literal onto this style)."
+    },
+    "doc-title": {
+      "$type": "dimension",
+      "$value": "34px",
+      "$description": "Type style Doc title. The docs page's own page title (docs/prd.md §8.2)."
     }
   },
   "leading": {
@@ -41,13 +61,27 @@
       "$value": 1.2,
       "$description": "Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review.",
       "$extensions": { "lairy": { "flagged": true } }
-    }
+    },
+    "micro": { "$type": "number", "$value": 1.4, "$description": "Leading for Micro (docs/prd.md §8.2)." },
+    "body": { "$type": "number", "$value": 1.6, "$description": "Leading for Body (docs/prd.md §8.2)." },
+    "section": {
+      "$type": "number",
+      "$value": 1.3,
+      "$description": "Leading for Section. docs/prd.md §8.2 lists this style's leading as \"per prototype\" without a fixed figure; the prototype's own section-title spans set no line-height at all (browser default), while the one wrapped use (the docs page's opening sentence, 19px → Section) used 1.55. 1.3 is a harvested middle value serving both; flagged pending the token decisions ticket.",
+      "$extensions": { "lairy": { "flagged": true } }
+    },
+    "doc-title": { "$type": "number", "$value": 1.1, "$description": "Leading for Doc title (docs/prd.md §8.2)." }
   },
   "tracking": {
     "tight-6": {
       "$type": "dimension",
       "$value": "0.06em",
       "$description": "Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2)."
+    },
+    "tight-neg-2": {
+      "$type": "dimension",
+      "$value": "-0.02em",
+      "$description": "Tracking step -.02em — the Doc title style's negative display tracking (docs/prd.md §8.2)."
     }
   }
 }

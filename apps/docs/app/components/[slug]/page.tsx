@@ -1,0 +1,255 @@
+import { getComponent, listComponents } from "@lairy/content";
+import { PageHeader } from "@/components/docs-page/page-header";
+import { Section } from "@/components/docs-page/section";
+import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type { ComponentType } from "react";
+import { CALLOUT_EXAMPLES } from "./callout-examples";
+
+const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
+  callout: CALLOUT_EXAMPLES,
+};
+
+function formatDate(iso: string) {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+export function generateStaticParams() {
+  return listComponents()
+    .filter((entry) => entry.meta.status !== "draft")
+    .map((entry) => ({ slug: entry.meta.id }));
+}
+
+export default async function ComponentPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const entry = getComponent(slug);
+  if (!entry || entry.meta.status === "draft") notFound();
+
+  const examples = EXAMPLE_REGISTRIES[slug] ?? {};
+  const demoExamples = entry.examples.filter((example) => example.kind === "demo");
+  const goodExamples = entry.examples.filter((example) => example.kind === "good");
+  const badExamples = entry.examples.filter((example) => example.kind === "bad");
+  const dontPairs = goodExamples.map((good, index) => ({ good, bad: badExamples[index] }));
+
+  return (
+    <ThemeToggle>
+      <div className="flex flex-col gap-32">
+        <PageHeader
+          title={entry.meta.name}
+          status={entry.meta.status}
+          version={entry.meta.version}
+          updated={formatDate(entry.meta.updated)}
+        />
+
+        {entry.description ? (
+          <div className="flex flex-col gap-8">
+            <div className="text-section text-fg">{entry.description.summary}</div>
+            <div className="text-body text-mute">{entry.description.boundary}</div>
+          </div>
+        ) : null}
+
+        {entry.anatomy.length > 0 ? (
+          <Section number="01" title="Anatomy" meta={`${entry.anatomy.length} parts`}>
+            <div className="flex items-center justify-center border border-border bg-panel p-32">
+              {(() => {
+                const specimenExample =
+                  demoExamples.find((example) => example.title.toLowerCase() === "success") ?? demoExamples[0];
+                const Specimen = specimenExample ? examples[specimenExample.id] : undefined;
+                return Specimen ? <Specimen /> : null;
+              })()}
+            </div>
+            {entry.anatomyCaption ? <div className="text-micro text-faint">{entry.anatomyCaption}</div> : null}
+            <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+              {entry.anatomy.map((part) => (
+                <div key={part.number} className="flex items-start gap-12">
+                  <span className="flex size-22 shrink-0 items-center justify-center rounded-full bg-accent font-heading text-label font-semibold text-bg">
+                    {part.number}
+                  </span>
+                  <span className="flex min-w-0 flex-col gap-4">
+                    <span className="text-body text-fg">{part.name}</span>
+                    <span className="text-small text-mute">{part.description}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.variants.length > 0 ? (
+          <Section number="02" title="Variants" meta={`${entry.variants.length}`}>
+            <div className="flex flex-col gap-12">
+              {entry.variants.map((variant) => {
+                const example = demoExamples.find((e) => e.title.toLowerCase() === variant.name.toLowerCase());
+                const Specimen = example ? examples[example.id] : undefined;
+                return (
+                  <div
+                    key={variant.name}
+                    className="grid grid-cols-1 gap-16 border border-border bg-panel p-16 sm:grid-cols-2"
+                  >
+                    <div className="flex min-w-0 flex-col gap-8">
+                      <span className="text-small text-fg">{variant.name}</span>
+                      <span className="text-micro text-faint">{variant.tokens.map((t) => `--${t}`).join(", ")}</span>
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-8">
+                      {Specimen ? <Specimen /> : null}
+                      <span className="text-small text-mute">{variant.description}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {entry.variantsNote ? <div className="text-micro text-faint">{entry.variantsNote}</div> : null}
+          </Section>
+        ) : null}
+
+        {entry.usage.useWhen.length > 0 || entry.usage.useInstead.length > 0 ? (
+          <Section number="03" title="Usage" meta="Use when / use instead">
+            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+              <div className="border border-accent-line bg-accent-soft p-18">
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-accent">Use when</div>
+                <div className="flex flex-col gap-8 text-small text-dim">
+                  {entry.usage.useWhen.map((row) => (
+                    <span key={row}>{row}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="border border-border-2 p-18">
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">Use something else when</div>
+                <div className="flex flex-col gap-8 text-small text-dim">
+                  {entry.usage.useInstead.map((row) => (
+                    <span key={row.target}>{row.text}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.contentRules.length > 0 ? (
+          <Section number="04" title="Content" meta={`${entry.contentRules.length} rules`}>
+            <div className="border border-border bg-panel">
+              {entry.contentRules.map((rule) => (
+                <div key={rule.text} className="border-b border-border p-16 text-small text-mute last:border-b-0">
+                  {rule.text}
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
+        {dontPairs.length > 0 ? (
+          <Section number="05" title="Do and don't" meta={`${dontPairs.length} pairs`}>
+            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+              {dontPairs.flatMap(({ good, bad }) => [
+                <DoDontCell key={good.id} example={good} mark="good" Specimen={examples[good.id]} />,
+                bad ? <DoDontCell key={bad.id} example={bad} mark="bad" Specimen={examples[bad.id]} /> : null,
+              ])}
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.accessibility.length > 0 ? (
+          <Section number="06" title="Accessibility" meta={`${entry.accessibility.length}`}>
+            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+              {entry.accessibility.map((note) => (
+                <div key={note.title} className="flex flex-col gap-8 border border-border bg-panel p-18">
+                  <span className="text-micro uppercase tracking-tight-6 text-accent">{note.title}</span>
+                  <span className="text-small text-dim">{note.body}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.tokens.length > 0 ? (
+          <Section number="07" title="Tokens" meta={`${entry.tokens.length}`}>
+            <div className="border border-border bg-panel">
+              {entry.tokens.map((row) => (
+                <div
+                  key={row.tokens.join(",")}
+                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 sm:grid-cols-2"
+                >
+                  <span className="text-fg">{row.tokens.map((t) => `--${t}`).join(", ")}</span>
+                  <span className="text-mute">{row.usage}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.relationships.length > 0 ? (
+          <Section number="08" title="Related" meta={`${entry.relationships.length}`}>
+            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+              {entry.relationships.map((relationship) => {
+                const target = getComponent(relationship.target);
+                const linkable = target && target.meta.status !== "draft";
+                const card = (
+                  <div className="flex flex-col gap-8 border border-border bg-panel p-16">
+                    <span className="text-small text-fg">{target?.meta.name ?? relationship.target}</span>
+                    <span className="text-small text-mute">{relationship.text}</span>
+                  </div>
+                );
+                return linkable ? (
+                  <Link
+                    key={relationship.target}
+                    href={`/components/${relationship.target}`}
+                    className="rounded-ds focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  >
+                    {card}
+                  </Link>
+                ) : (
+                  <div key={relationship.target}>{card}</div>
+                );
+              })}
+            </div>
+          </Section>
+        ) : null}
+
+        {entry.changelog.length > 0 ? (
+          <Section number="09" title="Changelog" meta="Newest first">
+            <div className="border border-border bg-panel">
+              {entry.changelog.map((change) => (
+                <div
+                  key={change.version}
+                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 sm:flex-row"
+                >
+                  <span className="text-micro text-accent">v{change.version}</span>
+                  <span className="text-micro text-faint">{formatDate(change.date)}</span>
+                  <span className="flex-1">{change.text}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+      </div>
+    </ThemeToggle>
+  );
+}
+
+function DoDontCell({
+  example,
+  mark,
+  Specimen,
+}: {
+  example: { id: string; title: string; caption?: string };
+  mark: "good" | "bad";
+  Specimen?: ComponentType;
+}) {
+  return (
+    <div className="flex flex-col border border-border">
+      <div className="flex flex-1 items-center bg-panel p-18">{Specimen ? <Specimen /> : null}</div>
+      <div className="flex gap-8 border-t border-border p-12">
+        <span className={mark === "good" ? "text-small text-accent" : "text-small text-alarm"}>
+          {mark === "good" ? "✓" : "✕"}
+        </span>
+        <span className="text-small text-mute">{example.caption}</span>
+      </div>
+    </div>
+  );
+}

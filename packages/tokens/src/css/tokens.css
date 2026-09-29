@@ -7,7 +7,11 @@
   --bg: #07090b; /** Ground. The page background beneath every surface. Dark is the default theme. */
   --fg: #f2f5f8; /** Text rank 1 (highest). Titles and primary content. */
   --dim: #c6ced6; /** Text rank 2. Body copy, one step below --fg. */
+  --mute: #9aa5b0; /** Text rank 3. Secondary prose, one step below --dim. */
+  --faint: #7c8791; /** Text rank 4 (lowest). Section numbers, meta labels, captions. */
+  --border: rgba(255, 255, 255, 0.16); /** Line. The default edge — --border-2 is emphasised over this one. */
   --border-2: rgba(255, 255, 255, 0.28); /** Line. An edge that has to be found — emphasised over --border. */
+  --panel: rgba(255, 255, 255, 0.02); /** Surface. A fill laid over the ground as a translucent layer — panels, cards, table rows. */
   --accent: #f7bd63; /** Amber. The primary accent: the colour of acting. */
   --accent-soft: rgba(247, 189, 99, 0.16); /** Amber fill, low opacity. */
   --accent-line: rgba(247, 189, 99, 0.5); /** Amber border/line. */
@@ -23,6 +27,8 @@
   --space-12: 12px; /** Spacing ramp step 12. */
   --space-16: 16px; /** Spacing ramp step 16. */
   --space-18: 18px; /** Spacing ramp step 18. */
+  --space-22: 22px; /** Spacing ramp step 22. */
+  --space-32: 32px; /** Spacing ramp step 32. */
   --radius: 2px; /** The system radius. Locked — does not nest, never scales with size (AGENTS.md rule 5). */
   --font-heading: 'Space Grotesk', sans-serif; /** Headings and titles. */
   --font-body: 'IBM Plex Mono', monospace; /** Body copy, the system default. */
@@ -31,10 +37,19 @@
   --text-small: 13px; /** Type style Small. Rows, hints, buttons, card body. */
   --text-label: 12px; /** Type style Label. Uppercase panel headers and chips. */
   --text-callout-title: 14.5px; /** Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR. */
+  --text-micro: 11px; /** Type style Micro. The hard floor (AGENTS.md rule 6) — nothing in Lairy is set smaller. Section numbers, meta labels, captions, uppercase codes. */
+  --text-body: 14px; /** Type style Body. Rows and paragraphs — the docs page's own prose, distinct from a component's Small body text. */
+  --text-section: 17px; /** Type style Section. Docs page section titles, and the docs page's opening sentence (docs/prd.md §8.2's default mapping snaps its 19px literal onto this style). */
+  --text-doc-title: 34px; /** Type style Doc title. The docs page's own page title (docs/prd.md §8.2). */
   --leading-small: 1.5; /** Leading for Small — the Typography foundation's documented value. The prototype's own Callout body used 1.55; documented foundations win (ADR-0005), so 1.5 is used and the difference is flagged. */
   --leading-label: 1.4; /** Leading for Label. */
   --leading-callout-title: 1.2; /** Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review. */
+  --leading-micro: 1.4; /** Leading for Micro (docs/prd.md §8.2). */
+  --leading-body: 1.6; /** Leading for Body (docs/prd.md §8.2). */
+  --leading-section: 1.3; /** Leading for Section. docs/prd.md §8.2 lists this style's leading as "per prototype" without a fixed figure; the prototype's own section-title spans set no line-height at all (browser default), while the one wrapped use (the docs page's opening sentence, 19px → Section) used 1.55. 1.3 is a harvested middle value serving both; flagged pending the token decisions ticket. */
+  --leading-doc-title: 1.1; /** Leading for Doc title (docs/prd.md §8.2). */
   --tracking-tight-6: 0.06em; /** Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2). */
+  --tracking-tight-neg-2: -0.02em; /** Tracking step -.02em — the Doc title style's negative display tracking (docs/prd.md §8.2). */
   --icon-callout: 17px; /** Icon width/height used by Callout, harvested from the prototype's calloutIcon() (17×17). No Icons foundation size scale exists yet (LDS-017); flagged as a proposed value pending that ticket. */
 }
 
@@ -46,7 +61,11 @@
   --bg: #f3f4f5; /** Ground, light theme. */
   --fg: #0e1216; /** Text rank 1, light theme. */
   --dim: #333c45; /** Text rank 2, light theme. */
+  --mute: #586269; /** Text rank 3, light theme. */
+  --faint: #767f88; /** Text rank 4, light theme. */
+  --border: rgba(0, 0, 0, 0.2); /** Line, light theme. */
   --border-2: rgba(0, 0, 0, 0.32); /** Line, light theme. */
+  --panel: rgba(0, 0, 0, 0.02); /** Surface, light theme. */
   --accent: #9a6208; /** Amber, light theme. */
   --accent-soft: rgba(154, 98, 8, 0.1); /** Amber fill, light theme. */
   --accent-line: rgba(154, 98, 8, 0.42); /** Amber border/line, light theme. */

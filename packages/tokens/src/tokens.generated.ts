@@ -5,7 +5,11 @@ export const color = {
   "bg": "#07090b",
   "fg": "#f2f5f8",
   "dim": "#c6ced6",
+  "mute": "#9aa5b0",
+  "faint": "#7c8791",
+  "border": "rgba(255, 255, 255, 0.16)",
   "border2": "rgba(255, 255, 255, 0.28)",
+  "panel": "rgba(255, 255, 255, 0.02)",
   "accent": "#f7bd63",
   "accentSoft": "rgba(247, 189, 99, 0.16)",
   "accentLine": "rgba(247, 189, 99, 0.5)",
@@ -16,7 +20,11 @@ export const color = {
   "bg": "#f3f4f5",
   "fg": "#0e1216",
   "dim": "#333c45",
+  "mute": "#586269",
+  "faint": "#767f88",
+  "border": "rgba(0, 0, 0, 0.2)",
   "border2": "rgba(0, 0, 0, 0.32)",
+  "panel": "rgba(0, 0, 0, 0.02)",
   "accent": "#9a6208",
   "accentSoft": "rgba(154, 98, 8, 0.1)",
   "accentLine": "rgba(154, 98, 8, 0.42)",
@@ -35,7 +43,7 @@ export const color = {
  * and the Tailwind theme (e.g. "accent-2-line"). The single source other
  * tooling (cn's tailwind-merge config, lint rules) should read from, rather
  * than re-listing token names by hand. */
-export const colorTokenNames = ["bg","fg","dim","border-2","accent","accent-soft","accent-line","accent-2","accent-2-line","alarm","alarm-soft","alarm-line","alarm-ink"] as const;
+export const colorTokenNames = ["bg","fg","dim","mute","faint","border","border-2","panel","accent","accent-soft","accent-line","accent-2","accent-2-line","alarm","alarm-soft","alarm-line","alarm-ink"] as const;
 
 export const space = {
   "4": "4px",
@@ -43,7 +51,9 @@ export const space = {
   "8": "8px",
   "12": "12px",
   "16": "16px",
-  "18": "18px"
+  "18": "18px",
+  "22": "22px",
+  "32": "32px"
 } as const;
 
 export const radius = "2px" as const;
@@ -61,17 +71,26 @@ export const fontWeight = {
 export const text = {
   "small": "13px",
   "label": "12px",
-  "calloutTitle": "14.5px"
+  "calloutTitle": "14.5px",
+  "micro": "11px",
+  "body": "14px",
+  "section": "17px",
+  "docTitle": "34px"
 } as const;
 
 export const leading = {
   "small": 1.5,
   "label": 1.4,
-  "calloutTitle": 1.2
+  "calloutTitle": 1.2,
+  "micro": 1.4,
+  "body": 1.6,
+  "section": 1.3,
+  "docTitle": 1.1
 } as const;
 
 export const tracking = {
-  "tight6": "0.06em"
+  "tight6": "0.06em",
+  "tightNeg2": "-0.02em"
 } as const;
 
 export const icon = {

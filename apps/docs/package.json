@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@lairy/content": "workspace:*",
     "@lairy/tokens": "workspace:*",
     "@lairy/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.3.3",

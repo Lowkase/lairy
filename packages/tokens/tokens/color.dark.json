@@ -17,11 +17,35 @@
     "$description": "Text rank 2. Body copy, one step below --fg.",
     "$extensions": { "lairy": { "themeable": true, "role": "text" } }
   },
+  "mute": {
+    "$type": "color",
+    "$value": "#9aa5b0",
+    "$description": "Text rank 3. Secondary prose, one step below --dim.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "faint": {
+    "$type": "color",
+    "$value": "#7c8791",
+    "$description": "Text rank 4 (lowest). Section numbers, meta labels, captions.",
+    "$extensions": { "lairy": { "themeable": true, "role": "text" } }
+  },
+  "border": {
+    "$type": "color",
+    "$value": "rgba(255, 255, 255, 0.16)",
+    "$description": "Line. The default edge — --border-2 is emphasised over this one.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
   "border-2": {
     "$type": "color",
     "$value": "rgba(255, 255, 255, 0.28)",
     "$description": "Line. An edge that has to be found — emphasised over --border.",
     "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "panel": {
+    "$type": "color",
+    "$value": "rgba(255, 255, 255, 0.02)",
+    "$description": "Surface. A fill laid over the ground as a translucent layer — panels, cards, table rows.",
+    "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
   },
   "accent": {
     "$type": "color",
