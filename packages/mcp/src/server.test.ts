@@ -77,6 +77,18 @@ describe("MCP server (seam 2: tool surface)", () => {
       expect(info?.sourceText).toContain('<Callout tone="info"');
     });
 
+    it("includes Callout's real props, extracted from source and merged with propGuidance", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "get_component", arguments: { id: "callout" } });
+      const entry = json<{
+        props: Array<{ name: string; type: string; required: boolean; guidance?: string }>;
+      }>(result);
+      expect(entry.props.map((p) => p.name).sort()).toEqual(["actions", "children", "title", "tone"]);
+      const tone = entry.props.find((p) => p.name === "tone");
+      expect(tone?.required).toBe(true);
+      expect(tone?.guidance).toContain("Match the tone to the state");
+    });
+
     it("resolves relationship targets to names", async () => {
       const client = await connect();
       const result = await client.callTool({ name: "get_component", arguments: { id: "callout" } });

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ComponentEntry, Relationship, UseInstead } from "@lairy/content";
-import { getComponent, listComponents } from "@lairy/content";
+import type { ComponentEntry, ComponentProp, Relationship, UseInstead } from "@lairy/content";
+import { getComponent, getComponentProps, listComponents } from "@lairy/content";
 import { REPO_ROOT } from "./repo-root";
 
 export class EntryNotFoundError extends Error {
@@ -64,6 +64,11 @@ export interface ComponentDetail extends Omit<
   examples: ExampleWithSource[];
   relationships: ResolvedRelationship[];
   usage: Omit<ComponentEntry["usage"], "useInstead"> & { useInstead: ResolvedUseInstead[] };
+  /** Extracted from the component's own source via react-docgen-typescript,
+   * merged with `propGuidance` by name — the real API, never a hand-written
+   * table (docs/prd.md D5, LDS-009). Empty for a component with no `ui`
+   * implementation yet. */
+  props: ComponentProp[];
 }
 
 function resolveName(id: string): string {
@@ -84,6 +89,7 @@ export function getComponentDetail(input: { id: string }): ComponentDetail {
 
   return {
     ...entry,
+    props: getComponentProps(input.id) ?? [],
     examples: entry.examples.map((example) => ({
       ...example,
       sourceText: readFileSync(resolve(REPO_ROOT, example.source), "utf-8"),

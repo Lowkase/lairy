@@ -1,4 +1,4 @@
-import { getComponent, listComponents } from "@lairy/content";
+import { getComponent, getComponentProps, listComponents } from "@lairy/content";
 import { PageHeader } from "@/components/docs-page/page-header";
 import { Section } from "@/components/docs-page/section";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -32,6 +32,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
   if (!entry || entry.meta.status === "draft") notFound();
 
   const examples = EXAMPLE_REGISTRIES[slug] ?? {};
+  const props = getComponentProps(slug) ?? [];
   const demoExamples = entry.examples.filter((example) => example.kind === "demo");
   const goodExamples = entry.examples.filter((example) => example.kind === "good");
   const badExamples = entry.examples.filter((example) => example.kind === "bad");
@@ -183,8 +184,28 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
           </Section>
         ) : null}
 
+        {props.length > 0 ? (
+          <Section number="08" title="Props" meta={`${props.length}`}>
+            <div className="border border-border bg-panel">
+              {props.map((prop) => (
+                <div
+                  key={prop.name}
+                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 sm:grid-cols-2"
+                >
+                  <span className="text-fg">
+                    {prop.name}
+                    {prop.required ? null : <span className="text-faint">?</span>}
+                    <span className="ml-8 text-micro text-faint">{prop.type}</span>
+                  </span>
+                  <span className="text-mute">{prop.guidance ?? prop.description}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
         {entry.relationships.length > 0 ? (
-          <Section number="08" title="Related" meta={`${entry.relationships.length}`}>
+          <Section number="09" title="Related" meta={`${entry.relationships.length}`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {entry.relationships.map((relationship) => {
                 const target = getComponent(relationship.target);
@@ -212,7 +233,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
         ) : null}
 
         {entry.changelog.length > 0 ? (
-          <Section number="09" title="Changelog" meta="Newest first">
+          <Section number="10" title="Changelog" meta="Newest first">
             <div className="border border-border bg-panel">
               {entry.changelog.map((change) => (
                 <div
