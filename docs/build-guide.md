@@ -73,6 +73,9 @@ pnpm turbo run dev --filter=docs
 pnpm turbo run typecheck lint test build
 pnpm --filter docs exec playwright test
 pnpm --filter mcp run inspect      # MCP inspector against the local server
+
+# reference/ is its own standalone tool, not a workspace package — run from inside it
+cd reference && pnpm install && pnpm run capture:baseline   # manual only, see reference/README.md
 ```
 
 Update this list when scripts change.
