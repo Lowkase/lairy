@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  AccessibilityNoteSchema,
   ChangelogEntrySchema,
   ColorTokenNameSchema,
   EntryIdSchema,
@@ -41,12 +42,6 @@ export const UsageSchema = z.object({
   useInstead: z.array(UseInsteadSchema).default([]),
 });
 export type Usage = z.infer<typeof UsageSchema>;
-
-export const AccessibilityNoteSchema = z.object({
-  title: z.string().min(1),
-  body: z.string().min(1),
-});
-export type AccessibilityNote = z.infer<typeof AccessibilityNoteSchema>;
 
 /** One row of the component's Tokens section: the token(s) a part of the
  * component uses, and what for. */

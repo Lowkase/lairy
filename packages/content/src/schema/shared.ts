@@ -57,6 +57,15 @@ export const RelationshipSchema = z.object({
 });
 export type Relationship = z.infer<typeof RelationshipSchema>;
 
+/** A titled accessibility callout, shared by Component and Foundation
+ * entries (both the prototype's `coA11y`-shaped lists and Color's own
+ * `colorA11y` use the same title+body pair). */
+export const AccessibilityNoteSchema = z.object({
+  title: z.string().min(1),
+  body: z.string().min(1),
+});
+export type AccessibilityNote = z.infer<typeof AccessibilityNoteSchema>;
+
 export const ExampleKindSchema = z.enum(["good", "bad", "demo"]);
 export type ExampleKind = z.infer<typeof ExampleKindSchema>;
 

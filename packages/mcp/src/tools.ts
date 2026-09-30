@@ -1,12 +1,26 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ComponentEntry, ComponentProp, Relationship, TokenEntry, UseInstead } from "@lairy/content";
-import { getComponent, getComponentProps, listComponents, listTokens } from "@lairy/content";
+import type {
+  ComponentEntry,
+  ComponentProp,
+  FoundationEntry,
+  Relationship,
+  TokenEntry,
+  UseInstead,
+} from "@lairy/content";
+import {
+  getComponent,
+  getComponentProps,
+  getFoundation,
+  listComponents,
+  listFoundations,
+  listTokens,
+} from "@lairy/content";
 import { REPO_ROOT } from "./repo-root";
 
 export class EntryNotFoundError extends Error {
-  constructor(id: string) {
-    super(`No component entry with id "${id}".`);
+  constructor(id: string, kind: string = "component") {
+    super(`No ${kind} entry with id "${id}".`);
     this.name = "EntryNotFoundError";
   }
 }
@@ -22,21 +36,31 @@ export interface EntrySummary {
 export type Section = "foundations" | "components" | "patterns";
 
 /**
- * docs/prd.md §9 `list_entries({ section? })`. Only the `components` section
- * has content entries so far (packages/content/src/catalogue.ts) —
- * foundations and patterns join once their own tickets land, and this list
- * will surface them without any change here.
+ * docs/prd.md §9 `list_entries({ section? })`. Patterns join once their own
+ * tickets land (packages/content/src/catalogue.ts) and will surface here
+ * without any change, the same way foundations did in LDS-014. A
+ * Foundation entry has no one-line `purpose` field the way a Component
+ * does (docs/prd.md §7.2) — its opening `description.summary` serves the
+ * same job here.
  */
 export function listEntries(input: { section?: Section } = {}): EntrySummary[] {
-  return listComponents()
-    .filter((entry) => !input.section || entry.meta.section === input.section)
-    .map((entry) => ({
-      id: entry.meta.id,
-      name: entry.meta.name,
-      section: entry.meta.section,
-      status: entry.meta.status,
-      purpose: entry.purpose,
-    }))
+  const componentSummaries = listComponents().map((entry) => ({
+    id: entry.meta.id,
+    name: entry.meta.name,
+    section: entry.meta.section,
+    status: entry.meta.status,
+    purpose: entry.purpose,
+  }));
+  const foundationSummaries = listFoundations().map((entry) => ({
+    id: entry.meta.id,
+    name: entry.meta.name,
+    section: entry.meta.section,
+    status: entry.meta.status,
+    purpose: entry.description.summary,
+  }));
+
+  return [...componentSummaries, ...foundationSummaries]
+    .filter((entry) => !input.section || entry.section === input.section)
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
@@ -71,8 +95,14 @@ export interface ComponentDetail extends Omit<
   props: ComponentProp[];
 }
 
+/** Resolves an id to its entry's display name, checking components first
+ * and then foundations — a relationship target can be either kind (e.g.
+ * Color's own relationships all point at other foundations). Falls back to
+ * the id itself only for a genuinely dangling reference, which the
+ * catalogue's own build-time validation (packages/content/src/catalogue.ts)
+ * should already have caught. */
 function resolveName(id: string): string {
-  return getComponent(id)?.meta.name ?? id;
+  return getComponent(id)?.meta.name ?? getFoundation(id)?.meta.name ?? id;
 }
 
 /**
@@ -105,6 +135,31 @@ export function getComponentDetail(input: { id: string }): ComponentDetail {
         targetName: resolveName(useInstead.target),
       })),
     },
+  };
+}
+
+export interface FoundationDetail extends Omit<FoundationEntry, "relationships"> {
+  relationships: ResolvedRelationship[];
+}
+
+/**
+ * docs/prd.md §9 `get_foundation({ id })`: the full entry, with
+ * relationship targets resolved to names — the foundation equivalent of
+ * `get_component` (LDS-014). A foundation has no examples or extracted
+ * props to attach, so those two steps of `get_component` don't apply here.
+ */
+export function getFoundationDetail(input: { id: string }): FoundationDetail {
+  const entry = getFoundation(input.id);
+  if (!entry) {
+    throw new EntryNotFoundError(input.id, "foundation");
+  }
+
+  return {
+    ...entry,
+    relationships: entry.relationships.map((relationship) => ({
+      ...relationship,
+      targetName: resolveName(relationship.target),
+    })),
   };
 }
 

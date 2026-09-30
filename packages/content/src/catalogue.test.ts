@@ -1,13 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { ComponentEntrySchema } from "./schema/component";
+import { FoundationEntrySchema } from "./schema/foundation";
 import { TokenEntrySchema } from "./schema/token";
 import {
   getComponent,
   getComponentProps,
+  getFoundation,
   getToken,
   listComponents,
+  listFoundations,
   listTokens,
   validateCatalogue,
+  validateFoundationCatalogue,
   validateTokenCatalogue,
 } from "./catalogue";
 
@@ -152,6 +156,76 @@ describe("catalogue (duplicate ids and dangling relationship targets)", () => {
     const relationship = callout?.relationships.find((r) => r.target === "toast");
     expect(relationship?.kind).toBe("often-confused-with");
     expect(relationship?.text).toBeTruthy();
+  });
+});
+
+describe("foundation catalogue (LDS-014)", () => {
+  const validFoundation = {
+    meta: {
+      id: "sample-foundation",
+      name: "Sample foundation",
+      section: "foundations" as const,
+      status: "draft" as const,
+      version: "0.1.0",
+      updated: "2026-09-29",
+    },
+    description: { summary: "A sample.", boundary: "A sample boundary." },
+  };
+
+  it("throws on a duplicate foundation id", () => {
+    const entries = [FoundationEntrySchema.parse(validFoundation), FoundationEntrySchema.parse(validFoundation)];
+    expect(() => validateFoundationCatalogue(entries)).toThrow(/duplicate entry id/);
+  });
+
+  it("throws when a foundation relationship targets an entry that doesn't exist", () => {
+    const withDanglingRelationship = FoundationEntrySchema.parse({
+      ...validFoundation,
+      relationships: [{ target: "does-not-exist", kind: "contrasts-with", text: "x" }],
+    });
+    expect(() => validateFoundationCatalogue([withDanglingRelationship])).toThrow(
+      /relationship targeting unknown entry/,
+    );
+  });
+
+  it("passes when every foundation relationship target is present in the same set of entries", () => {
+    const a = FoundationEntrySchema.parse({
+      ...validFoundation,
+      meta: { ...validFoundation.meta, id: "foundation-a" },
+      relationships: [{ target: "foundation-b", kind: "contrasts-with", text: "x" }],
+    });
+    const b = FoundationEntrySchema.parse({
+      ...validFoundation,
+      meta: { ...validFoundation.meta, id: "foundation-b" },
+    });
+    expect(() => validateFoundationCatalogue([a, b])).not.toThrow();
+  });
+
+  it("the real foundation catalogue is internally valid: every relationship target resolves", () => {
+    const entries = listFoundations();
+    const ids = new Set(entries.map((e) => e.meta.id));
+    for (const entry of entries) {
+      for (const relationship of entry.relationships) {
+        expect(ids.has(relationship.target)).toBe(true);
+      }
+    }
+  });
+
+  it("getFoundation resolves the real Color entry, stable with its three relationships", () => {
+    const entry = getFoundation("color");
+    expect(entry?.meta.status).toBe("stable");
+    expect(entry?.relationships).toHaveLength(3);
+    expect(entry?.scales).toHaveLength(7);
+  });
+
+  it("Typography, Elevation and Accessibility exist as draft stubs for Color's relationships", () => {
+    for (const id of ["typography", "elevation", "accessibility"]) {
+      const stub = getFoundation(id);
+      expect(stub?.meta.status).toBe("draft");
+    }
+    const color = getFoundation("color");
+    for (const target of ["typography", "elevation", "accessibility"]) {
+      expect(color?.relationships.some((r) => r.target === target)).toBe(true);
+    }
   });
 });
 

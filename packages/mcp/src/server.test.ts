@@ -35,11 +35,12 @@ function json<T>(result: { content: Array<{ type: string; text?: string }> }): T
 }
 
 describe("MCP server (seam 2: tool surface)", () => {
-  it("exposes list_entries, get_component, get_tokens, suggest_alternative and search_guidelines (docs/prd.md §9)", async () => {
+  it("exposes list_entries, get_component, get_foundation, get_tokens, suggest_alternative and search_guidelines (docs/prd.md §9)", async () => {
     const client = await connect();
     const { tools } = await client.listTools();
     expect(tools.map((tool) => tool.name).sort()).toEqual([
       "get_component",
+      "get_foundation",
       "get_tokens",
       "list_entries",
       "search_guidelines",
@@ -59,6 +60,20 @@ describe("MCP server (seam 2: tool surface)", () => {
       });
     });
 
+    it("lists foundations too, using description.summary as purpose (LDS-014)", async () => {
+      const client = await connect();
+      const result = await client.callTool({
+        name: "list_entries",
+        arguments: { section: "foundations" },
+      });
+      const entries = json<Array<{ id: string; status: string; purpose: string }>>(result);
+      const color = entries.find((entry) => entry.id === "color");
+      expect(color).toMatchObject({
+        status: "stable",
+        purpose: "Colour in this system is a rank, not a palette.",
+      });
+    });
+
     it("filters by section — patterns has no entries yet", async () => {
       const client = await connect();
       const result = await client.callTool({
@@ -66,6 +81,29 @@ describe("MCP server (seam 2: tool surface)", () => {
         arguments: { section: "patterns" },
       });
       expect(json(result)).toEqual([]);
+    });
+  });
+
+  describe("get_foundation", () => {
+    it("returns Color's scales with their tokens and resolves relationship targets to names", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "get_foundation", arguments: { id: "color" } });
+      const entry = json<{
+        scales: Array<{ name: string; tokens: string[] }>;
+        relationships: Array<{ target: string; targetName: string }>;
+      }>(result);
+      const amber = entry.scales.find((s) => s.name === "Amber");
+      expect(amber?.tokens).toEqual(["accent", "accent-soft", "accent-line"]);
+      expect(entry.relationships.find((r) => r.target === "typography")?.targetName).toBe("Typography");
+    });
+
+    it("errors for an id that doesn't exist in the catalogue", async () => {
+      const client = await connect();
+      const result = await client.callTool({
+        name: "get_foundation",
+        arguments: { id: "does-not-exist" },
+      });
+      expect(result.isError).toBe(true);
     });
   });
 
