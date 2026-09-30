@@ -12,10 +12,14 @@
   --border: rgba(255, 255, 255, 0.16); /** Line. The default edge — --border-2 is emphasised over this one. */
   --border-2: rgba(255, 255, 255, 0.28); /** Line. An edge that has to be found — emphasised over --border. */
   --panel: rgba(255, 255, 255, 0.02); /** Surface. A fill laid over the ground as a translucent layer — panels, cards, table rows. */
+  --panel-2: rgba(255, 255, 255, 0.045); /** Surface, emphasised over --panel. Hover and active state for panels, rows and secondary/ghost buttons. */
+  --bracket: rgba(255, 255, 255, 0.45); /** The corner-bracket mark drawn around visualization frames and telemetry panels — a decorative line, distinct from --border. */
+  --glow: rgba(150, 165, 175, 0.1); /** The ambient radial-gradient tint behind the workspace header. */
   --accent: #f7bd63; /** Amber. The primary accent: the colour of acting. */
   --accent-soft: rgba(247, 189, 99, 0.16); /** Amber fill, low opacity. */
   --accent-line: rgba(247, 189, 99, 0.5); /** Amber border/line. */
   --accent-2: #7fd8ff; /** Ice. The secondary accent: the colour of referring. */
+  --accent-2-soft: rgba(127, 216, 255, 0.16); /** Ice fill, low opacity. */
   --accent-2-line: rgba(127, 216, 255, 0.5); /** Ice border/line. */
   --alarm: #ff8f6b; /** Alarm. The colour of a broken or failed state, and only that. Written literally in the prototype rather than themed, deliberately: no theme may redefine what "broken" looks like. */
   --alarm-soft: rgba(255, 143, 107, 0.1); /** Alarm fill, low opacity. Non-themeable, same reasoning as --alarm. */
@@ -29,11 +33,16 @@
   --space-18: 18px; /** Spacing ramp step 18. */
   --space-22: 22px; /** Spacing ramp step 22. */
   --space-32: 32px; /** Spacing ramp step 32. */
+  --space-44: 44px; /** Spacing ramp step 44. docs/prd.md §8.3's prose names eight steps (4–32), but reference/harvest-tokens.mjs's own SPACING_RAMP set — the authority the token-decisions ticket harvests against — already treats 44 as a ninth step, and the harvest report maps real padding/margin occurrences onto it. Added to close that gap, not a new decision. */
   --radius: 2px; /** The system radius. Locked — does not nest, never scales with size (AGENTS.md rule 5). */
+  --radius-chip: 20px; /** The chip shape — a shape, not a size, and not part of the radius scale (AGENTS.md rule 5, docs/prd.md §8.4). Full circle (Tailwind's built-in rounded-full, not a token) is reserved for marks that hold no layout. */
   --font-heading: 'Space Grotesk', sans-serif; /** Headings and titles. */
   --font-body: 'IBM Plex Mono', monospace; /** Body copy, the system default. */
   --weight-regular: 400;
   --weight-semibold: 600;
+  --text-display: 48px; /** Type style Display. Page hero only — the top of the hierarchy rule ("hero 48 > doc title 34 > workspace title 28 > section title 17 > module title 13", docs/prd.md §8.2). */
+  --text-title: 28px; /** Type style Title. The workspace name. */
+  --text-metric: 28px; /** Type style Metric. Numbers in stat cards — same size as Title but its own tracking and leading (docs/prd.md §8.2). */
   --text-small: 13px; /** Type style Small. Rows, hints, buttons, card body. */
   --text-label: 12px; /** Type style Label. Uppercase panel headers and chips. */
   --text-callout-title: 14.5px; /** Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR. */
@@ -41,6 +50,9 @@
   --text-body: 14px; /** Type style Body. Rows and paragraphs — the docs page's own prose, distinct from a component's Small body text. */
   --text-section: 17px; /** Type style Section. Docs page section titles, and the docs page's opening sentence (docs/prd.md §8.2's default mapping snaps its 19px literal onto this style). */
   --text-doc-title: 34px; /** Type style Doc title. The docs page's own page title (docs/prd.md §8.2). */
+  --leading-display: 1.08; /** Leading for Display (docs/prd.md §8.2). */
+  --leading-title: 1.15; /** Leading for Title (docs/prd.md §8.2). */
+  --leading-metric: 1.1; /** Leading for Metric (docs/prd.md §8.2). */
   --leading-small: 1.5; /** Leading for Small — the Typography foundation's documented value. The prototype's own Callout body used 1.55; documented foundations win (ADR-0005), so 1.5 is used and the difference is flagged. */
   --leading-label: 1.4; /** Leading for Label. */
   --leading-callout-title: 1.2; /** Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review. */
@@ -48,9 +60,39 @@
   --leading-body: 1.6; /** Leading for Body (docs/prd.md §8.2). */
   --leading-section: 1.3; /** Leading for Section. docs/prd.md §8.2 lists this style's leading as "per prototype" without a fixed figure; the prototype's own section-title spans set no line-height at all (browser default), while the one wrapped use (the docs page's opening sentence, 19px → Section) used 1.55. 1.3 is a harvested middle value serving both; flagged pending the token decisions ticket. */
   --leading-doc-title: 1.1; /** Leading for Doc title (docs/prd.md §8.2). */
-  --tracking-tight-6: 0.06em; /** Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2). */
-  --tracking-tight-neg-2: -0.02em; /** Tracking step -.02em — the Doc title style's negative display tracking (docs/prd.md §8.2). */
+  --tracking-tight-6: 0.06em; /** Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-8: 0.08em; /** Tracking step .08em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-10: 0.1em; /** Tracking step .1em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-12: 0.12em; /** Tracking step .12em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-14: 0.14em; /** Tracking step .14em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-16: 0.16em; /** Tracking step .16em — Label's uppercase panel-header tracking. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2). */
+  --tracking-tight-20: 0.2em; /** Tracking step .2em — Micro's uppercase tracking (docs/prd.md §8.2 type table). One of the consolidated tracking set (reference/token-harvest.md §2). */
+  --tracking-tight-neg-1: -0.01em; /** Metric's tracking (docs/prd.md §8.2 type table). */
+  --tracking-tight-neg-2: -0.02em; /** Negative display tracking, shared by Display, Doc title and Title (docs/prd.md §8.2). */
   --icon-callout: 17px; /** Icon width/height used by Callout, harvested from the prototype's calloutIcon() (17×17). No Icons foundation size scale exists yet (LDS-017); flagged as a proposed value pending that ticket. */
+  --easing-standard: cubic-bezier(.4, 0, .2, 1); /** Standard. Panel and Reveal's curve — anything that changes shape or enters the page (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
+  --easing-symmetric: cubic-bezier(.45, 0, .55, 1); /** Symmetric. The sweepline loop's curve (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
+  --easing-draw: cubic-bezier(.35, 0, .2, 1); /** Draw. The blueprint line-draw curve, used only there (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
+  --duration-instant: 140ms; /** Instant. Hover fills, chip toggles, row highlights — short enough to feel like a property of the pointer (Motion page motDocs). */
+  --duration-control: 180ms; /** Control. Buttons and inputs, where several properties change together (Motion page motDocs). */
+  --duration-panel: 260ms; /** Panel. Anything that changes the shape of the page — dock, drawer, layout shift (Motion page motDocs). */
+  --duration-reveal: 500ms; /** Reveal. Cards and panels arriving on first paint (Motion page motDocs). The prototype varies this 450–600ms per group weight; 500ms is the documented base step. */
+  --shadow-bubble: 0 12px 30px rgba(0, 0, 0, 0.5); /** Bubble. Tooltip only (Elevation page elevDocs, elevTokens). */
+  --shadow-menu: 0 22px 60px rgba(0, 0, 0, 0.45); /** Menu. Select, popover, overflow (Elevation page elevDocs, elevTokens). */
+  --shadow-overlay: 0 30px 90px rgba(0, 0, 0, 0.5); /** Overlay. Modal, command bar (Elevation page elevDocs, elevTokens). */
+  --shadow-overlay-horizontal: -30px 0 90px rgba(0, 0, 0, 0.5); /** Overlay, horizontal. Drawer, entering from the edge it lives on (Elevation page elevDocs, elevTokens). */
+  --shadow-hover-lift: 0 3px 10px -4px rgba(0, 0, 0, 0.45); /** Hover lift. Secondary and ghost controls (Elevation page elevDocs, elevTokens). */
+  --shadow-hover-lift-accent: 0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent); /** Hover lift, amber. The primary button (Elevation page elevDocs: '0 4px 12px -4px accent 45%'). References the themed --accent token via color-mix so the tint follows theme, unlike the neutral hover-lift's fixed black. */
+  --shadow-press: inset 0 2px 4px rgba(0, 0, 0, 0.35); /** Press. Secondary and ghost controls (Elevation page elevDocs, elevTokens). */
+  --shadow-press-primary: inset 0 2px 5px rgba(0, 0, 0, 0.6); /** Press, primary. The primary button, a deeper press than the neutral pair (Elevation page elevDocs: 'inset 0 2px 5px black 60%'). */
+  --z-chrome: 4; /** Chrome. The dock, subnav rail and top status bar — flat, and first (Elevation page elevDocs, elevZ). */
+  --z-rail-stub: 36; /** Rail stub. The collapsed-rail handle, above chrome because it sits on the seam between two pieces of it (Elevation page elevDocs, elevZ). */
+  --z-command-bar: 60; /** Command bar. Above the page and its chrome, below anything that could interrupt it (Elevation page elevDocs, elevZ). */
+  --z-overlay: 80; /** Overlay. Modal and drawer — the blocking layer. Both live at the same stop because two are never open at once (Elevation page elevDocs, elevZ). */
+  --z-toast: 90; /** Toast. The top of the ladder, so a confirmation is legible over a modal that caused it (Elevation page elevDocs, elevZ). */
+  --breakpoint-tablet: 640px; /** Tablet starts here (640–1023px). Below it is phone, the unprefixed default (docs/prd.md §8.6). */
+  --breakpoint-desktop: 1024px; /** Desktop starts here (1024–1439px) — the prototype's own minimum width (docs/prd.md §8.6). */
+  --breakpoint-wide: 1440px; /** Wide starts here (docs/prd.md §8.6). */
 }
 
 /**
@@ -66,9 +108,13 @@
   --border: rgba(0, 0, 0, 0.2); /** Line, light theme. */
   --border-2: rgba(0, 0, 0, 0.32); /** Line, light theme. */
   --panel: rgba(0, 0, 0, 0.02); /** Surface, light theme. */
+  --panel-2: rgba(0, 0, 0, 0.05); /** Surface, emphasised over --panel, light theme. */
+  --bracket: rgba(0, 0, 0, 0.45); /** The corner-bracket mark drawn around visualization frames and telemetry panels, light theme. */
+  --glow: rgba(120, 135, 145, 0.12); /** The ambient radial-gradient tint behind the workspace header, light theme. */
   --accent: #9a6208; /** Amber, light theme. */
   --accent-soft: rgba(154, 98, 8, 0.1); /** Amber fill, light theme. */
   --accent-line: rgba(154, 98, 8, 0.42); /** Amber border/line, light theme. */
   --accent-2: #0d6d92; /** Ice, light theme. */
+  --accent-2-soft: rgba(13, 109, 146, 0.1); /** Ice fill, low opacity, light theme. */
   --accent-2-line: rgba(13, 109, 146, 0.42); /** Ice border/line, light theme. */
 }

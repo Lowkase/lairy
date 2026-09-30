@@ -10,6 +10,9 @@
   --tracking-*: initial;
   --leading-*: initial;
   --font-weight-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+  --breakpoint-*: initial;
 
   /* Color — aliases the themed custom properties in tokens.css. */
   --color-bg: var(--bg);
@@ -20,10 +23,14 @@
   --color-border: var(--border);
   --color-border-2: var(--border-2);
   --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-bracket: var(--bracket);
+  --color-glow: var(--glow);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-line: var(--accent-line);
   --color-accent-2: var(--accent-2);
+  --color-accent-2-soft: var(--accent-2-soft);
   --color-accent-2-line: var(--accent-2-line);
   --color-alarm: var(--alarm);
   --color-alarm-soft: var(--alarm-soft);
@@ -43,9 +50,11 @@
   --spacing-18: 18px;
   --spacing-22: 22px;
   --spacing-32: 32px;
+  --spacing-44: 44px;
 
   /* Radius (locked, docs/prd.md §8.4). */
   --radius-ds: 2px;
+  --radius-chip: 20px;
 
   /* Font families. next/font/google supplies --ff-<name> at runtime; the
      token value is the fallback stack for non-Next consumers. */
@@ -57,6 +66,12 @@
   --font-weight-semibold: 600;
 
   /* Type styles: paired font-size + line-height (docs/prd.md §8.2). */
+  --text-display: 48px;
+  --text-display--line-height: 1.08;
+  --text-title: 28px;
+  --text-title--line-height: 1.15;
+  --text-metric: 28px;
+  --text-metric--line-height: 1.1;
   --text-small: 13px;
   --text-small--line-height: 1.5;
   --text-label: 12px;
@@ -74,5 +89,93 @@
 
   /* Tracking steps. */
   --tracking-tight-6: 0.06em;
+  --tracking-tight-8: 0.08em;
+  --tracking-tight-10: 0.1em;
+  --tracking-tight-12: 0.12em;
+  --tracking-tight-14: 0.14em;
+  --tracking-tight-16: 0.16em;
+  --tracking-tight-20: 0.2em;
+  --tracking-tight-neg-1: -0.01em;
   --tracking-tight-neg-2: -0.02em;
+
+  /* Breakpoints (docs/prd.md §8.6). Phone (<640) is the unprefixed default. */
+  --breakpoint-tablet: 640px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+
+  /* Easing curves (docs/prd.md §8.5). */
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --ease-symmetric: cubic-bezier(.45, 0, .55, 1);
+  --ease-draw: cubic-bezier(.35, 0, .2, 1);
+
+  /* Elevation shadows (Elevation foundation, elevTokens). */
+  --shadow-bubble: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --shadow-menu: 0 22px 60px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: 0 30px 90px rgba(0, 0, 0, 0.5);
+  --shadow-overlay-horizontal: -30px 0 90px rgba(0, 0, 0, 0.5);
+  --shadow-hover-lift: 0 3px 10px -4px rgba(0, 0, 0, 0.45);
+  --shadow-hover-lift-accent: 0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent);
+  --shadow-press: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  --shadow-press-primary: inset 0 2px 5px rgba(0, 0, 0, 0.6);
+
+  /* Named entrances and loops (Motion foundation, motEntrances/motTokens).
+     Keyframe bodies are harvested verbatim from the prototype's own
+     @keyframes rules (archive/v1/Workspace Shell.dc.html) and declared
+     below, outside this @theme block. Durations/easings here reuse the
+     named motion tokens where a call site maps cleanly onto one; the two
+     that don't (rise-in, draw-in) use their own harvested literal value —
+     see each animation's comment for its source. */
+  --animate-fade-in: fadeIn 180ms ease both; /* Scrims and backdrops (fadeIn .18s ease both, every scrim call site). */
+  --animate-rise-in: riseIn 280ms cubic-bezier(.4, 0, .2, 1) both; /* Toast entrance (riseIn .28s cubic-bezier(.4,0,.2,1) both) — 280ms is off the named scale, harvested as-is. */
+  --animate-panel-in: panelIn 260ms cubic-bezier(.4, 0, .2, 1) both; /* Layout-shift entrances — dock, drawer, cards, panels. Overlay call sites (menu 160ms, modal 220ms, command bar 240ms) commonly override this default. */
+  --animate-widget-in: widgetIn 500ms cubic-bezier(.4, 0, .2, 1) both; /* Full-width widgets and hero rows (widgetIn .5s cubic-bezier(.4,0,.2,1) both). */
+  --animate-drawer-in: drawerIn 260ms cubic-bezier(.4, 0, .2, 1) both; /* The drawer, entering from its edge (drawerIn .26s cubic-bezier(.4,0,.2,1) both). */
+  --animate-draw-in: drawIn 800ms cubic-bezier(.35, 0, .2, 1) both; /* Blueprint line-draw. Every call site passes its own duration (draw(delay, dur) => dur || 800) — 800ms is the source's own fallback, not a fixed step. */
+  --animate-pulse: pulse 2.6s ease-in-out infinite; /* Live-status pulse (Motion page motTokens: '2.6s ease-in-out'). */
+  --animate-breathe: breathe 2s ease-in-out infinite; /* Live-status breathe loop (Motion page motTokens: '2s ease-in-out'). */
+  --animate-shimmer: shimmer 1.2s linear infinite; /* Loading skeleton shimmer (animation: shimmer 1.2s linear infinite, every call site). */
+  --animate-sweepline: sweepline 1.8s cubic-bezier(.45, 0, .55, 1) infinite; /* The sweeping progress line (Motion page motTokens: '1.8s cubic-bezier(.45,0,.55,1)', every call site). */
+}
+
+/* Keyframe bodies, harvested verbatim from the prototype's own @keyframes
+   rules (archive/v1/Workspace Shell.dc.html) — see the --animate-* entries
+   above for how each is composed into a named animation. */
+@keyframes fadeIn {
+  0% { opacity: 0; } 100% { opacity: 1; }
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; }
+}
+@keyframes panelIn {
+  0% { opacity: 0; transform: translateY(12px) scale(.99); } 100% { opacity: 1; transform: none; }
+}
+@keyframes widgetIn {
+  0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: none; }
+}
+@keyframes drawerIn {
+  from { transform: translateX(100%); } to { transform: none; }
+}
+@keyframes drawIn {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.8); }
+}
+@keyframes breathe {
+  0%, 100% { opacity: .45; } 50% { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -220px 0; } 100% { background-position: 220px 0; }
+}
+@keyframes sweepline {
+  0% { transform: translateX(-110%); } 100% { transform: translateX(320%); }
+}
+
+/* prefers-reduced-motion (AGENTS.md rule 7, Accessibility foundation motA11y):
+   every loop stops and entrances collapse to opacity alone. */
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-"] {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

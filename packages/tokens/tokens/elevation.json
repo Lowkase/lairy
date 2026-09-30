@@ -1,0 +1,71 @@
+{
+  "shadow": {
+    "bubble": {
+      "$type": "shadow",
+      "$value": "0 12px 30px rgba(0, 0, 0, 0.5)",
+      "$description": "Bubble. Tooltip only (Elevation page elevDocs, elevTokens)."
+    },
+    "menu": {
+      "$type": "shadow",
+      "$value": "0 22px 60px rgba(0, 0, 0, 0.45)",
+      "$description": "Menu. Select, popover, overflow (Elevation page elevDocs, elevTokens)."
+    },
+    "overlay": {
+      "$type": "shadow",
+      "$value": "0 30px 90px rgba(0, 0, 0, 0.5)",
+      "$description": "Overlay. Modal, command bar (Elevation page elevDocs, elevTokens)."
+    },
+    "overlay-horizontal": {
+      "$type": "shadow",
+      "$value": "-30px 0 90px rgba(0, 0, 0, 0.5)",
+      "$description": "Overlay, horizontal. Drawer, entering from the edge it lives on (Elevation page elevDocs, elevTokens)."
+    },
+    "hover-lift": {
+      "$type": "shadow",
+      "$value": "0 3px 10px -4px rgba(0, 0, 0, 0.45)",
+      "$description": "Hover lift. Secondary and ghost controls (Elevation page elevDocs, elevTokens)."
+    },
+    "hover-lift-accent": {
+      "$type": "shadow",
+      "$value": "0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent)",
+      "$description": "Hover lift, amber. The primary button (Elevation page elevDocs: '0 4px 12px -4px accent 45%'). References the themed --accent token via color-mix so the tint follows theme, unlike the neutral hover-lift's fixed black."
+    },
+    "press": {
+      "$type": "shadow",
+      "$value": "inset 0 2px 4px rgba(0, 0, 0, 0.35)",
+      "$description": "Press. Secondary and ghost controls (Elevation page elevDocs, elevTokens)."
+    },
+    "press-primary": {
+      "$type": "shadow",
+      "$value": "inset 0 2px 5px rgba(0, 0, 0, 0.6)",
+      "$description": "Press, primary. The primary button, a deeper press than the neutral pair (Elevation page elevDocs: 'inset 0 2px 5px black 60%')."
+    }
+  },
+  "z": {
+    "chrome": {
+      "$type": "number",
+      "$value": 4,
+      "$description": "Chrome. The dock, subnav rail and top status bar — flat, and first (Elevation page elevDocs, elevZ)."
+    },
+    "rail-stub": {
+      "$type": "number",
+      "$value": 36,
+      "$description": "Rail stub. The collapsed-rail handle, above chrome because it sits on the seam between two pieces of it (Elevation page elevDocs, elevZ)."
+    },
+    "command-bar": {
+      "$type": "number",
+      "$value": 60,
+      "$description": "Command bar. Above the page and its chrome, below anything that could interrupt it (Elevation page elevDocs, elevZ)."
+    },
+    "overlay": {
+      "$type": "number",
+      "$value": 80,
+      "$description": "Overlay. Modal and drawer — the blocking layer. Both live at the same stop because two are never open at once (Elevation page elevDocs, elevZ)."
+    },
+    "toast": {
+      "$type": "number",
+      "$value": 90,
+      "$description": "Toast. The top of the ladder, so a confirmation is legible over a modal that caused it (Elevation page elevDocs, elevZ)."
+    }
+  }
+}

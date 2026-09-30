@@ -16,6 +16,21 @@
     "semibold": { "$type": "fontWeight", "$value": 600 }
   },
   "text": {
+    "display": {
+      "$type": "dimension",
+      "$value": "48px",
+      "$description": "Type style Display. Page hero only — the top of the hierarchy rule (\"hero 48 > doc title 34 > workspace title 28 > section title 17 > module title 13\", docs/prd.md §8.2)."
+    },
+    "title": {
+      "$type": "dimension",
+      "$value": "28px",
+      "$description": "Type style Title. The workspace name."
+    },
+    "metric": {
+      "$type": "dimension",
+      "$value": "28px",
+      "$description": "Type style Metric. Numbers in stat cards — same size as Title but its own tracking and leading (docs/prd.md §8.2)."
+    },
     "small": {
       "$type": "dimension",
       "$value": "13px",
@@ -54,6 +69,9 @@
     }
   },
   "leading": {
+    "display": { "$type": "number", "$value": 1.08, "$description": "Leading for Display (docs/prd.md §8.2)." },
+    "title": { "$type": "number", "$value": 1.15, "$description": "Leading for Title (docs/prd.md §8.2)." },
+    "metric": { "$type": "number", "$value": 1.1, "$description": "Leading for Metric (docs/prd.md §8.2)." },
     "small": { "$type": "number", "$value": 1.5, "$description": "Leading for Small — the Typography foundation's documented value. The prototype's own Callout body used 1.55; documented foundations win (ADR-0005), so 1.5 is used and the difference is flagged." },
     "label": { "$type": "number", "$value": 1.4, "$description": "Leading for Label." },
     "callout-title": {
@@ -76,12 +94,47 @@
     "tight-6": {
       "$type": "dimension",
       "$value": "0.06em",
-      "$description": "Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2)."
+      "$description": "Tracking step .06em — Callout's action-button label. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-8": {
+      "$type": "dimension",
+      "$value": "0.08em",
+      "$description": "Tracking step .08em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-10": {
+      "$type": "dimension",
+      "$value": "0.1em",
+      "$description": "Tracking step .1em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-12": {
+      "$type": "dimension",
+      "$value": "0.12em",
+      "$description": "Tracking step .12em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-14": {
+      "$type": "dimension",
+      "$value": "0.14em",
+      "$description": "Tracking step .14em. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-16": {
+      "$type": "dimension",
+      "$value": "0.16em",
+      "$description": "Tracking step .16em — Label's uppercase panel-header tracking. One of the consolidated tracking set (docs/prd.md §8.2, reference/token-harvest.md §2)."
+    },
+    "tight-20": {
+      "$type": "dimension",
+      "$value": "0.2em",
+      "$description": "Tracking step .2em — Micro's uppercase tracking (docs/prd.md §8.2 type table). One of the consolidated tracking set (reference/token-harvest.md §2)."
+    },
+    "tight-neg-1": {
+      "$type": "dimension",
+      "$value": "-0.01em",
+      "$description": "Metric's tracking (docs/prd.md §8.2 type table)."
     },
     "tight-neg-2": {
       "$type": "dimension",
       "$value": "-0.02em",
-      "$description": "Tracking step -.02em — the Doc title style's negative display tracking (docs/prd.md §8.2)."
+      "$description": "Negative display tracking, shared by Display, Doc title and Title (docs/prd.md §8.2)."
     }
   }
 }

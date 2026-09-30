@@ -29,6 +29,18 @@ describe("Tailwind theme (seam 4: no off-system CSS)", () => {
     expect(rounded).toBeNull();
   });
 
+  it("produces no CSS for off-system breakpoints, easing, duration or spacing (LDS-012)", async () => {
+    // The default sm/md/lg/xl/2xl breakpoints, ease-in/out/in-out and the
+    // numeric spacing multiplier are all removed along with the rest of
+    // Tailwind's default theme — only Lairy's named steps exist.
+    const design = await loadLairyDesignSystem();
+    const [md, easeIn, w44BeforeRamp] = design.candidatesToCss(["md:flex", "ease-in", "w-88"]);
+
+    expect(md).toBeNull();
+    expect(easeIn).toBeNull();
+    expect(w44BeforeRamp).toBeNull();
+  });
+
   it("produces CSS for Lairy's own tokens", async () => {
     const design = await loadLairyDesignSystem();
     const [bg, rounded, spacing] = design.candidatesToCss(["bg-accent", "rounded-ds", "p-16"]);
@@ -36,6 +48,25 @@ describe("Tailwind theme (seam 4: no off-system CSS)", () => {
     expect(bg).toContain("var(--color-accent)");
     expect(rounded).toContain("var(--radius-ds)");
     expect(spacing).toContain("var(--spacing-16)");
+  });
+
+  it("produces CSS for the full LDS-012 token set", async () => {
+    const design = await loadLairyDesignSystem();
+    const [breakpoint, ease, shadow, animate, chip, color] = design.candidatesToCss([
+      "tablet:flex",
+      "ease-standard",
+      "shadow-menu",
+      "animate-fade-in",
+      "rounded-chip",
+      "bg-panel-2",
+    ]);
+
+    expect(breakpoint).toContain("640px");
+    expect(ease).toContain("var(--ease-standard)");
+    expect(shadow).toContain("var(--tw-shadow-color");
+    expect(animate).toContain("var(--animate-fade-in)");
+    expect(chip).toContain("var(--radius-chip)");
+    expect(color).toContain("var(--color-panel-2)");
   });
 });
 

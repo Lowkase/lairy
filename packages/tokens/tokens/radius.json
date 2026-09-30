@@ -3,5 +3,10 @@
     "$type": "dimension",
     "$value": "2px",
     "$description": "The system radius. Locked — does not nest, never scales with size (AGENTS.md rule 5)."
+  },
+  "radius-chip": {
+    "$type": "dimension",
+    "$value": "20px",
+    "$description": "The chip shape — a shape, not a size, and not part of the radius scale (AGENTS.md rule 5, docs/prd.md §8.4). Full circle (Tailwind's built-in rounded-full, not a token) is reserved for marks that hold no layout."
   }
 }

@@ -10,10 +10,14 @@ export const color = {
   "border": "rgba(255, 255, 255, 0.16)",
   "border2": "rgba(255, 255, 255, 0.28)",
   "panel": "rgba(255, 255, 255, 0.02)",
+  "panel2": "rgba(255, 255, 255, 0.045)",
+  "bracket": "rgba(255, 255, 255, 0.45)",
+  "glow": "rgba(150, 165, 175, 0.10)",
   "accent": "#f7bd63",
   "accentSoft": "rgba(247, 189, 99, 0.16)",
   "accentLine": "rgba(247, 189, 99, 0.5)",
   "accent2": "#7fd8ff",
+  "accent2Soft": "rgba(127, 216, 255, 0.16)",
   "accent2Line": "rgba(127, 216, 255, 0.5)"
 },
   light: {
@@ -25,10 +29,14 @@ export const color = {
   "border": "rgba(0, 0, 0, 0.2)",
   "border2": "rgba(0, 0, 0, 0.32)",
   "panel": "rgba(0, 0, 0, 0.02)",
+  "panel2": "rgba(0, 0, 0, 0.05)",
+  "bracket": "rgba(0, 0, 0, 0.45)",
+  "glow": "rgba(120, 135, 145, 0.12)",
   "accent": "#9a6208",
   "accentSoft": "rgba(154, 98, 8, 0.1)",
   "accentLine": "rgba(154, 98, 8, 0.42)",
   "accent2": "#0d6d92",
+  "accent2Soft": "rgba(13, 109, 146, 0.1)",
   "accent2Line": "rgba(13, 109, 146, 0.42)"
 },
   alarm: {
@@ -43,7 +51,7 @@ export const color = {
  * and the Tailwind theme (e.g. "accent-2-line"). The single source other
  * tooling (cn's tailwind-merge config, lint rules) should read from, rather
  * than re-listing token names by hand. */
-export const colorTokenNames = ["bg","fg","dim","mute","faint","border","border-2","panel","accent","accent-soft","accent-line","accent-2","accent-2-line","alarm","alarm-soft","alarm-line","alarm-ink"] as const;
+export const colorTokenNames = ["bg","fg","dim","mute","faint","border","border-2","panel","panel-2","bracket","glow","accent","accent-soft","accent-line","accent-2","accent-2-soft","accent-2-line","alarm","alarm-soft","alarm-line","alarm-ink"] as const;
 
 export const space = {
   "4": "4px",
@@ -53,10 +61,13 @@ export const space = {
   "16": "16px",
   "18": "18px",
   "22": "22px",
-  "32": "32px"
+  "32": "32px",
+  "44": "44px"
 } as const;
 
 export const radius = "2px" as const;
+
+export const radiusChip = "20px" as const;
 
 export const font = {
   "heading": "'Space Grotesk', sans-serif",
@@ -69,6 +80,9 @@ export const fontWeight = {
 } as const;
 
 export const text = {
+  "display": "48px",
+  "title": "28px",
+  "metric": "28px",
   "small": "13px",
   "label": "12px",
   "calloutTitle": "14.5px",
@@ -79,6 +93,9 @@ export const text = {
 } as const;
 
 export const leading = {
+  "display": 1.08,
+  "title": 1.15,
+  "metric": 1.1,
   "small": 1.5,
   "label": 1.4,
   "calloutTitle": 1.2,
@@ -90,9 +107,54 @@ export const leading = {
 
 export const tracking = {
   "tight6": "0.06em",
+  "tight8": "0.08em",
+  "tight10": "0.1em",
+  "tight12": "0.12em",
+  "tight14": "0.14em",
+  "tight16": "0.16em",
+  "tight20": "0.2em",
+  "tightNeg1": "-0.01em",
   "tightNeg2": "-0.02em"
 } as const;
 
 export const icon = {
   "callout": "17px"
+} as const;
+
+export const easing = {
+  "standard": "cubic-bezier(.4, 0, .2, 1)",
+  "symmetric": "cubic-bezier(.45, 0, .55, 1)",
+  "draw": "cubic-bezier(.35, 0, .2, 1)"
+} as const;
+
+export const duration = {
+  "instant": "140ms",
+  "control": "180ms",
+  "panel": "260ms",
+  "reveal": "500ms"
+} as const;
+
+export const shadow = {
+  "bubble": "0 12px 30px rgba(0, 0, 0, 0.5)",
+  "menu": "0 22px 60px rgba(0, 0, 0, 0.45)",
+  "overlay": "0 30px 90px rgba(0, 0, 0, 0.5)",
+  "overlayHorizontal": "-30px 0 90px rgba(0, 0, 0, 0.5)",
+  "hoverLift": "0 3px 10px -4px rgba(0, 0, 0, 0.45)",
+  "hoverLiftAccent": "0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent)",
+  "press": "inset 0 2px 4px rgba(0, 0, 0, 0.35)",
+  "pressPrimary": "inset 0 2px 5px rgba(0, 0, 0, 0.6)"
+} as const;
+
+export const zIndex = {
+  "chrome": 4,
+  "railStub": 36,
+  "commandBar": 60,
+  "overlay": 80,
+  "toast": 90
+} as const;
+
+export const breakpoint = {
+  "tablet": "640px",
+  "desktop": "1024px",
+  "wide": "1440px"
 } as const;
