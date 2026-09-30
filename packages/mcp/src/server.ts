@@ -1,7 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { getComponentDetail, getTokens, listEntries, searchGuidelines, suggestAlternative } from "./tools";
+import {
+  getComponentDetail,
+  getFoundationDetail,
+  getTokens,
+  listEntries,
+  searchGuidelines,
+  suggestAlternative,
+} from "./tools";
 
 function ok(data: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
@@ -13,9 +20,10 @@ function failed(error: unknown): CallToolResult {
 }
 
 /**
- * docs/prd.md §9 (v0 tool set — `get_foundation`/`get_pattern` are listed
- * there too, but join once foundation/pattern content entries exist).
- * Stdio transport, reads `packages/content` through `@lairy/content`.
+ * docs/prd.md §9 (v0 tool set — `get_pattern` is listed there too, but
+ * joins once pattern content entries exist, the same way `get_foundation`
+ * did in LDS-014). Stdio transport, reads `packages/content` through
+ * `@lairy/content`.
  */
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -52,6 +60,25 @@ export function createServer(): McpServer {
     ({ id }) => {
       try {
         return ok(getComponentDetail({ id }));
+      } catch (error) {
+        return failed(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "get_foundation",
+    {
+      title: "Get a foundation entry",
+      description:
+        "The full content entry for one foundation: opening description, usage (reach for / use something else), principles, scales (named groups of tokens, each with its own usage prose), accessibility notes, and relationships (resolved to the target's name).",
+      inputSchema: {
+        id: z.string().min(1).describe('The foundation\'s id, e.g. "color".'),
+      },
+    },
+    ({ id }) => {
+      try {
+        return ok(getFoundationDetail({ id }));
       } catch (error) {
         return failed(error);
       }

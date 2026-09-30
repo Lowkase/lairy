@@ -1,10 +1,15 @@
 import type { ComponentEntry } from "./schema/component";
+import type { FoundationEntry } from "./schema/foundation";
 import type { TokenEntry } from "./schema/token";
 import { badge } from "./entries/components/badge";
 import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
 import { modal } from "./entries/components/modal";
 import { toast } from "./entries/components/toast";
+import { accessibility } from "./entries/foundations/accessibility";
+import { color as colorFoundation } from "./entries/foundations/color";
+import { elevation } from "./entries/foundations/elevation";
+import { typography } from "./entries/foundations/typography";
 import { alarmTokens } from "./entries/tokens/alarm";
 import { breakpointTokens } from "./entries/tokens/breakpoint";
 import { colorTokens } from "./entries/tokens/color";
@@ -16,10 +21,12 @@ import { spacingTokens } from "./entries/tokens/spacing";
 import { typographyTokens } from "./entries/tokens/typography";
 import { extractProps, type ExtractedProp } from "./props";
 
-/** Every populated entry. Foundation/Pattern entries join this list as
- * their tickets land (docs/prd.md §7) — the schemas already exist
- * (./schema/foundation, ./schema/pattern). */
+/** Every populated entry. Pattern entries join this list as their tickets
+ * land (docs/prd.md §7) — the schema already exists (./schema/pattern). */
 const components: ComponentEntry[] = [callout, toast, modal, badge, card];
+
+/** Every Foundation entry (docs/prd.md §7.2 — LDS-014). */
+const foundations: FoundationEntry[] = [colorFoundation, typography, elevation, accessibility];
 
 /** Every token entry (docs/prd.md §7.2, §9 — LDS-013). */
 const tokens: TokenEntry[] = [
@@ -119,6 +126,46 @@ export function getComponent(id: string): ComponentEntry | undefined {
 export function getComponentProps(id: string): ComponentProp[] | undefined {
   const entry = componentsById.get(id);
   return entry && buildComponentProps(entry);
+}
+
+/** Exported for its own tests — duplicate ids and dangling relationship
+ * targets, run against synthetic entries rather than only the real
+ * catalogue below. Foundations relate only to other foundations so far
+ * (docs/prd.md §9's `get_foundation`, LDS-014), so this checks relationship
+ * targets against the foundations list alone, the same way
+ * `validateTokenCatalogue` below checks only within its own list. */
+export function validateFoundationCatalogue(entries: FoundationEntry[]): Map<string, FoundationEntry> {
+  const byId = new Map<string, FoundationEntry>();
+  for (const entry of entries) {
+    const { id } = entry.meta;
+    if (byId.has(id)) {
+      throw new Error(`@lairy/content: duplicate entry id "${id}" (docs/prd.md §7, ADR-0001).`);
+    }
+    byId.set(id, entry);
+  }
+
+  for (const entry of entries) {
+    for (const relationship of entry.relationships) {
+      if (!byId.has(relationship.target)) {
+        throw new Error(
+          `@lairy/content: "${entry.meta.id}" has a relationship targeting unknown entry "${relationship.target}" (docs/build-guide.md §3: create a draft stub for any target with no entry yet).`,
+        );
+      }
+    }
+  }
+
+  return byId;
+}
+
+/** Validated at import time, same as `componentsById` above. */
+export const foundationsById = validateFoundationCatalogue(foundations);
+
+export function listFoundations(): FoundationEntry[] {
+  return [...foundationsById.values()];
+}
+
+export function getFoundation(id: string): FoundationEntry | undefined {
+  return foundationsById.get(id);
 }
 
 /** Exported for its own tests — a duplicate token name, run against
