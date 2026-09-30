@@ -76,6 +76,7 @@ pnpm --filter mcp run inspect      # MCP inspector against the local server
 
 # reference/ is its own standalone tool, not a workspace package — run from inside it
 cd reference && pnpm install && pnpm run capture:baseline   # manual only, see reference/README.md
+cd reference && pnpm install && pnpm run harvest:tokens      # regenerates reference/token-harvest.md
 ```
 
 Update this list when scripts change.
