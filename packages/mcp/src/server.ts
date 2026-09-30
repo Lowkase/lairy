@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { getComponentDetail, listEntries, searchGuidelines, suggestAlternative } from "./tools";
+import { getComponentDetail, getTokens, listEntries, searchGuidelines, suggestAlternative } from "./tools";
 
 function ok(data: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
@@ -13,10 +13,9 @@ function failed(error: unknown): CallToolResult {
 }
 
 /**
- * docs/prd.md §9 (v0 tool set — `get_foundation`/`get_pattern`/`get_tokens`
- * are listed there too, but join once foundation/pattern content entries
- * exist; #8 scopes this server to the four tools its acceptance criteria
- * name). Stdio transport, reads `packages/content` through `@lairy/content`.
+ * docs/prd.md §9 (v0 tool set — `get_foundation`/`get_pattern` are listed
+ * there too, but join once foundation/pattern content entries exist).
+ * Stdio transport, reads `packages/content` through `@lairy/content`.
  */
 export function createServer(): McpServer {
   const server = new McpServer(
@@ -93,6 +92,29 @@ export function createServer(): McpServer {
       },
     },
     ({ query }) => ok(searchGuidelines({ query })),
+  );
+
+  server.registerTool(
+    "get_tokens",
+    {
+      title: "Get tokens",
+      description:
+        "Every token in the given group (colour, typography, spacing, radius, motion, elevation, icon, breakpoint), or every token when no group is given, with its value(s), use for, never for and rationale. A themeable colour token's value is an object with dark and light values unless a theme is requested, in which case it is resolved to a single value; a non-themeable token's value is always a single value.",
+      inputSchema: {
+        group: z
+          .string()
+          .min(1)
+          .optional()
+          .describe(
+            'Restrict to one token group, matched case-insensitively (e.g. "Accent", "Spacing", "Typography — tracking"). Omit to list every token.',
+          ),
+        theme: z
+          .enum(["dark", "light"])
+          .optional()
+          .describe("Resolve a themeable token's value down to this theme. Omit to get both."),
+      },
+    },
+    ({ group, theme }) => ok(getTokens({ group, theme })),
   );
 
   return server;

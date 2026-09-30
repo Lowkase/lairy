@@ -1,15 +1,38 @@
 import type { ComponentEntry } from "./schema/component";
+import type { TokenEntry } from "./schema/token";
 import { badge } from "./entries/components/badge";
 import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
 import { modal } from "./entries/components/modal";
 import { toast } from "./entries/components/toast";
+import { alarmTokens } from "./entries/tokens/alarm";
+import { breakpointTokens } from "./entries/tokens/breakpoint";
+import { colorTokens } from "./entries/tokens/color";
+import { elevationTokens } from "./entries/tokens/elevation";
+import { iconTokens } from "./entries/tokens/icon";
+import { motionTokens } from "./entries/tokens/motion";
+import { radiusTokens } from "./entries/tokens/radius";
+import { spacingTokens } from "./entries/tokens/spacing";
+import { typographyTokens } from "./entries/tokens/typography";
 import { extractProps, type ExtractedProp } from "./props";
 
-/** Every populated entry. Token/Foundation/Pattern entries join this list as
+/** Every populated entry. Foundation/Pattern entries join this list as
  * their tickets land (docs/prd.md §7) — the schemas already exist
- * (./schema/token, ./schema/foundation, ./schema/pattern). */
+ * (./schema/foundation, ./schema/pattern). */
 const components: ComponentEntry[] = [callout, toast, modal, badge, card];
+
+/** Every token entry (docs/prd.md §7.2, §9 — LDS-013). */
+const tokens: TokenEntry[] = [
+  ...colorTokens,
+  ...alarmTokens,
+  ...typographyTokens,
+  ...spacingTokens,
+  ...radiusTokens,
+  ...iconTokens,
+  ...motionTokens,
+  ...elevationTokens,
+  ...breakpointTokens,
+];
 
 /** One extracted prop, with its content-authored guidance note merged in
  * by name (docs/prd.md §7.2 — "annotations on extracted props only, never
@@ -96,4 +119,28 @@ export function getComponent(id: string): ComponentEntry | undefined {
 export function getComponentProps(id: string): ComponentProp[] | undefined {
   const entry = componentsById.get(id);
   return entry && buildComponentProps(entry);
+}
+
+/** Exported for its own tests — a duplicate token name, run against
+ * synthetic entries rather than only the real catalogue below. */
+export function validateTokenCatalogue(entries: TokenEntry[]): Map<string, TokenEntry> {
+  const byName = new Map<string, TokenEntry>();
+  for (const entry of entries) {
+    if (byName.has(entry.name)) {
+      throw new Error(`@lairy/content: duplicate token name "${entry.name}" (docs/prd.md §7).`);
+    }
+    byName.set(entry.name, entry);
+  }
+  return byName;
+}
+
+/** Validated at import time, same as `componentsById` above. */
+export const tokensByName = validateTokenCatalogue(tokens);
+
+export function listTokens(): TokenEntry[] {
+  return [...tokensByName.values()];
+}
+
+export function getToken(name: string): TokenEntry | undefined {
+  return tokensByName.get(name);
 }

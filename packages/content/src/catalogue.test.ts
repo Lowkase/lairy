@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { ComponentEntrySchema } from "./schema/component";
-import { getComponent, getComponentProps, listComponents, validateCatalogue } from "./catalogue";
+import { TokenEntrySchema } from "./schema/token";
+import {
+  getComponent,
+  getComponentProps,
+  getToken,
+  listComponents,
+  listTokens,
+  validateCatalogue,
+  validateTokenCatalogue,
+} from "./catalogue";
 
 const validEntry = {
   meta: {
@@ -183,5 +192,67 @@ describe("props extraction (LDS-009)", () => {
 
   it("getComponentProps is undefined for a draft component with no ui implementation", () => {
     expect(getComponentProps("toast")).toBeUndefined();
+  });
+});
+
+describe("token catalogue (LDS-013)", () => {
+  const validToken = {
+    name: "--sample",
+    group: "Sample",
+    value: "1px",
+    themeable: false,
+    useFor: ["A sample entry for catalogue tests."],
+    rationale: "Not a colour, so it has no theme axis to vary.",
+  };
+
+  it("throws on a duplicate token name", () => {
+    const entries = [TokenEntrySchema.parse(validToken), TokenEntrySchema.parse(validToken)];
+    expect(() => validateTokenCatalogue(entries)).toThrow(/duplicate token name/);
+  });
+
+  it("passes when every token name is unique", () => {
+    const other = TokenEntrySchema.parse({ ...validToken, name: "--sample-2" });
+    expect(() => validateTokenCatalogue([TokenEntrySchema.parse(validToken), other])).not.toThrow();
+  });
+
+  it("the real token catalogue has no duplicate names", () => {
+    const names = listTokens().map((t) => t.name);
+    expect(new Set(names).size).toBe(names.length);
+  });
+
+  it("the real token catalogue covers every token exported by @lairy/tokens", () => {
+    // 17 colour + 4 alarm + 33 typography (2 family + 2 weight + 10 size +
+    // 10 leading + 9 tracking) + 9 spacing + 2 radius + 1 icon + 7 motion
+    // (3 easing + 4 duration) + 13 elevation (8 shadow + 5 z-index) +
+    // 3 breakpoint = 89 (docs/prd.md §7.2, #15 acceptance criterion 1).
+    expect(listTokens()).toHaveLength(89);
+  });
+
+  it("getToken resolves a real colour token by its CSS variable name", () => {
+    const accent = getToken("--accent");
+    expect(accent?.group).toBe("Accent");
+    expect(accent?.themeable).toBe(true);
+    expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#9a6208" });
+  });
+
+  it("every non-themeable token carries a rationale", () => {
+    for (const token of listTokens()) {
+      if (!token.themeable) {
+        expect(token.rationale, `${token.name} is non-themeable and needs a rationale`).toBeTruthy();
+      }
+    }
+  });
+
+  it("Alarm entries carry the prototype's rationale verbatim", () => {
+    const alarmTokens = listTokens().filter((t) => t.group === "Alarm");
+    expect(alarmTokens).toHaveLength(4);
+    for (const token of alarmTokens) {
+      expect(token.rationale).toContain(
+        "Failure, and only failure. It is written literally rather than tokenised on purpose",
+      );
+      expect(token.rationale).toContain(
+        "a theme should never be able to redefine what broken looks like, and nothing should be able to borrow the colour by accident.",
+      );
+    }
   });
 });
