@@ -2,6 +2,192 @@
 
 > Lairy is a design system with the visual language of an operator console: dark-first, monospaced, amber-accented, with a locked 2px corner.
 
+# Tokens
+
+## Surface
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--bg` | dark `#07090b` · light `#f3f4f5` | Page background. | — | — |
+| `--glow` | dark `rgba(150, 165, 175, 0.10)` · light `rgba(120, 135, 145, 0.12)` | The ambient radial-gradient tint behind the workspace header. | — | Not part of the prototype's own dsTokens() catalogue table — added for the workspace header's ambient background effect, which the documented Color foundation page predates. Themeable because, like every other Surface tint, it is expressed as a low-opacity value over the ground and must invert with it (colorContent's alpha-over-ground rule). |
+| `--panel` | dark `rgba(255, 255, 255, 0.02)` · light `rgba(0, 0, 0, 0.02)` | Card fill. | — | — |
+| `--panel-2` | dark `rgba(255, 255, 255, 0.045)` · light `rgba(0, 0, 0, 0.05)` | Hover / active fill. | A second, alternate card style — it is reserved for the state a pointer or a selection put there, a response rather than a style choice (colorDocs "Surface" role). | — |
+
+## Line
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--border` | dark `rgba(255, 255, 255, 0.16)` · light `rgba(0, 0, 0, 0.2)` | Hairline, dividers. | — | — |
+| `--border-2` | dark `rgba(255, 255, 255, 0.28)` · light `rgba(0, 0, 0, 0.32)` | Emphasis border. | — | — |
+| `--bracket` | dark `rgba(255, 255, 255, 0.45)` · light `rgba(0, 0, 0, 0.45)` | HUD corner brackets. | An ordinary divider or emphasis edge — it is the HUD corner mark only (colorDocs "Line" role); use --border or --border-2 instead. | — |
+
+## Text
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--dim` | dark `#c6ced6` · light `#333c45` | Secondary text. | — | — |
+| `--faint` | dark `#7c8791` · light `#767f88` | Tertiary only — never body. | Body text or a sentence — it is the only text rank that does not clear AA for body copy in either theme, legal only on counters, timestamps and single-word meta (colorA11y "Faint is a caption colour"). A sentence set in it is a bug. | — |
+| `--fg` | dark `#f2f5f8` · light `#0e1216` | Primary text, icons. | — | — |
+| `--mute` | dark `#9aa5b0` · light `#586269` | Labels, timestamps. | — | — |
+
+## Accent
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--accent` | dark `#f7bd63` · light `#9a6208` | Live, alert, primary action. | A second, simultaneous focus in the same view — if two elements are amber, neither reads as the answer; demote the weaker one instead (colorContent). | — |
+| `--accent-line` | dark `rgba(247, 189, 99, 0.5)` · light `rgba(154, 98, 8, 0.42)` | Accent border. | — | — |
+| `--accent-soft` | dark `rgba(247, 189, 99, 0.16)` · light `rgba(154, 98, 8, 0.1)` | Accent fill. | — | — |
+
+## Accent — secondary (Ice)
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--accent-2` | dark `#7fd8ff` · light `#0d6d92` | Secondary signal — data, links in charts, informational state. | Something clickable that amber is not already leading — Ice refers, it never leads an action on its own (colorDocs "Ice" role). | — |
+| `--accent-2-line` | dark `rgba(127, 216, 255, 0.5)` · light `rgba(13, 109, 146, 0.42)` | Secondary border. | — | — |
+| `--accent-2-soft` | dark `rgba(127, 216, 255, 0.16)` · light `rgba(13, 109, 146, 0.1)` | Secondary fill. | — | — |
+
+## Alarm
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--alarm` | #ff8f6b | Failure, and only failure. | Anything that is not a failure state — no theme may redefine what "broken" looks like, and nothing may borrow the colour by accident. | Failure, and only failure. It is written literally rather than tokenised on purpose: a theme should never be able to redefine what broken looks like, and nothing should be able to borrow the colour by accident. |
+| `--alarm-ink` | #07090b | Text and icon colour for content set on a solid --alarm fill — the primary action button on a Warning or Error tone. | Anything not sitting on a solid --alarm fill — for a failure-tinted border or wash, use --alarm-line or --alarm-soft against the ordinary text ranks instead. | Failure, and only failure. It is written literally rather than tokenised on purpose: a theme should never be able to redefine what broken looks like, and nothing should be able to borrow the colour by accident. Not itself in the prototype: renderCallout() used var(--bg) for text on a solid alarm fill, which fails AA in the light theme (2.03:1) because --bg is themeable but --alarm is not. --alarm-ink is proposed to close that gap and, for the same reason as --alarm itself, is non-themeable — a themeable ink colour paired with a non-themeable fill would drift out of contrast in exactly one theme. |
+| `--alarm-line` | rgba(255, 143, 107, 0.4) | Failure-state border, reduced opacity — e.g. Callout and Toast's Warning/Error border. | — | Failure, and only failure. It is written literally rather than tokenised on purpose: a theme should never be able to redefine what broken looks like, and nothing should be able to borrow the colour by accident. |
+| `--alarm-soft` | rgba(255, 143, 107, 0.1) | Failure-state fill, low opacity — e.g. Callout's Error tone background. | — | Failure, and only failure. It is written literally rather than tokenised on purpose: a theme should never be able to redefine what broken looks like, and nothing should be able to borrow the colour by accident. |
+
+## Typography — family
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--font-body` | 'IBM Plex Mono', monospace | Body copy, the system default.; Body, Small, Label, Micro and the document default (typoTokens). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--font-heading` | 'Space Grotesk', sans-serif | Headings and titles.; Display, Title and Metric — weight 600 only (typoTokens). | Body copy, labels or anything set at Section size or smaller. | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+
+## Typography — weight
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--weight-regular` | 400 | Every IBM Plex Mono style — Body, Small, Label, Micro. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--weight-semibold` | 600 | Every Space Grotesk style — Display, Title, Metric, Section — and nothing else. | A one-off emphasis inside body copy — "weight is fixed": the scale changes size and tracking to make a point, it never reaches for a weight (typoScaleNotes). | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+
+## Typography — size
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--text-body` | 14px | Rows, paragraphs (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-callout-title` | 14.5px | Callout's title text. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). Harvested from the prototype's own renderCallout() rather than the documented six-step scale — it lands between Small (13) and Section (17), where the scale has no step. Reviewed and kept as a component-specific size in the LDS-012 token decisions pass. |
+| `--text-display` | 48px | Page hero only (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-doc-title` | 34px | Docs page title (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-label` | 12px | Uppercase panel headers, chips (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-metric` | 28px | Numbers in stat cards (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-micro` | 11px | Uppercase codes, badges, table headers (docs/prd.md §8.2). | Anything smaller — this is the hard floor. Nothing in Lairy is set below Micro (AGENTS.md rule 6, docs/prd.md §8.2). | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-section` | 17px | Section titles (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-small` | 13px | Module titles, hints, buttons, card body (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--text-title` | 28px | Workspace name (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+
+## Typography — leading
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--leading-body` | 1.6 | Paired with --text-body for rows and paragraphs. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-callout-title` | 1.2 | Paired with --text-callout-title for Callout's title. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). Not specified in the prototype's inline style for renderCallout() — a browser's normal line-height for a single-line 600-weight label is roughly 1.2. Harvested as a proposed value in the LDS-012 token decisions pass rather than left unset. |
+| `--leading-display` | 1.08 | Paired with --text-display for the page hero style. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-doc-title` | 1.1 | Paired with --text-doc-title for the docs page title. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-label` | 1.4 | Paired with --text-label for uppercase panel headers and chips. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-metric` | 1.1 | Paired with --text-metric for stat-card numerals. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-micro` | 1.4 | Paired with --text-micro for uppercase codes, badges and table headers. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--leading-section` | 1.3 | Paired with --text-section for section titles. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). docs/prd.md §8.2 leaves Section's leading as "per prototype" with no fixed figure: the prototype's section-title spans set no line-height at all (browser default), while its one wrapped use — the docs page's opening sentence — used 1.55. 1.3 is a harvested middle value serving both, flagged in the LDS-012 token decisions pass. |
+| `--leading-small` | 1.5 | Paired with --text-small for module titles, hints, buttons and card body. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). The Typography foundation's own documented value. The prototype's Callout body used 1.55; documented foundations win over prototype markup where they disagree (ADR-0005), so 1.5 is used here and the difference is flagged rather than silently reconciled. |
+| `--leading-title` | 1.15 | Paired with --text-title for the workspace name. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+
+## Typography — tracking
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--tracking-tight-10` | 0.1em | One of the harvested tracking steps consolidated across components (reference/token-harvest.md §2) — not tied to one of the six documented type styles. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-12` | 0.12em | One of the harvested tracking steps consolidated across components (reference/token-harvest.md §2) — not tied to one of the six documented type styles. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-14` | 0.14em | One of the harvested tracking steps consolidated across components (reference/token-harvest.md §2) — not tied to one of the six documented type styles. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-16` | 0.16em | Label's uppercase panel-header tracking (docs/prd.md §8.2 type table). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-20` | 0.2em | Micro's uppercase tracking (docs/prd.md §8.2 type table). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-6` | 0.06em | Callout's action-button label. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-8` | 0.08em | One of the harvested tracking steps consolidated across components (reference/token-harvest.md §2) — not tied to one of the six documented type styles. | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-neg-1` | -0.01em | Metric's tracking (docs/prd.md §8.2 type table). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+| `--tracking-tight-neg-2` | -0.02em | Negative display tracking, shared by Display, Doc title and Title (docs/prd.md §8.2). | — | A typographic value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.2). |
+
+## Spacing
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--space-12` | 12px | Rows inside a group, grid gaps in a legend or a small card set. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-16` | 16px | Vertical inset of a panel, and the gap between unrelated blocks inside one card. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-18` | 18px | Horizontal inset of a panel. Paired with 16 vertical so text clears the corner without looking centred. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-22` | 22px | Inset of a large tile, where the content is a heading rather than a row. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-32` | 32px | Between numbered sections of a page, and between major regions of a workspace. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-4` | 4px | A label and the value it names. The smallest distance in the system, and the only one that still reads as one thing. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-44` | 44px | Page-level breathing room: under a page header, around a hero, at the outer gutter. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). docs/prd.md §8.3's prose names eight steps (4–32); the prototype's own spacingDocs() ramp and reference/harvest-tokens.mjs's SPACING_RAMP already treat 44 as a ninth step, with real padding/margin occurrences mapped onto it, so it is included here rather than left as an off-ramp value (LDS-012). |
+| `--space-6` | 6px | Icon to its text inside a control, and the gap between stacked lines of a caption. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+| `--space-8` | 8px | Sibling controls in a row — buttons, chips, a field and its adornment. | — | A spacing value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.3). |
+
+## Radius
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--radius` | 2px | Every surface — the .ds lock. | Nesting inside another rounded container — radii do not nest, so rows, dividers and headers inside a rounded panel stay square and run edge to edge (radiusContent).; Scaling with the size of the box — a 900px modal and a 20px badge share the same corner (radiusContent). | A radius value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.4). Enforced in code via .ds's border-radius 2px !important, not by convention. |
+| `--radius-chip` | 20px | Chips only. | A size — it is a shape token, not part of the radius scale, and stays 20px at every chip height so the ends always read as fully round (radiusContent). | A radius value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.4). |
+
+## Icon
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--icon-callout` | 17px | Callout's icon width and height (17×17), harvested from the prototype's calloutIcon(). | — | A dimension, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary. It is also a component-specific value rather than a documented scale step: no Icons foundation size scale exists yet (LDS-017), so this token is an exception pending that ticket rather than the first entry of one. |
+
+## Motion — easing
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--easing-draw` | cubic-bezier(.35, 0, .2, 1) | The blueprint line-draw curve, used only there. | Anything other than the blueprint line-draw. | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+| `--easing-standard` | cubic-bezier(.4, 0, .2, 1) | Panel and Reveal's curve — anything that changes shape or enters the page. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+| `--easing-symmetric` | cubic-bezier(.45, 0, .55, 1) | The sweepline loop's curve. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+
+## Motion — duration
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--duration-control` | 180ms | Buttons and inputs, where several properties change together: fill, border, transform and shadow. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+| `--duration-instant` | 140ms | Hover fills, chip toggles, row highlights, the fade on a revealed action — short enough to feel like a property of the pointer rather than an animation. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+| `--duration-panel` | 260ms | Anything that changes the shape of the page: the dock collapsing, the drawer taking width, the header sliding to follow. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). |
+| `--duration-reveal` | 500ms | Cards and panels arriving on first paint, spread 360–600ms with no delay on anything. | — | A motion value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.5). The prototype varies this 450–600ms per group weight; 500ms is the documented base step (Motion page motDocs). |
+
+## Elevation — shadow
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--shadow-bubble` | 0 12px 30px rgba(0, 0, 0, 0.5) | Tooltip only. | Any other overlay — Bubble is reserved for Tooltip (elevTokens). | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-hover-lift` | 0 3px 10px -4px rgba(0, 0, 0, 0.45) | Hover lift for secondary and ghost controls. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-hover-lift-accent` | 0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent) | Hover lift for the primary button — the amber-tinted variant. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). References the themed --accent token via color-mix so the tint follows theme, even though the shadow token itself is not per-theme. |
+| `--shadow-menu` | 0 22px 60px rgba(0, 0, 0, 0.45) | Select, popover, overflow menu. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-overlay` | 0 30px 90px rgba(0, 0, 0, 0.5) | Modal, command bar. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-overlay-horizontal` | -30px 0 90px rgba(0, 0, 0, 0.5) | Drawer, entering from the edge it lives on. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-press` | inset 0 2px 4px rgba(0, 0, 0, 0.35) | Press state for secondary and ghost controls. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--shadow-press-primary` | inset 0 2px 5px rgba(0, 0, 0, 0.6) | Press state for the primary button — a deeper press than the neutral pair. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+
+## Elevation — z-index
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--z-chrome` | 4 | The dock, the subnav rail and the top status bar — flat, and first. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--z-command-bar` | 60 | Above the page and its chrome, below anything that could interrupt it. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--z-overlay` | 80 | Modal and drawer — the blocking layer. Both live at the same stop because two are never open at once. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--z-rail-stub` | 36 | The collapsed-rail handle — above chrome only because it sits on the seam between two pieces of it. | — | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+| `--z-toast` | 90 | The top of the ladder, so a confirmation is legible over a modal that caused it. | A scrim — Toast is the one stop that never takes one, because a toast interrupts nothing (elevZ). | An elevation value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.7). |
+
+## Breakpoint
+
+| Token | Value | Use for | Never for | Rationale |
+|---|---|---|---|---|
+| `--breakpoint-desktop` | 1024px | The desktop range starts here (1024–1439px) — the prototype's own minimum width. | — | A layout value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.6). |
+| `--breakpoint-tablet` | 640px | The tablet range starts here (640–1023px); below it is phone, the unprefixed default. | — | A layout value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.6). |
+| `--breakpoint-wide` | 1440px | The wide range starts here (≥1440px). | — | A layout value, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary (docs/prd.md §8.6). |
+
 # Components
 
 ## Callout

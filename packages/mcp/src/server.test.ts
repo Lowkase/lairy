@@ -35,11 +35,12 @@ function json<T>(result: { content: Array<{ type: string; text?: string }> }): T
 }
 
 describe("MCP server (seam 2: tool surface)", () => {
-  it("exposes list_entries, get_component, suggest_alternative and search_guidelines (docs/prd.md §9)", async () => {
+  it("exposes list_entries, get_component, get_tokens, suggest_alternative and search_guidelines (docs/prd.md §9)", async () => {
     const client = await connect();
     const { tools } = await client.listTools();
     expect(tools.map((tool) => tool.name).sort()).toEqual([
       "get_component",
+      "get_tokens",
       "list_entries",
       "search_guidelines",
       "suggest_alternative",
@@ -126,6 +127,59 @@ describe("MCP server (seam 2: tool surface)", () => {
         json<Array<{ id: string; matches: Array<{ field: string; text: string }> }>>(result);
       expect(matches[0]?.id).toBe("callout");
       expect(matches[0]?.matches.some((m) => m.text.includes("Export failed"))).toBe(true);
+    });
+  });
+
+  describe("get_tokens", () => {
+    it("filters by group, case-insensitively", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "get_tokens", arguments: { group: "accent" } });
+      const tokens = json<Array<{ name: string; group: string }>>(result);
+      expect(tokens.map((t) => t.name).sort()).toEqual(["--accent", "--accent-line", "--accent-soft"]);
+      expect(tokens.every((t) => t.group === "Accent")).toBe(true);
+    });
+
+    it("returns every token, with use for, never for and rationale, when no group is given", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "get_tokens", arguments: {} });
+      const tokens = json<
+        Array<{ name: string; useFor: string[]; neverFor: string[]; rationale?: string }>
+      >(result);
+      expect(tokens).toHaveLength(89);
+      const faint = tokens.find((t) => t.name === "--faint");
+      expect(faint?.useFor).toContain("Tertiary only — never body.");
+      expect(faint?.neverFor.some((n) => n.includes("Body text"))).toBe(true);
+    });
+
+    it("keeps a themeable token's value as dark/light when no theme is given", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "get_tokens", arguments: { group: "Accent" } });
+      const tokens = json<Array<{ name: string; value: { dark: string; light: string } }>>(result);
+      const accent = tokens.find((t) => t.name === "--accent");
+      expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#9a6208" });
+    });
+
+    it("resolves a themeable token's value to the requested theme", async () => {
+      const client = await connect();
+      const result = await client.callTool({
+        name: "get_tokens",
+        arguments: { group: "Accent", theme: "light" },
+      });
+      const tokens = json<Array<{ name: string; value: string }>>(result);
+      const accent = tokens.find((t) => t.name === "--accent");
+      expect(accent?.value).toBe("#9a6208");
+    });
+
+    it("leaves a non-themeable token's single value alone even when a theme is requested", async () => {
+      const client = await connect();
+      const result = await client.callTool({
+        name: "get_tokens",
+        arguments: { group: "Alarm", theme: "dark" },
+      });
+      const tokens = json<Array<{ name: string; value: string; rationale: string }>>(result);
+      const alarm = tokens.find((t) => t.name === "--alarm");
+      expect(alarm?.value).toBe("#ff8f6b");
+      expect(alarm?.rationale).toContain("a theme should never be able to redefine what broken looks like");
     });
   });
 

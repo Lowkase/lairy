@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { ComponentEntry, ComponentProp, Relationship, UseInstead } from "@lairy/content";
-import { getComponent, getComponentProps, listComponents } from "@lairy/content";
+import type { ComponentEntry, ComponentProp, Relationship, TokenEntry, UseInstead } from "@lairy/content";
+import { getComponent, getComponentProps, listComponents, listTokens } from "@lairy/content";
 import { REPO_ROOT } from "./repo-root";
 
 export class EntryNotFoundError extends Error {
@@ -325,4 +325,32 @@ export function searchGuidelines(input: { query: string }): GuidelineMatch[] {
   }
 
   return results.sort((a, b) => b.score - a.score);
+}
+
+export type Theme = "dark" | "light";
+
+/** A token entry with its value resolved to a single theme, when `theme` was
+ * requested. A themeable token keeps its `{ dark, light }` shape otherwise;
+ * a non-themeable token's plain-string value is unaffected either way. */
+export interface ResolvedTokenEntry extends Omit<TokenEntry, "value"> {
+  value: TokenEntry["value"] | string;
+}
+
+/**
+ * docs/prd.md §9 `get_tokens({ group?, theme? })`: every token with its
+ * value(s), use for, never for and rationale (docs/prd.md §7.2). `group` is
+ * an exact, case-insensitive match against an entry's `group` field (e.g.
+ * "Accent", "Spacing", "Typography — tracking"). `theme` projects a
+ * themeable token's `{ dark, light }` value down to the one requested,
+ * leaving a non-themeable token's single value as-is.
+ */
+export function getTokens(input: { group?: string; theme?: Theme } = {}): ResolvedTokenEntry[] {
+  const { group, theme } = input;
+  return listTokens()
+    .filter((token) => !group || token.group.toLowerCase() === group.toLowerCase())
+    .map((token) => ({
+      ...token,
+      value: theme && typeof token.value === "object" ? token.value[theme] : token.value,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }

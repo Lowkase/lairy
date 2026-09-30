@@ -1,5 +1,5 @@
-import type { ComponentEntry } from "@lairy/content";
-import { listComponents } from "@lairy/content";
+import type { ComponentEntry, TokenEntry } from "@lairy/content";
+import { listComponents, listTokens } from "@lairy/content";
 
 /**
  * docs/prd.md §6.3 `llms.txt` / `llms-full.txt`: flat text renderings of the
@@ -164,6 +164,40 @@ function renderEntry(entry: ComponentEntry): string[] {
   return lines;
 }
 
+function formatTokenValue(value: TokenEntry["value"]): string {
+  return typeof value === "string" ? value : `dark \`${value.dark}\` · light \`${value.light}\``;
+}
+
+/**
+ * docs/prd.md §7.2, §9 (LDS-013): one markdown table per token group,
+ * sorted by name within the group — the same shape `get_tokens` returns,
+ * flattened to text for an agent that only reads `llms-full.txt`.
+ */
+function renderTokenGroups(): string[] {
+  const groups = new Map<string, TokenEntry[]>();
+  for (const token of listTokens()) {
+    const group = groups.get(token.group) ?? [];
+    group.push(token);
+    groups.set(token.group, group);
+  }
+
+  const lines: string[] = ["# Tokens", ""];
+  for (const [group, tokens] of groups) {
+    lines.push(`## ${group}`, "");
+    lines.push("| Token | Value | Use for | Never for | Rationale |");
+    lines.push("|---|---|---|---|---|");
+    for (const token of [...tokens].sort((a, b) => a.name.localeCompare(b.name))) {
+      const value = formatTokenValue(token.value);
+      const useFor = token.useFor.join("; ");
+      const neverFor = token.neverFor.length > 0 ? token.neverFor.join("; ") : "—";
+      const rationale = token.rationale ?? "—";
+      lines.push(`| \`${token.name}\` | ${value} | ${useFor} | ${neverFor} | ${rationale} |`);
+    }
+    lines.push("");
+  }
+  return lines;
+}
+
 /**
  * docs/prd.md §6.3 point 4, `llms-full.txt`: a full rendering of every
  * entry, same content the docs page shows, in reading order.
@@ -173,6 +207,8 @@ export function buildLlmsFull(): string {
   const groups = groupBySection(entries);
 
   const lines: string[] = ["# Lairy — full reference", "", `> ${SYSTEM_SUMMARY}`, ""];
+
+  lines.push(...renderTokenGroups());
 
   for (const [section, sectionEntries] of groups) {
     lines.push(`# ${SECTION_TITLES[section]}`, "");
