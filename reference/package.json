@@ -1,0 +1,12 @@
+{
+  "name": "lairy-reference-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Manual tooling for reference/. Not part of the pnpm workspace — never built, linted or run in CI (AGENTS.md).",
+  "scripts": {
+    "capture:baseline": "node capture-baseline.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}
