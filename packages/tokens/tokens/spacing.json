@@ -39,6 +39,11 @@
       "$type": "dimension",
       "$value": "32px",
       "$description": "Spacing ramp step 32."
+    },
+    "44": {
+      "$type": "dimension",
+      "$value": "44px",
+      "$description": "Spacing ramp step 44. docs/prd.md §8.3's prose names eight steps (4–32), but reference/harvest-tokens.mjs's own SPACING_RAMP set — the authority the token-decisions ticket harvests against — already treats 44 as a ninth step, and the harvest report maps real padding/margin occurrences onto it. Added to close that gap, not a new decision."
     }
   }
 }

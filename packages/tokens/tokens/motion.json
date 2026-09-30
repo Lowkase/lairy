@@ -1,0 +1,41 @@
+{
+  "easing": {
+    "standard": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(.4, 0, .2, 1)",
+      "$description": "Standard. Panel and Reveal's curve — anything that changes shape or enters the page (docs/prd.md §8.5, confirmed against the Motion page's motTokens)."
+    },
+    "symmetric": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(.45, 0, .55, 1)",
+      "$description": "Symmetric. The sweepline loop's curve (docs/prd.md §8.5, confirmed against the Motion page's motTokens)."
+    },
+    "draw": {
+      "$type": "cubicBezier",
+      "$value": "cubic-bezier(.35, 0, .2, 1)",
+      "$description": "Draw. The blueprint line-draw curve, used only there (docs/prd.md §8.5, confirmed against the Motion page's motTokens)."
+    }
+  },
+  "duration": {
+    "instant": {
+      "$type": "duration",
+      "$value": "140ms",
+      "$description": "Instant. Hover fills, chip toggles, row highlights — short enough to feel like a property of the pointer (Motion page motDocs)."
+    },
+    "control": {
+      "$type": "duration",
+      "$value": "180ms",
+      "$description": "Control. Buttons and inputs, where several properties change together (Motion page motDocs)."
+    },
+    "panel": {
+      "$type": "duration",
+      "$value": "260ms",
+      "$description": "Panel. Anything that changes the shape of the page — dock, drawer, layout shift (Motion page motDocs)."
+    },
+    "reveal": {
+      "$type": "duration",
+      "$value": "500ms",
+      "$description": "Reveal. Cards and panels arriving on first paint (Motion page motDocs). The prototype varies this 450–600ms per group weight; 500ms is the documented base step."
+    }
+  }
+}

@@ -18,11 +18,58 @@ export const cn: CnFunction = createCn({
       "border-color": [{ border: colorTokenNames }],
       "ring-color": [{ ring: ["accent-line"] }],
       "ring-offset-color": [{ "ring-offset": ["bg"] }],
-      "font-size": [{ text: ["small", "label", "callout-title"] }],
+      "font-size": [
+        { text: ["display", "title", "metric", "small", "label", "callout-title", "micro", "body", "section", "doc-title"] },
+      ],
       "font-family": [{ font: ["heading", "body"] }],
       "font-weight": [{ font: ["regular", "semibold"] }],
-      tracking: [{ tracking: ["tight-6"] }],
-      rounded: [{ rounded: ["ds"] }],
+      tracking: [
+        {
+          tracking: [
+            "tight-6",
+            "tight-8",
+            "tight-10",
+            "tight-12",
+            "tight-14",
+            "tight-16",
+            "tight-20",
+            "tight-neg-1",
+            "tight-neg-2",
+          ],
+        },
+      ],
+      rounded: [{ rounded: ["ds", "chip"] }],
+      shadow: [
+        {
+          shadow: [
+            "bubble",
+            "menu",
+            "overlay",
+            "overlay-horizontal",
+            "hover-lift",
+            "hover-lift-accent",
+            "press",
+            "press-primary",
+          ],
+        },
+      ],
+      ease: [{ ease: ["standard", "symmetric", "draw"] }],
+      animate: [
+        {
+          animate: [
+            "fade-in",
+            "rise-in",
+            "panel-in",
+            "widget-in",
+            "drawer-in",
+            "draw-in",
+            "pulse",
+            "breathe",
+            "shimmer",
+            "sweepline",
+          ],
+        },
+      ],
     },
   },
 });

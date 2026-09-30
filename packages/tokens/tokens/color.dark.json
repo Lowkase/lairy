@@ -47,6 +47,24 @@
     "$description": "Surface. A fill laid over the ground as a translucent layer — panels, cards, table rows.",
     "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
   },
+  "panel-2": {
+    "$type": "color",
+    "$value": "rgba(255, 255, 255, 0.045)",
+    "$description": "Surface, emphasised over --panel. Hover and active state for panels, rows and secondary/ghost buttons.",
+    "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
+  },
+  "bracket": {
+    "$type": "color",
+    "$value": "rgba(255, 255, 255, 0.45)",
+    "$description": "The corner-bracket mark drawn around visualization frames and telemetry panels — a decorative line, distinct from --border.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "glow": {
+    "$type": "color",
+    "$value": "rgba(150, 165, 175, 0.10)",
+    "$description": "The ambient radial-gradient tint behind the workspace header.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ground" } }
+  },
   "accent": {
     "$type": "color",
     "$value": "#f7bd63",
@@ -69,6 +87,12 @@
     "$type": "color",
     "$value": "#7fd8ff",
     "$description": "Ice. The secondary accent: the colour of referring.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  },
+  "accent-2-soft": {
+    "$type": "color",
+    "$value": "rgba(127, 216, 255, 0.16)",
+    "$description": "Ice fill, low opacity.",
     "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
   },
   "accent-2-line": {

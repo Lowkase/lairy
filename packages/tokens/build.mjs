@@ -19,9 +19,102 @@ const spacing = readTokens("tokens/spacing.json");
 const radiusTokens = readTokens("tokens/radius.json");
 const typography = readTokens("tokens/typography.json");
 const iconTokens = readTokens("tokens/icon.json");
+const motion = readTokens("tokens/motion.json");
+const elevation = readTokens("tokens/elevation.json");
+const breakpoint = readTokens("tokens/breakpoint.json");
 
 const camel = (s) => s.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 const val = (t) => t.$value;
+
+// Named entrances and loops (Motion foundation motEntrances/motTokens). Each
+// keyframe body below is copied verbatim from the prototype's own @keyframes
+// rules (archive/v1/Workspace Shell.dc.html lines 45-58) — nothing here is
+// invented geometry. Duration/easing pairings reuse the named motion tokens
+// wherever a call site in the prototype maps cleanly onto one (grep for
+// `animation:` in the same file); the exceptions carry their own harvested
+// literal and a citation:
+// - rise-in: the one non-chart (toast) call site uses .28s, which doesn't
+//   match any of the four named durations and is flagged as such in
+//   reference/token-harvest.md §5 — harvested literally, not snapped.
+// - draw-in: the source's own draw() helper defaults to `dur || 800`; every
+//   real call site passes its own duration because a line's duration is set
+//   by its length, not a token (Motion page motDocs).
+const ANIMATIONS = [
+  {
+    name: "fade-in",
+    keyframeBody: "0% { opacity: 0; } 100% { opacity: 1; }",
+    duration: val(motion.duration.control),
+    easing: "ease",
+    note: "Scrims and backdrops (fadeIn .18s ease both, every scrim call site).",
+  },
+  {
+    name: "rise-in",
+    keyframeBody: "from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; }",
+    duration: "280ms",
+    easing: val(motion.easing.standard),
+    note: "Toast entrance (riseIn .28s cubic-bezier(.4,0,.2,1) both) — 280ms is off the named scale, harvested as-is.",
+  },
+  {
+    name: "panel-in",
+    keyframeBody: "0% { opacity: 0; transform: translateY(12px) scale(.99); } 100% { opacity: 1; transform: none; }",
+    duration: val(motion.duration.panel),
+    easing: val(motion.easing.standard),
+    note: "Layout-shift entrances — dock, drawer, cards, panels. Overlay call sites (menu 160ms, modal 220ms, command bar 240ms) commonly override this default.",
+  },
+  {
+    name: "widget-in",
+    keyframeBody: "0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: none; }",
+    duration: val(motion.duration.reveal),
+    easing: val(motion.easing.standard),
+    note: "Full-width widgets and hero rows (widgetIn .5s cubic-bezier(.4,0,.2,1) both).",
+  },
+  {
+    name: "drawer-in",
+    keyframeBody: "from { transform: translateX(100%); } to { transform: none; }",
+    duration: val(motion.duration.panel),
+    easing: val(motion.easing.standard),
+    note: "The drawer, entering from its edge (drawerIn .26s cubic-bezier(.4,0,.2,1) both).",
+  },
+  {
+    name: "draw-in",
+    keyframeBody: "to { stroke-dashoffset: 0; }",
+    duration: "800ms",
+    easing: val(motion.easing.draw),
+    note: "Blueprint line-draw. Every call site passes its own duration (draw(delay, dur) => dur || 800) — 800ms is the source's own fallback, not a fixed step.",
+  },
+  {
+    name: "pulse",
+    keyframeBody: "0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.8); }",
+    duration: "2.6s",
+    easing: "ease-in-out",
+    iteration: "infinite",
+    note: "Live-status pulse (Motion page motTokens: '2.6s ease-in-out').",
+  },
+  {
+    name: "breathe",
+    keyframeBody: "0%, 100% { opacity: .45; } 50% { opacity: 1; }",
+    duration: "2s",
+    easing: "ease-in-out",
+    iteration: "infinite",
+    note: "Live-status breathe loop (Motion page motTokens: '2s ease-in-out').",
+  },
+  {
+    name: "shimmer",
+    keyframeBody: "0% { background-position: -220px 0; } 100% { background-position: 220px 0; }",
+    duration: "1.2s",
+    easing: "linear",
+    iteration: "infinite",
+    note: "Loading skeleton shimmer (animation: shimmer 1.2s linear infinite, every call site).",
+  },
+  {
+    name: "sweepline",
+    keyframeBody: "0% { transform: translateX(-110%); } 100% { transform: translateX(320%); }",
+    duration: "1.8s",
+    easing: val(motion.easing.symmetric),
+    iteration: "infinite",
+    note: "The sweeping progress line (Motion page motTokens: '1.8s cubic-bezier(.45,0,.55,1)', every call site).",
+  },
+];
 
 // ---------------------------------------------------------------------------
 // 1. CSS custom properties: dark on :root, light on [data-theme="light"].
@@ -51,6 +144,9 @@ const SHARED = [
   "tokens/radius.json",
   "tokens/typography.json",
   "tokens/icon.json",
+  "tokens/motion.json",
+  "tokens/elevation.json",
+  "tokens/breakpoint.json",
 ];
 
 const darkSd = buildCssTheme({
@@ -96,6 +192,9 @@ for (const ns of [
   "tracking",
   "leading",
   "font-weight",
+  "ease",
+  "animate",
+  "breakpoint",
 ]) {
   themeLines.push(`  --${ns}-*: initial;`);
 }
@@ -116,6 +215,7 @@ for (const [step, t] of Object.entries(spacing.space)) {
 themeLines.push("");
 themeLines.push("  /* Radius (locked, docs/prd.md §8.4). */");
 themeLines.push(`  --radius-ds: ${val(radiusTokens.radius)};`);
+themeLines.push(`  --radius-chip: ${val(radiusTokens["radius-chip"])};`);
 themeLines.push("");
 themeLines.push("  /* Font families. next/font/google supplies --ff-<name> at runtime; the");
 themeLines.push("     token value is the fallback stack for non-Next consumers. */");
@@ -139,6 +239,50 @@ themeLines.push("  /* Tracking steps. */");
 for (const [name, t] of Object.entries(typography.tracking)) {
   themeLines.push(`  --tracking-${name}: ${val(t)};`);
 }
+themeLines.push("");
+themeLines.push("  /* Breakpoints (docs/prd.md §8.6). Phone (<640) is the unprefixed default. */");
+for (const [name, t] of Object.entries(breakpoint.breakpoint)) {
+  themeLines.push(`  --breakpoint-${name}: ${val(t)};`);
+}
+themeLines.push("");
+themeLines.push("  /* Easing curves (docs/prd.md §8.5). */");
+for (const [name, t] of Object.entries(motion.easing)) {
+  themeLines.push(`  --ease-${name}: ${val(t)};`);
+}
+themeLines.push("");
+themeLines.push("  /* Elevation shadows (Elevation foundation, elevTokens). */");
+for (const [name, t] of Object.entries(elevation.shadow)) {
+  themeLines.push(`  --shadow-${name}: ${val(t)};`);
+}
+themeLines.push("");
+themeLines.push("  /* Named entrances and loops (Motion foundation, motEntrances/motTokens).");
+themeLines.push("     Keyframe bodies are harvested verbatim from the prototype's own");
+themeLines.push("     @keyframes rules (archive/v1/Workspace Shell.dc.html) and declared");
+themeLines.push("     below, outside this @theme block. Durations/easings here reuse the");
+themeLines.push("     named motion tokens where a call site maps cleanly onto one; the two");
+themeLines.push("     that don't (rise-in, draw-in) use their own harvested literal value —");
+themeLines.push("     see each animation's comment for its source. */");
+for (const a of ANIMATIONS) {
+  themeLines.push(`  --animate-${a.name}: ${camel(a.name)} ${a.duration} ${a.easing} ${a.iteration ?? "both"}; /* ${a.note} */`);
+}
+themeLines.push("}");
+themeLines.push("");
+themeLines.push("/* Keyframe bodies, harvested verbatim from the prototype's own @keyframes");
+themeLines.push("   rules (archive/v1/Workspace Shell.dc.html) — see the --animate-* entries");
+themeLines.push("   above for how each is composed into a named animation. */");
+for (const a of ANIMATIONS) {
+  themeLines.push(`@keyframes ${camel(a.name)} {`);
+  themeLines.push(`  ${a.keyframeBody}`);
+  themeLines.push(`}`);
+}
+themeLines.push("");
+themeLines.push("/* prefers-reduced-motion (AGENTS.md rule 7, Accessibility foundation motA11y):");
+themeLines.push("   every loop stops and entrances collapse to opacity alone. */");
+themeLines.push("@media (prefers-reduced-motion: reduce) {");
+themeLines.push('  [class*="animate-"] {');
+themeLines.push("    animation-duration: .01ms !important;");
+themeLines.push("    animation-iteration-count: 1 !important;");
+themeLines.push("  }");
 themeLines.push("}");
 writeFileSync(path.join(cssDir, "tailwind-theme.css"), themeLines.join("\n") + "\n");
 
@@ -177,6 +321,8 @@ export const space = ${JSON.stringify(flatObject(spacing.space), null, 2)} as co
 
 export const radius = ${JSON.stringify(val(radiusTokens.radius))} as const;
 
+export const radiusChip = ${JSON.stringify(val(radiusTokens["radius-chip"]))} as const;
+
 export const font = ${JSON.stringify(flatObject(typography.font), null, 2)} as const;
 
 export const fontWeight = ${JSON.stringify(flatObject(typography.weight), null, 2)} as const;
@@ -188,6 +334,16 @@ export const leading = ${JSON.stringify(flatObject(typography.leading), null, 2)
 export const tracking = ${JSON.stringify(flatObject(typography.tracking), null, 2)} as const;
 
 export const icon = ${JSON.stringify(flatObject(iconTokens.icon), null, 2)} as const;
+
+export const easing = ${JSON.stringify(flatObject(motion.easing), null, 2)} as const;
+
+export const duration = ${JSON.stringify(flatObject(motion.duration), null, 2)} as const;
+
+export const shadow = ${JSON.stringify(flatObject(elevation.shadow), null, 2)} as const;
+
+export const zIndex = ${JSON.stringify(flatObject(elevation.z), null, 2)} as const;
+
+export const breakpoint = ${JSON.stringify(flatObject(breakpoint.breakpoint), null, 2)} as const;
 `;
 writeFileSync(path.join(dir, "src/tokens.generated.ts"), ts);
 

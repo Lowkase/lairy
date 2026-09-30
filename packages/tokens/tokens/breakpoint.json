@@ -1,0 +1,19 @@
+{
+  "breakpoint": {
+    "tablet": {
+      "$type": "dimension",
+      "$value": "640px",
+      "$description": "Tablet starts here (640–1023px). Below it is phone, the unprefixed default (docs/prd.md §8.6)."
+    },
+    "desktop": {
+      "$type": "dimension",
+      "$value": "1024px",
+      "$description": "Desktop starts here (1024–1439px) — the prototype's own minimum width (docs/prd.md §8.6)."
+    },
+    "wide": {
+      "$type": "dimension",
+      "$value": "1440px",
+      "$description": "Wide starts here (docs/prd.md §8.6)."
+    }
+  }
+}

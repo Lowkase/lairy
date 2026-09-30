@@ -47,6 +47,24 @@
     "$description": "Surface, light theme.",
     "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
   },
+  "panel-2": {
+    "$type": "color",
+    "$value": "rgba(0, 0, 0, 0.05)",
+    "$description": "Surface, emphasised over --panel, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "surface" } }
+  },
+  "bracket": {
+    "$type": "color",
+    "$value": "rgba(0, 0, 0, 0.45)",
+    "$description": "The corner-bracket mark drawn around visualization frames and telemetry panels, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "line" } }
+  },
+  "glow": {
+    "$type": "color",
+    "$value": "rgba(120, 135, 145, 0.12)",
+    "$description": "The ambient radial-gradient tint behind the workspace header, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ground" } }
+  },
   "accent": {
     "$type": "color",
     "$value": "#9a6208",
@@ -69,6 +87,12 @@
     "$type": "color",
     "$value": "#0d6d92",
     "$description": "Ice, light theme.",
+    "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
+  },
+  "accent-2-soft": {
+    "$type": "color",
+    "$value": "rgba(13, 109, 146, 0.1)",
+    "$description": "Ice fill, low opacity, light theme.",
     "$extensions": { "lairy": { "themeable": true, "role": "ice" } }
   },
   "accent-2-line": {
