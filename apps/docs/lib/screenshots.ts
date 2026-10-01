@@ -19,6 +19,7 @@ export type CompareTheme = "dark" | "light";
 const COMPONENT_SCREENSHOT_SLUGS: Record<string, string> = {
   badge: "badges",
   card: "cards",
+  button: "buttons",
 };
 
 export interface CompareEntry {

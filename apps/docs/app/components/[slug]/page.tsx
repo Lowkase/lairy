@@ -5,9 +5,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
+import { BUTTON_EXAMPLES } from "./button-examples";
 import { CALLOUT_EXAMPLES } from "./callout-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
+  button: BUTTON_EXAMPLES,
   callout: CALLOUT_EXAMPLES,
 };
 
@@ -104,7 +106,7 @@ export default async function ComponentPage({
                       <span className="text-small text-fg">{variant.name}</span>
                       <span className="text-micro text-faint">{variant.tokens.map((t) => `--${t}`).join(", ")}</span>
                     </div>
-                    <div className="flex min-w-0 flex-col gap-8">
+                    <div className="flex min-w-0 flex-col items-start gap-8">
                       {Specimen ? <Specimen /> : null}
                       <span className="text-small text-mute">{variant.description}</span>
                     </div>
@@ -116,8 +118,21 @@ export default async function ComponentPage({
           </Section>
         ) : null}
 
+        {entry.states.length > 0 ? (
+          <Section number="03" title="States" meta={`${entry.states.length}`}>
+            <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+              {entry.states.map((state) => (
+                <div key={state.name} className="flex flex-col gap-8 border border-border p-16">
+                  <span className="text-micro uppercase tracking-tight-6 text-accent">{state.name}</span>
+                  <span className="text-small text-mute">{state.description}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
         {entry.usage.useWhen.length > 0 || entry.usage.useInstead.length > 0 ? (
-          <Section number="03" title="Usage" meta="Use when / use instead">
+          <Section number="04" title="Usage" meta="Use when / use instead">
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               <div className="border border-accent-line bg-accent-soft p-18">
                 <div className="mb-12 text-micro uppercase tracking-tight-6 text-accent">Use when</div>
@@ -140,7 +155,7 @@ export default async function ComponentPage({
         ) : null}
 
         {entry.contentRules.length > 0 ? (
-          <Section number="04" title="Content" meta={`${entry.contentRules.length} rules`}>
+          <Section number="05" title="Content" meta={`${entry.contentRules.length} rules`}>
             <div className="border border-border bg-panel">
               {entry.contentRules.map((rule) => (
                 <div key={rule.text} className="border-b border-border p-16 text-small text-mute last:border-b-0">
@@ -152,7 +167,7 @@ export default async function ComponentPage({
         ) : null}
 
         {dontPairs.length > 0 ? (
-          <Section number="05" title="Do and don't" meta={`${dontPairs.length} pairs`}>
+          <Section number="06" title="Do and don't" meta={`${dontPairs.length} pairs`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {dontPairs.flatMap(({ good, bad }) => [
                 <DoDontCell key={good.id} example={good} mark="good" Specimen={examples[good.id]} />,
@@ -163,7 +178,7 @@ export default async function ComponentPage({
         ) : null}
 
         {entry.accessibility.length > 0 ? (
-          <Section number="06" title="Accessibility" meta={`${entry.accessibility.length}`}>
+          <Section number="07" title="Accessibility" meta={`${entry.accessibility.length}`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {entry.accessibility.map((note) => (
                 <div key={note.title} className="flex flex-col gap-8 border border-border bg-panel p-18">
@@ -176,7 +191,7 @@ export default async function ComponentPage({
         ) : null}
 
         {entry.tokens.length > 0 ? (
-          <Section number="07" title="Tokens" meta={`${entry.tokens.length}`}>
+          <Section number="08" title="Tokens" meta={`${entry.tokens.length}`}>
             <div className="border border-border bg-panel">
               {entry.tokens.map((row) => (
                 <div
@@ -192,7 +207,7 @@ export default async function ComponentPage({
         ) : null}
 
         {props.length > 0 ? (
-          <Section number="08" title="Props" meta={`${props.length}`}>
+          <Section number="09" title="Props" meta={`${props.length}`}>
             <div className="border border-border bg-panel">
               {props.map((prop) => (
                 <div
@@ -212,7 +227,7 @@ export default async function ComponentPage({
         ) : null}
 
         {entry.relationships.length > 0 ? (
-          <Section number="09" title="Related" meta={`${entry.relationships.length}`}>
+          <Section number="10" title="Related" meta={`${entry.relationships.length}`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {entry.relationships.map((relationship) => {
                 const target = getComponent(relationship.target);
@@ -240,7 +255,7 @@ export default async function ComponentPage({
         ) : null}
 
         {entry.changelog.length > 0 ? (
-          <Section number="10" title="Changelog" meta="Newest first">
+          <Section number="11" title="Changelog" meta="Newest first">
             <div className="border border-border bg-panel">
               {entry.changelog.map((change) => (
                 <div

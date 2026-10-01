@@ -4,4 +4,5 @@
 
 ## Components
 
+- [Buttons](/components/button): Commits an action the operator has decided to take.
 - [Callout](/components/callout): Reports a standing condition inside the panel or flow it belongs to.

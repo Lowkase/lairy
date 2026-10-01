@@ -61,6 +61,17 @@ export const PropAnnotationSchema = z.object({
 });
 export type PropAnnotation = z.infer<typeof PropAnnotationSchema>;
 
+/** One row of the component's States section: a named interaction state
+ * (Default, Hover, Active, Focus, Disabled, …) and the prose describing it
+ * (docs/build-guide.md §3 — the prototype's `btnStateDocs`-shaped lists).
+ * Shaped like `AnatomyPartSchema` minus the numbering, since states aren't
+ * ordered parts of a diagram. */
+export const StateDocSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+});
+export type StateDoc = z.infer<typeof StateDocSchema>;
+
 export const ComponentEntrySchema = z.object({
   meta: MetaSchema,
   /** One-line purpose. Required even for a draft stub — it's the one thing
@@ -76,7 +87,7 @@ export const ComponentEntrySchema = z.object({
    * deliberately omitted (archive/v1/NOTES.md: "Close with a --faint note
    * explaining a deliberate omission"). */
   variantsNote: z.string().optional(),
-  states: z.array(z.string().min(1)).default([]),
+  states: z.array(StateDocSchema).default([]),
   usage: UsageSchema.default({ useWhen: [], useInstead: [] }),
   contentRules: z.array(RuleSchema).default([]),
   examples: z.array(ExampleSchema).default([]),

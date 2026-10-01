@@ -195,6 +195,106 @@
 
 # Components
 
+## Buttons
+
+Status: stable · Version: 1.3.0 · Updated: 1 Oct 2026 · /components/button
+
+Purpose: Commits an action the operator has decided to take.
+
+### Description
+
+A button commits an action the operator has decided to take.
+
+It changes something — runs, saves, deletes, confirms. If the control only changes what is shown, it is Tabs or a link, not a button; if it carries a value the operator picked rather than an action, it is a Chip. Everything below assumes the click has a consequence.
+
+### Anatomy
+
+1. Padding — 9px vertical, 16px horizontal on every variant, so a row of mixed buttons shares one height.
+2. Label — 12.5px, 600 weight, .06em tracking, uppercase. A verb, never a noun.
+3. Icon slot — Optional 14px leading glyph at 8px from the label. Trailing icons are reserved for menus and links.
+4. Container — 1px border, 2px radius, 32px minimum height. The border is present on every variant except Ghost, which draws one on hover.
+
+### Variants
+
+- Primary (--accent, --bg): The one action the screen exists for. Never two on the same view — if two things look primary, neither is.
+- Secondary (--border-2, --fg): A real alternative to the primary action: cancel, go back, pick the other path. Outlined, never filled.
+- Ghost (--dim): Tertiary and repeated actions — toolbar controls, row actions, anything that would shout if it were bordered.
+- Danger (--alarm-line, --alarm-soft, --fg): Destructive and irreversible only. Delete, revoke, purge. Never for "remove filter" or anything a click can undo.
+
+There is no Link variant. A link navigates and belongs in prose; giving it a button shell teaches operators that the two behave alike, and then a misplaced click costs them work.
+
+### States
+
+- Default: At rest. Primary is the only variant carrying a fill.
+- Hover: Fill lightens 22% and a soft lift shadow appears. 140ms.
+- Active: Fill darkens 18%, the button drops 1px and the shadow inverts inward. No duration — it tracks the pointer.
+- Focus: 3px --accent-soft ring plus an --accent-line border. Identical on every variant, including Danger.
+- Disabled: 35% opacity, not-allowed cursor. Never removed from the DOM — a vanished button reads as a bug.
+
+### Use when
+
+- The click commits something — data is written, a job starts, a record is destroyed.
+- The operator chose to act, rather than being told about something.
+- The action can be named as a verb the operator would use out loud.
+- It belongs to the view it sits in, not to a row inside it.
+
+### Use something else when
+
+- tabs: It only changes which panel is visible — that is Navigation (Tabs).
+- chip: It carries a value the operator picked or can dismiss — that is a Chip.
+- switch: It flips one setting on or off in place — that is a Switch.
+
+### Content rules
+
+- A verb in the imperative: "Save", "Run pipeline", "Revoke access". Never a noun like "Configuration".
+- Uppercase, 12.5px, .06em tracking. One or two words; three is the ceiling and it needs a reason.
+- Say what happens, not what the user wants. "Delete workspace", never "OK" or "Yes".
+- No trailing punctuation, no ellipsis unless the click opens a further dialog that still needs input.
+- The same action carries the same verb everywhere. "Run" is never also "Execute" or "Start".
+
+### Examples
+
+- [demo] Secondary
+- [demo] Primary
+- [demo] Ghost
+- [demo] Danger
+- [good] One primary, kept quiet alternative — One primary per view, with its alternative kept quiet.
+- [bad] Three primaries — Never three primaries. Everything is loud, so nothing leads.
+- [good] Danger names what it destroys — Danger names what it destroys, so the label survives being read alone.
+- [bad] "OK" on a destructive action — Never "OK" on a destructive action — it tells the operator nothing about the consequence.
+- [good] Mixed variants, one height — Mixed variants share one height, so the row keeps a single baseline.
+- [bad] Resized for emphasis — Never resize a button to add emphasis — variant carries weight, size does not.
+
+### Accessibility
+
+- Focus ring: Every button takes a 3px --accent-soft ring with an --accent-line border on keyboard focus. Focus is never suppressed and never reduced to a colour change, so it stays visible on the filled Primary as well as on Ghost.
+- Real buttons: Ghost and icon-only controls are still buttons: they take a tab stop, fire on Enter and Space, and expose a label. An icon-only button carries an aria-label matching its tooltip word for word.
+- Disabled: Disabled buttons stay in the tab order as aria-disabled rather than being removed, so a keyboard operator can find the control and read why it is unavailable from the adjacent help text.
+- Never colour alone: Danger is not signalled by colour alone — the label names the destruction. At 35% opacity a disabled button drops below 4.5:1, which is why disabled state is always paired with an explanatory line, never left to the eye.
+
+### Tokens
+
+- --accent, --bg: Primary fill and its label
+- --border-2, --fg: Secondary border and label
+- --panel-2: Hover fill on Secondary and Ghost
+- --dim: Ghost label at rest
+- --accent-soft, --accent-line: Focus ring on all variants
+
+### Related
+
+- chip (often-confused-with): Also clickable, but a chip carries a value the operator has chosen. A button carries an action.
+- tabs (often-confused-with): Tabs switch what is shown without changing anything. If nothing is committed, it is not a button.
+- modal (composes-with): Where Primary and Secondary most often appear as a pair — and where Danger is confirmed.
+
+### Changelog
+
+- v1.3.0 (18 Aug 2026): Focus ring unified across variants; Ghost no longer relies on a border change alone.
+- v1.2.0 (15 Aug 2026): Radius locked to 2px. Active state gained the inset press shadow.
+- v1.1.0 (13 Aug 2026): Danger variant added, replacing ad-hoc red text buttons.
+- v1.0.0 (11 Aug 2026): Initial release — Primary, Secondary, Ghost across five states.
+
+---
+
 ## Callout
 
 Status: stable · Version: 1.0.0 · Updated: 18 Sept 2026 · /components/callout
