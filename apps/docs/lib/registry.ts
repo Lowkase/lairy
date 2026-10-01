@@ -19,7 +19,9 @@ function readSource(relativePath: string): string {
  * shipped component's source ever changes shape. */
 function replaceOrThrow(source: string, search: string, replacement: string): string {
   if (!source.includes(search)) {
-    throw new Error(`registry: expected to find ${JSON.stringify(search)} in source to rewrite for the registry item.`);
+    throw new Error(
+      `registry: expected to find ${JSON.stringify(search)} in source to rewrite for the registry item.`,
+    );
   }
   return source.replace(search, replacement);
 }
@@ -60,7 +62,11 @@ export const REGISTRY_HOMEPAGE = "https://github.com/Lowkase/lairy";
  * builder below rather than only `buildCalloutItem`'s, now that more than
  * one component exists. */
 function withLairyCnImport(source: string): string {
-  return replaceOrThrow(source, 'import { cn } from "../cn";', 'import { cn } from "@/lib/lairy-cn";');
+  return replaceOrThrow(
+    source,
+    'import { cn } from "../cn";',
+    'import { cn } from "@/lib/lairy-cn";',
+  );
 }
 
 const BUTTON_FILE = {
@@ -132,6 +138,32 @@ function buildCalloutItem(): RegistryItem {
   };
 }
 
+function buildBadgeItem(): RegistryItem {
+  const entry = getComponent("badge");
+  if (!entry) throw new Error('registry: content entry "badge" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "badge",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/badge/badge.tsx",
+        target: "components/ui/badge/badge.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/badge/badge.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildButtonItem(): RegistryItem {
   const entry = getComponent("button");
   if (!entry) throw new Error('registry: content entry "button" not found.');
@@ -181,6 +213,7 @@ function buildTextItem(): RegistryItem {
 
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
+  badge: buildBadgeItem,
   button: buildButtonItem,
   text: buildTextItem,
 };

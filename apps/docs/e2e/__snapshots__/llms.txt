@@ -4,6 +4,7 @@
 
 ## Components
 
+- [Badges](/components/badge): A small, square, system-assigned label stating a standing condition on a row. The operator cannot dismiss it.
 - [Buttons](/components/button): Commits an action the operator has decided to take.
 - [Callout](/components/callout): Reports a standing condition inside the panel or flow it belongs to.
 - [Text](/components/text): Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.

@@ -5,11 +5,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
+import { BADGE_EXAMPLES } from "./badge-examples";
 import { BUTTON_EXAMPLES } from "./button-examples";
 import { CALLOUT_EXAMPLES } from "./callout-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
+  badge: BADGE_EXAMPLES,
   button: BUTTON_EXAMPLES,
   callout: CALLOUT_EXAMPLES,
   text: TEXT_EXAMPLES,
@@ -71,12 +73,15 @@ export default async function ComponentPage({
             <div className="flex items-center justify-center border border-border bg-panel p-32">
               {(() => {
                 const specimenExample =
-                  demoExamples.find((example) => example.title.toLowerCase() === "success") ?? demoExamples[0];
+                  demoExamples.find((example) => example.title.toLowerCase() === "success") ??
+                  demoExamples[0];
                 const Specimen = specimenExample ? examples[specimenExample.id] : undefined;
                 return Specimen ? <Specimen /> : null;
               })()}
             </div>
-            {entry.anatomyCaption ? <div className="text-micro text-faint">{entry.anatomyCaption}</div> : null}
+            {entry.anatomyCaption ? (
+              <div className="text-micro text-faint">{entry.anatomyCaption}</div>
+            ) : null}
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
               {entry.anatomy.map((part) => (
                 <div key={part.number} className="flex items-start gap-12">
@@ -97,7 +102,9 @@ export default async function ComponentPage({
           <Section number="02" title="Variants" meta={`${entry.variants.length}`}>
             <div className="flex flex-col gap-12">
               {entry.variants.map((variant) => {
-                const example = demoExamples.find((e) => e.title.toLowerCase() === variant.name.toLowerCase());
+                const example = demoExamples.find(
+                  (e) => e.title.toLowerCase() === variant.name.toLowerCase(),
+                );
                 const Specimen = example ? examples[example.id] : undefined;
                 return (
                   <div
@@ -106,7 +113,9 @@ export default async function ComponentPage({
                   >
                     <div className="flex min-w-0 flex-col gap-8">
                       <span className="text-small text-fg">{variant.name}</span>
-                      <span className="text-micro text-faint">{variant.tokens.map((t) => `--${t}`).join(", ")}</span>
+                      <span className="text-micro text-faint">
+                        {variant.tokens.map((t) => `--${t}`).join(", ")}
+                      </span>
                     </div>
                     <div className="flex min-w-0 flex-col items-start gap-8">
                       {Specimen ? <Specimen /> : null}
@@ -116,7 +125,9 @@ export default async function ComponentPage({
                 );
               })}
             </div>
-            {entry.variantsNote ? <div className="text-micro text-faint">{entry.variantsNote}</div> : null}
+            {entry.variantsNote ? (
+              <div className="text-micro text-faint">{entry.variantsNote}</div>
+            ) : null}
           </Section>
         ) : null}
 
@@ -125,7 +136,9 @@ export default async function ComponentPage({
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
               {entry.states.map((state) => (
                 <div key={state.name} className="flex flex-col gap-8 border border-border p-16">
-                  <span className="text-micro uppercase tracking-tight-6 text-accent">{state.name}</span>
+                  <span className="text-micro uppercase tracking-tight-6 text-accent">
+                    {state.name}
+                  </span>
                   <span className="text-small text-mute">{state.description}</span>
                 </div>
               ))}
@@ -137,7 +150,9 @@ export default async function ComponentPage({
           <Section number="04" title="Usage" meta="Use when / use instead">
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               <div className="border border-accent-line bg-accent-soft p-18">
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-accent">Use when</div>
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-accent">
+                  Use when
+                </div>
                 <div className="flex flex-col gap-8 text-small text-dim">
                   {entry.usage.useWhen.map((row) => (
                     <span key={row}>{row}</span>
@@ -145,7 +160,9 @@ export default async function ComponentPage({
                 </div>
               </div>
               <div className="border border-border-2 p-18">
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">Use something else when</div>
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">
+                  Use something else when
+                </div>
                 <div className="flex flex-col gap-8 text-small text-dim">
                   {entry.usage.useInstead.map((row) => (
                     <span key={row.target}>{row.text}</span>
@@ -160,7 +177,10 @@ export default async function ComponentPage({
           <Section number="05" title="Content" meta={`${entry.contentRules.length} rules`}>
             <div className="border border-border bg-panel">
               {entry.contentRules.map((rule) => (
-                <div key={rule.text} className="border-b border-border p-16 text-small text-mute last:border-b-0">
+                <div
+                  key={rule.text}
+                  className="border-b border-border p-16 text-small text-mute last:border-b-0"
+                >
                   {rule.text}
                 </div>
               ))}
@@ -172,8 +192,15 @@ export default async function ComponentPage({
           <Section number="06" title="Do and don't" meta={`${dontPairs.length} pairs`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {dontPairs.flatMap(({ good, bad }) => [
-                <DoDontCell key={good.id} example={good} mark="good" Specimen={examples[good.id]} />,
-                bad ? <DoDontCell key={bad.id} example={bad} mark="bad" Specimen={examples[bad.id]} /> : null,
+                <DoDontCell
+                  key={good.id}
+                  example={good}
+                  mark="good"
+                  Specimen={examples[good.id]}
+                />,
+                bad ? (
+                  <DoDontCell key={bad.id} example={bad} mark="bad" Specimen={examples[bad.id]} />
+                ) : null,
               ])}
             </div>
           </Section>
@@ -183,8 +210,13 @@ export default async function ComponentPage({
           <Section number="07" title="Accessibility" meta={`${entry.accessibility.length}`}>
             <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
               {entry.accessibility.map((note) => (
-                <div key={note.title} className="flex flex-col gap-8 border border-border bg-panel p-18">
-                  <span className="text-micro uppercase tracking-tight-6 text-accent">{note.title}</span>
+                <div
+                  key={note.title}
+                  className="flex flex-col gap-8 border border-border bg-panel p-18"
+                >
+                  <span className="text-micro uppercase tracking-tight-6 text-accent">
+                    {note.title}
+                  </span>
                   <span className="text-small text-dim">{note.body}</span>
                 </div>
               ))}
@@ -236,7 +268,9 @@ export default async function ComponentPage({
                 const linkable = target && target.meta.status !== "draft";
                 const card = (
                   <div className="flex flex-col gap-8 border border-border bg-panel p-16">
-                    <span className="text-small text-fg">{target?.meta.name ?? relationship.target}</span>
+                    <span className="text-small text-fg">
+                      {target?.meta.name ?? relationship.target}
+                    </span>
                     <span className="text-small text-mute">{relationship.text}</span>
                   </div>
                 );
