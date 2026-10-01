@@ -26,8 +26,15 @@ export function generateStaticParams() {
     .map((entry) => ({ slug: entry.meta.id }));
 }
 
-export default async function ComponentPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ComponentPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ theme?: string }>;
+}) {
   const { slug } = await params;
+  const { theme } = await searchParams;
   const entry = getComponent(slug);
   if (!entry || entry.meta.status === "draft") notFound();
 
@@ -39,7 +46,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
   const dontPairs = goodExamples.map((good, index) => ({ good, bad: badExamples[index] }));
 
   return (
-    <ThemeToggle>
+    <ThemeToggle initialTheme={theme === "light" ? "light" : "dark"}>
       <div className="flex flex-col gap-32">
         <PageHeader
           title={entry.meta.name}

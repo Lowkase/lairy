@@ -8,8 +8,17 @@ import { useEffect, useState, type ReactNode } from "react";
  * element as :root — a nested [data-theme] wrapper only reassigns --bg
  * locally and the alias still resolves against :root's original value.
  */
-export function ThemeToggle({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+export function ThemeToggle({
+  children,
+  initialTheme = "dark",
+}: {
+  children: ReactNode;
+  /** Forces the starting theme (e.g. from a `?theme=` search param) — the
+   * /dev/compare/[entry] route (LDS-016) loads this page in an iframe per
+   * theme and needs each frame to start in the right one. */
+  initialTheme?: "dark" | "light";
+}) {
+  const [theme, setTheme] = useState<"dark" | "light">(initialTheme);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme === "light" ? "light" : "";
