@@ -14,6 +14,16 @@ const chipPill = cva(
   "inline-flex items-center gap-8 rounded-chip border py-6 px-12 font-body text-label uppercase tracking-tight-10 focus-visible:outline-none focus-visible:border-accent-line focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
   {
     variants: {
+      // Filter and Toggle (Chips Variants): "same shape" per the entry's
+      // own description — both empty, since the two differ only in how a
+      // consumer groups chips (mutually exclusive vs. freely combined),
+      // never in the chip's own rendered treatment. Named here anyway so
+      // the component carries the entry's variant names exactly (build
+      // guide §4 step 4), surfaced to consumers and tests via `data-variant`.
+      variant: {
+        filter: "",
+        toggle: "",
+      },
       pressed: {
         // Active (Chips Variants): not a fourth variant, the on state of a
         // Filter or Toggle chip — amber border, soft amber fill, the only
@@ -29,7 +39,7 @@ const chipPill = cva(
         false: "cursor-pointer border-border text-dim hover:border-border-2 hover:text-fg",
       },
     },
-    defaultVariants: { pressed: false },
+    defaultVariants: { variant: "filter", pressed: false },
   },
 );
 
@@ -65,6 +75,11 @@ export interface ChipProps {
   /** One or two words naming the value this chip carries, never a verb
    * (Chips Content rule 2). */
   children: ReactNode;
+  /** Filter (default) or Toggle (Chips Variants) — same rendered treatment
+   * either way; names which grouping pattern the chip belongs to, carried
+   * through as `data-variant` for consumers and tests. Ignored when
+   * `removable` is set. */
+  variant?: "filter" | "toggle";
   /** Whether a Filter or Toggle chip is currently on — Active (Chips
    * Variants) is this prop set to `true`, not a fourth variant. Ignored
    * when `removable` is set. */
@@ -92,6 +107,7 @@ export interface ChipProps {
  */
 export function Chip({
   children,
+  variant = "filter",
   pressed,
   onPressedChange,
   removable,
@@ -102,6 +118,7 @@ export function Chip({
     return (
       <span
         data-slot="chip"
+        data-variant="removable"
         className={cn(chipPill({ pressed: false }), "cursor-default pr-8", className)}
       >
         <span data-slot="chip-label">{children}</span>
@@ -111,7 +128,12 @@ export function Chip({
           aria-label={`Remove ${children}`}
           onClick={onRemove}
           style={{ margin: -DISMISS_HIT, padding: DISMISS_HIT }}
-          className="flex shrink-0 cursor-pointer rounded-full text-mute hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          // `rounded-chip`, not `rounded-full`: the dismiss control is
+          // interactive (a click handler, its own hit area, its own focus
+          // ring) rather than a layout-free mark, and `radius-chip`'s own
+          // description reserves the bare circle utility for marks that
+          // hold no layout (AGENTS.md rule 5, packages/tokens/tokens/radius.json).
+          className="flex shrink-0 cursor-pointer rounded-chip text-mute hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
         >
           <ChipDismissGlyph />
         </button>
@@ -127,6 +149,7 @@ export function Chip({
     <button
       type="button"
       data-slot="chip"
+      data-variant={variant}
       aria-pressed={pressed ?? false}
       // Stays `undefined`, never a wrapping closure, when the caller omits
       // `onPressedChange` — a function value here, even an inert one, can't
@@ -134,7 +157,7 @@ export function Chip({
       // Button's own `onClick` prop passes straight through rather than
       // always wrapping it).
       onClick={onPressedChange ? () => onPressedChange(!pressed) : undefined}
-      className={cn(chipPill({ pressed: !!pressed }), className)}
+      className={cn(chipPill({ variant, pressed: !!pressed }), className)}
     >
       {children}
     </button>

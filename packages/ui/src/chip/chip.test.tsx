@@ -24,6 +24,28 @@ describe("Chip", () => {
   });
 
   describe("Filter / Toggle (pressable)", () => {
+    it("defaults to the Filter variant, carried as data-variant (Chips Variants)", () => {
+      render(
+        <Chip pressed={false} onPressedChange={() => {}}>
+          OPEN
+        </Chip>,
+      );
+      expect(screen.getByRole("button", { name: "OPEN" })).toHaveAttribute(
+        "data-variant",
+        "filter",
+      );
+    });
+
+    it("distinguishes the Toggle variant from Filter via data-variant, even though both render the same classes (Chips Variants 'Same shape')", () => {
+      render(
+        <Chip variant="toggle" pressed={false} onPressedChange={() => {}}>
+          QUEUED
+        </Chip>,
+      );
+      const toggle = screen.getByRole("button", { name: "QUEUED" });
+      expect(toggle).toHaveAttribute("data-variant", "toggle");
+    });
+
     it("is a real button reporting aria-pressed, not aria-checked (Chips Accessibility 'Pressed, not checked')", () => {
       render(
         <Chip pressed={true} onPressedChange={() => {}}>
@@ -80,6 +102,18 @@ describe("Chip", () => {
   });
 
   describe("Removable", () => {
+    it("carries data-variant='removable' on the outer slot", () => {
+      render(
+        <Chip removable onRemove={() => {}}>
+          FLEET
+        </Chip>,
+      );
+      expect(screen.getByText("FLEET").closest('[data-slot="chip"]')).toHaveAttribute(
+        "data-variant",
+        "removable",
+      );
+    });
+
     it("renders the label as plain text, not itself a button (Chips Variants 'Removable')", () => {
       render(
         <Chip removable onRemove={() => {}}>
@@ -108,6 +142,17 @@ describe("Chip", () => {
       );
       fireEvent.click(screen.getByRole("button", { name: "Remove FLEET" }));
       expect(onRemove).toHaveBeenCalledTimes(1);
+    });
+
+    it("uses the chip shape token on the dismiss control, not a bare circle reserved for layout-free marks (AGENTS.md rule 5)", () => {
+      render(
+        <Chip removable onRemove={() => {}}>
+          FLEET
+        </Chip>,
+      );
+      const dismiss = screen.getByRole("button", { name: "Remove FLEET" });
+      expect(dismiss.className).toContain("rounded-chip");
+      expect(dismiss.className).not.toContain("rounded-full");
     });
 
     it("has exactly one button — the dismiss target — not two hit targets for the body too", () => {
