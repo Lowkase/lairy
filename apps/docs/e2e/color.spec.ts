@@ -50,21 +50,21 @@ test.describe("Color foundation page", () => {
     await screenshot(page, "color-light.png");
   });
 
-  test("relationship cards link to stable foundations and stay plain text for drafts", async ({
+  test("relationship cards link to the now-stable Typography, Elevation and Accessibility foundations (LDS-015)", async ({
     page,
   }) => {
     await page.goto("/foundations/color");
-    // Typography, Elevation and Accessibility are draft stubs (LDS-014) —
-    // no docs page exists for them yet, so their Related cards must not
-    // link anywhere.
-    await expect(page.getByRole("link", { name: /Typography/ })).toHaveCount(0);
-    await expect(page.getByRole("link", { name: /Elevation/ })).toHaveCount(0);
-    await expect(page.getByRole("link", { name: /Accessibility/ })).toHaveCount(0);
+    // Typography, Elevation and Accessibility were draft stubs under
+    // LDS-014; LDS-015 gave each a full entry and a docs page, so their
+    // Related cards on Color's own page now link out.
+    await expect(page.getByRole("link", { name: /Typography/ })).toHaveCount(1);
+    await expect(page.getByRole("link", { name: /Elevation/ })).toHaveCount(1);
+    await expect(page.getByRole("link", { name: /Accessibility/ })).toHaveCount(1);
     await expect(page.getByText("Holds the rules colour has to satisfy")).toBeVisible();
   });
 
   test("a foundation with draft status 404s", async ({ page }) => {
-    const response = await page.goto("/foundations/typography");
+    const response = await page.goto("/foundations/does-not-exist");
     expect(response?.status()).toBe(404);
   });
 });
