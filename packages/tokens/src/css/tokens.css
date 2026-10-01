@@ -69,7 +69,12 @@
   --tracking-tight-20: 0.2em; /** Tracking step .2em — Micro's uppercase tracking (docs/prd.md §8.2 type table). One of the consolidated tracking set (reference/token-harvest.md §2). */
   --tracking-tight-neg-1: -0.01em; /** Metric's tracking (docs/prd.md §8.2 type table). */
   --tracking-tight-neg-2: -0.02em; /** Negative display tracking, shared by Display, Doc title and Title (docs/prd.md §8.2). */
-  --icon-callout: 17px; /** Icon width/height used by Callout, harvested from the prototype's calloutIcon() (17×17). No Icons foundation size scale exists yet (LDS-017); flagged as a proposed value pending that ticket. */
+  --icon-callout: 17px; /** Icon width/height used by Callout, harvested from the prototype's calloutIcon() (17×17). Predates the Icons foundation size scale below (LDS-017) and stays a component-specific exception rather than being folded into it — 17px is Callout's own harvested value, not an instance of the inline icon's 16px box. */
+  --icon-glyph-rail: 22px; /** Glyph box in the dock rail and other collapsed-nav contexts, the lower end of the Icons foundation's Glyph scale (icoDocs "the dock rail at 22px, section tiles and empty states at 30–34px"). */
+  --icon-glyph-tile: 34px; /** Glyph box for section tiles and empty states, the upper end of the Icons foundation's Glyph scale and the prototype glyph()'s own default size (icoDocs). */
+  --icon-inline: 16px; /** Inline icon box — fixed, not a range. The prototype's icon() hardcodes 16×16 with no size parameter, matching the Icons foundation's Inline icon scale ("sized ... to match 14px body text"). */
+  --icon-stroke-glyph: 2.2; /** Glyph stroke width on the 40 grid (Icons foundation Construction rule 2: "Stroke is 2.2 on the 40 grid and 2 on the 24 grid"). */
+  --icon-stroke-inline: 2; /** Inline icon stroke width on the 24 grid (Icons foundation Construction rule 2). */
   --easing-standard: cubic-bezier(.4, 0, .2, 1); /** Standard. Panel and Reveal's curve — anything that changes shape or enters the page (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
   --easing-symmetric: cubic-bezier(.45, 0, .55, 1); /** Symmetric. The sweepline loop's curve (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
   --easing-draw: cubic-bezier(.35, 0, .2, 1); /** Draw. The blueprint line-draw curve, used only there (docs/prd.md §8.5, confirmed against the Motion page's motTokens). */
