@@ -474,6 +474,100 @@ There is no Neutral tone here the way Toast has one — a Callout that claims no
 
 ---
 
+## Cards
+
+Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/card
+
+Purpose: A bordered container that holds one whole object worth looking at on its own.
+
+### Description
+
+A card is a bounded surface that holds one thing worth looking at on its own.
+
+It draws an edge around content so a page can be read as a set of objects rather than one column of text. A card stays flat in the page and stays put — the moment content needs to float over everything else it is a Modal, and when rows share the same fields and want comparing it is a Table. Only one kind of card is clickable, and that is the exception, not the default.
+
+### Anatomy
+
+1. Container — A 1px --border hairline on --panel, 2px radius, no shadow. Elevation belongs to overlays; a card sits flat in the page.
+2. Header — 12px uppercase title at .16em on the left, optional --faint meta on the right, closed by a full-bleed hairline. Present or absent — never half-drawn.
+3. Meta slot — The right end of the header carries a count, unit or status. It is reference, never an action — actions go in the body or the page header.
+4. Body — 18px padding, or 14–16px when the card is a dense list. Rows inside separate with hairlines rather than gaps.
+
+### Variants
+
+- Plain (--border, --panel): Prose, grouped controls, anything that needs a boundary but not a name. If you find yourself adding a title later, it wanted a header all along.
+- With header (--border, --panel): The default for content sections. The title names the contents so the card can be scanned in a column of siblings.
+- HUD (--border, --panel, --bracket): Instrumentation only — live readouts and telemetry. The brackets are a signal that the numbers are moving, so they lose their meaning on static content.
+- Stat (--fg): One number that answers one question. A label above, a value, and at most one unit of context beside it.
+- Tile (--panel-2, --border-2): The only clickable card. Border and fill lift on hover, the whole surface is the hit target, and it must lead somewhere — never open a menu.
+
+There is no elevated card. Shadow is how the system says "this floats over the page", so spending it on a card that does not float leaves nothing to say it with later.
+
+### Use when
+
+- The content is one whole object that makes sense read on its own.
+- A page holds several such objects and the reader needs to tell where one ends.
+- The grouping is stable — the same card appears in the same place tomorrow.
+- It sits in the page flow, at the page's own scroll position.
+
+### Use something else when
+
+- modal: It must float over the page and be dismissed — that is a Modal.
+- table: Every item shares the same fields and wants comparing — that is a Table.
+- badge: The box would hold a single label — that is a Badge or a heading.
+- empty-state: There is nothing to show yet — that is an Empty state, not a bordered void.
+
+### Content rules
+
+- Header titles are uppercase, 12px, .16em tracking, and name the contents rather than describing them: "Coverage", not "Here is your coverage".
+- Two to four words in a title. If it needs a sentence, that sentence belongs in the body.
+- The meta slot holds a count or unit and nothing else — no verbs, no punctuation, no "click to expand".
+- Body copy is 13.5px --dim in full sentences. A card is not a place for orphaned fragments.
+- Cards in the same grid use the same kind and the same title grammar; a mixed grid reads as an accident.
+
+### Examples
+
+- [demo] With header
+- [demo] Plain
+- [demo] HUD
+- [demo] Stat
+- [demo] Tile
+- [good] Consistent kind and title grammar — Siblings share a kind and a title grammar, so the column scans in one pass.
+- [bad] Mixed kinds in one grid — Never mix kinds in one grid — HUD brackets on static content read as an accident.
+- [good] One question per stat — A stat card answers one question: label, value, one unit of context.
+- [bad] A crowded stat card — Never crowd a stat card — four numbers means none of them is the answer.
+- [good] One hit target, one destination — A tile is one hit target with one destination — the entire surface is clickable.
+- [bad] Controls nested inside a tile — Never nest controls inside a tile — three tab stops in a clickable card fight each other.
+
+### Accessibility
+
+- Headings, not styling: A header title is a real heading element in the reading order, so a screen reader can jump between cards. Uppercase is a CSS transform — the accessible name stays sentence case.
+- Tiles are one control: A tile is a single focusable element with one accessible name, not a div wrapping three tab stops. Enter and Space both activate it, and the focus ring wraps the whole card.
+- Boundaries survive: The hairline holds 3:1 against --panel in both themes, so the card edge is still a visible boundary in high-contrast and greyscale.
+- Order matters: Header precedes body in source, and a stat card announces its label before its number — "Open items, 32 of 33", never the number alone.
+
+### Tokens
+
+- --border, --panel: Container hairline and fill
+- --border: Header divider and internal row rules
+- --bracket: HUD corner marks
+- --panel-2: Tile hover fill
+- --dim, --faint: Body copy and meta labels
+
+### Related
+
+- modal (contrasts-with): A card that floats. The moment content needs a scrim and a dismiss, it stops being a card.
+- table (alternative): Use instead when rows share columns. Cards are for whole objects; tables are for comparing fields.
+- empty-state (composes-with): What a card body becomes when it has nothing to hold — never an empty bordered box.
+
+### Changelog
+
+- v1.2.0 (19 Aug 2026): Tile hover unified on --panel-2; the whole surface is now one hit target.
+- v1.1.0 (15 Aug 2026): Radius locked to 2px and card shadows removed — elevation reserved for overlays.
+- v1.0.0 (11 Aug 2026): Initial release — five kinds, header optional.
+
+---
+
 ## Chips
 
 Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/chip

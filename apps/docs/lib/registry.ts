@@ -190,6 +190,32 @@ function buildChipItem(): RegistryItem {
   };
 }
 
+function buildCardItem(): RegistryItem {
+  const entry = getComponent("card");
+  if (!entry) throw new Error('registry: content entry "card" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "card",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/card/card.tsx",
+        target: "components/ui/card/card.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/card/card.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildButtonItem(): RegistryItem {
   const entry = getComponent("button");
   if (!entry) throw new Error('registry: content entry "button" not found.');
@@ -240,6 +266,7 @@ function buildTextItem(): RegistryItem {
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
+  card: buildCardItem,
   chip: buildChipItem,
   button: buildButtonItem,
   text: buildTextItem,

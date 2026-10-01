@@ -11,6 +11,7 @@
     "./badge/examples": "./src/badge/examples/index.ts",
     "./button/examples": "./src/button/examples/index.ts",
     "./callout/examples": "./src/callout/examples/index.ts",
+    "./card/examples": "./src/card/examples/index.ts",
     "./chip/examples": "./src/chip/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts"
   },
