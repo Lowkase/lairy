@@ -46,6 +46,7 @@
   --text-small: 13px; /** Type style Small. Rows, hints, buttons, card body. */
   --text-label: 12px; /** Type style Label. Uppercase panel headers and chips. */
   --text-callout-title: 14.5px; /** Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR. */
+  --text-heading: 24px; /** Type style for the Text component's Heading role (names a panel, a card or a section inside a block of copy), harvested from the Text page's own specimens (archive/v1 txAnatomy #2 and its "Live" ramp panel, template lines 2994 and 3095: 24px, -.02em tracking). Falls between Section (17px) and Title/Metric (28px) and isn't covered by docs/prd.md §8.2's default off-scale mapping, so it is a new, flagged step rather than a reuse of one of the foundation's six documented scales. Proposed as-is pending the token decisions ticket — the same treatment given to Callout's own `callout-title` (LDS-005). */
   --text-micro: 11px; /** Type style Micro. The hard floor (AGENTS.md rule 6) — nothing in Lairy is set smaller. Section numbers, meta labels, captions, uppercase codes. */
   --text-body: 14px; /** Type style Body. Rows and paragraphs — the docs page's own prose, distinct from a component's Small body text. */
   --text-section: 17px; /** Type style Section. Docs page section titles, and the docs page's opening sentence (docs/prd.md §8.2's default mapping snaps its 19px literal onto this style). */
@@ -56,6 +57,7 @@
   --leading-small: 1.5; /** Leading for Small — the Typography foundation's documented value. The prototype's own Callout body used 1.55; documented foundations win (ADR-0005), so 1.5 is used and the difference is flagged. */
   --leading-label: 1.4; /** Leading for Label. */
   --leading-callout-title: 1.2; /** Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review. */
+  --leading-heading: 1.15; /** Leading for the Text component's Heading role, harvested from the same specimen as `text.heading` (template lines 2994/3095's inline `line-height:1.15`). Flagged for the same reason. */
   --leading-micro: 1.4; /** Leading for Micro (docs/prd.md §8.2). */
   --leading-body: 1.6; /** Leading for Body (docs/prd.md §8.2). */
   --leading-section: 1.3; /** Leading for Section. docs/prd.md §8.2 lists this style's leading as "per prototype" without a fixed figure; the prototype's own section-title spans set no line-height at all (browser default), while the one wrapped use (the docs page's opening sentence, 19px → Section) used 1.55. 1.3 is a harvested middle value serving both; flagged pending the token decisions ticket. */

@@ -7,10 +7,12 @@ import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
 import { BUTTON_EXAMPLES } from "./button-examples";
 import { CALLOUT_EXAMPLES } from "./callout-examples";
+import { TEXT_EXAMPLES } from "./text-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   button: BUTTON_EXAMPLES,
   callout: CALLOUT_EXAMPLES,
+  text: TEXT_EXAMPLES,
 };
 
 function formatDate(iso: string) {

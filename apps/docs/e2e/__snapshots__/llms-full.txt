@@ -383,3 +383,93 @@ There is no Neutral tone here the way Toast has one — a Callout that claims no
 - v1.0.0 (18 Sept 2026): First specification. Named Callout to sit next to Toast without colliding, and given a Warning tone Toast deliberately omits — built from the same accent and #ff8f6b tokens Toast already established, split into two intensities rather than a new hue, to keep the amber-and-one-other-colour rule intact.
 
 ---
+
+## Text
+
+Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text
+
+Purpose: Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.
+
+### Description
+
+Text is two typefaces and four weights of grey, and every other typographic decision is already made.
+
+Space Grotesk sets headings and numerals; IBM Plex Mono sets everything else, which is why this shell reads like an instrument rather than a document. There is no separate colour for emphasis: importance is carried by the grey ramp — --fg, --dim, --mute, --faint — and amber is reserved for things that act. Bold and italic are not part of the system.
+
+### Anatomy
+
+1. Eyebrow — An 11px --faint caps line at .2em tracking, above the heading. It carries the coordinates — which pipeline, which run — so the heading does not have to spend words locating itself.
+2. Heading — Space Grotesk 600 with -.02em tracking, the only place the sans appears in a text block. Sentence case, one line, no full stop: it is a name, not a sentence.
+3. Body — IBM Plex Mono at 14px on 1.6, set in --dim rather than --fg so the heading above it keeps its rank. Two or three lines at about a 70-character measure.
+4. Emphasis — One step up the ramp to --fg for the clause that matters. This is the system’s entire emphasis vocabulary — no bold, no italic, no colour — so it can never compete with amber.
+5. Caption — The smallest role, 11px --faint caps: timestamps, codes, counts. Its job is to be available rather than read, which is why it sits below everything and never above the heading.
+
+### Variants
+
+- Eyebrow (--mute): An 11px --faint caps line at .2em tracking, above the heading. It carries the coordinates — which pipeline, which run — so the heading does not have to spend words locating itself.
+- Heading (--fg): Space Grotesk 600 with -.02em tracking, the only place the sans appears in a text block. Sentence case, one line, no full stop: it is a name, not a sentence.
+- Body (--dim): IBM Plex Mono at 14px on 1.6, set in --dim rather than --fg so the heading above it keeps its rank. Two or three lines at about a 70-character measure.
+- Caption (--mute): The smallest role, 11px --faint caps: timestamps, codes, counts. Its job is to be available rather than read, which is why it sits below everything and never above the heading.
+
+### Use when
+
+- One thing in a block matters more than the rest — move it up, not bigger.
+- A line is supporting detail — --mute says so without shrinking it.
+- The text is a machine fact nobody has to read — that is --faint.
+- Two lines sit side by side and one is the answer — the ramp ranks them.
+
+### Use something else when
+
+- badge: The text is a system-assigned status — that is a Badge.
+- button: The text acts when pressed — that is a Button or a link.
+- empty-state: There is no content to describe — that is an Empty state.
+
+### Content rules
+
+- Write headings in sentence case with no terminal punctuation, and keep them to one line — a wrapping heading is a body paragraph that has not admitted it yet.
+- Keep body paragraphs to three lines at a measure of roughly 70 characters. This shell is read while something is running; long copy will not be read at all.
+- Reserve tracked caps for two or three words. Labels and captions only — a sentence in caps costs the reader more than the emphasis is worth.
+- Set numbers in Grotesk with tabular figures wherever they stack, so a column of values lines up on the digit rather than drifting.
+- Use the // prefix voice for machine asides in captions, and never for anything the operator is expected to act on.
+
+### Examples
+
+- [demo] Stack
+- [demo] Eyebrow
+- [demo] Heading
+- [demo] Body
+- [demo] Caption
+- [good] Three steps down the ramp — Three steps down the ramp in one block: caption, heading, body. The hierarchy is colour, not size alone.
+- [bad] A whole block at --fg — Never set a whole block at --fg — when everything is loudest, the block has no shape at all.
+- [good] One clause, one step up — Emphasis inside a sentence is one step up the ramp, applied to the clause that matters.
+- [bad] Amber or weight for emphasis — Never emphasise with amber or with weight — amber is for things that act, and there is no bold in this system.
+- [good] Tracked label, Grotesk numeral — A label in tracked caps over a Grotesk numeral: the pattern every stat in the shell uses.
+- [bad] A sentence in tracked caps — Never run a sentence in tracked caps — the tracking that makes two words legible makes ten words a wall.
+
+### Accessibility
+
+- The ramp is measured: --fg reads 15.8:1 on --bg, --dim 10.4:1 and --mute 5.7:1, all above the 4.5:1 body threshold. --faint measures 4.1:1, which is why it is restricted to 11px caps captions that repeat information available elsewhere.
+- Size has a floor: Nothing below 10.5px, and nothing below 12px that carries information found nowhere else. The mono face buys legibility at small sizes but it does not buy an exemption.
+- Structure, not styling: A heading is an h2 or h3 because of where it sits in the document, not because of its size. Type roles here are visual; the outline underneath them has to stand on its own.
+- Colour is never alone: Error copy is --alarm and also says what is wrong in words; a struck-through line is also labelled complete. The ramp ranks importance — it never carries the meaning by itself.
+
+### Tokens
+
+- --fg: Headings, emphasis, values.
+- --dim: Body copy, panel labels.
+- --mute: Secondary lines, supporting detail.
+- --faint: Captions, codes, timestamps.
+
+### Related
+
+- badge (often-confused-with): Differs in that a badge is a system-assigned status in a box. Coloured text is not a badge, and a badge is never a way to emphasise a word.
+- button (contrasts-with): Where amber lives. If a run of text is amber and not inside a button or a link, something has taken the accent that should not have.
+- card (composes-with): The container these roles are usually composed inside: eyebrow, heading, body, caption is the card’s stack in the order given here.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Numeral role documented as tabular Grotesk; bold and italic ruled out; body colour fixed at --dim.
+- v1.0.1 (18 Aug 2026): --faint restricted to captions after contrast measurement; caption tracking raised to .2em.
+- v1.0.0 (11 Aug 2026): Type system introduced — Space Grotesk for headings, IBM Plex Mono for everything else.
+
+---

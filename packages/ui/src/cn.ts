@@ -19,7 +19,21 @@ export const cn: CnFunction = createCn({
       "ring-color": [{ ring: ["accent-line", "accent-soft"] }],
       "ring-offset-color": [{ "ring-offset": ["bg"] }],
       "font-size": [
-        { text: ["display", "title", "metric", "small", "label", "callout-title", "micro", "body", "section", "doc-title"] },
+        {
+          text: [
+            "display",
+            "title",
+            "metric",
+            "small",
+            "label",
+            "callout-title",
+            "heading",
+            "micro",
+            "body",
+            "section",
+            "doc-title",
+          ],
+        },
       ],
       "font-family": [{ font: ["heading", "body"] }],
       "font-weight": [{ font: ["regular", "semibold"] }],
