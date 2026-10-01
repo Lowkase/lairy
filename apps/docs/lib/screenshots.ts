@@ -20,6 +20,7 @@ const COMPONENT_SCREENSHOT_SLUGS: Record<string, string> = {
   badge: "badges",
   card: "cards",
   button: "buttons",
+  chip: "chips",
 };
 
 export interface CompareEntry {
