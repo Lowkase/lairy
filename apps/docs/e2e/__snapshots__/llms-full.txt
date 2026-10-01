@@ -474,6 +474,98 @@ There is no Neutral tone here the way Toast has one — a Callout that claims no
 
 ---
 
+## Chips
+
+Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/chip
+
+Purpose: A round-ended token representing a value the operator chose, such as a filter. The operator can dismiss it.
+
+### Description
+
+A chip is a small pressable pill carrying a value the operator has chosen.
+
+It is theirs, not the system's: they turn it on, combine it with others, or take it away. That ownership is the whole distinction from a Badge, which is the same size and casing but assigned by the system and inert. A chip also never commits anything — it narrows what is shown, so if the press has a consequence it is a Button.
+
+### Anatomy
+
+1. Container — A 20px pill — the one deliberate exception to the sharp-radius lock. The round shape is what tells an operator this is theirs to press, not the system's to assign.
+2. Label — 11.5px at .1em, uppercase. It names the value the chip carries, never the act of pressing it.
+3. Padding — 5px vertical, 13px horizontal, widening to 9px on the right when a dismiss glyph is present so the label never crowds it.
+4. Dismiss — An optional × on removable chips only. It is a second hit target inside the chip, so it appears only where removal is the point.
+
+### Variants
+
+- Filter (--border, --dim): The default. One of a small set, at most one active at a time, narrowing what is already on screen. Pressing it changes the view, never the data.
+- Toggle (--border, --dim): Same shape, but several can be on at once. Use when the facets combine rather than replace each other.
+- Removable (--border, --dim, --mute): Carries a value the operator has already committed — a token in Select (Multi), an applied filter. The × is the only way out.
+- Active (--accent, --accent-soft): Not a variant so much as the on state: amber border, soft amber fill, amber label. Only ever one visual treatment for on.
+
+There is no tonal chip — no info chip, no danger chip. Amber means on and that is the only colour a chip carries, because a coloured pill the operator can press would compete with the one action the page is actually asking for.
+
+### Use when
+
+- The operator is narrowing a view they can already see.
+- The facets are few enough to show at once, and worth showing without a click.
+- The choice is theirs to make and theirs to undo, with no submit in between.
+- A committed value needs to stay visible so it can be taken away later.
+
+### Use something else when
+
+- badge: The system assigns it and it cannot be pressed — that is a Badge.
+- button: Pressing it commits or changes something — that is a Button.
+- tabs: It switches between whole views — that is Navigation (Tabs).
+- select-multi: The options outgrow a single row — that is Select (Multi).
+
+### Content rules
+
+- Uppercase, 11.5px, .1em tracking — the same casing as a badge, so the shape rather than the type carries the difference.
+- One or two words naming the value: "OPEN", "LAST 7 DAYS". Never a verb — "FILTER" tells the operator nothing about what they get.
+- Keep a row of chips parallel in grammar and length; a set that mixes "OPEN" with "AWAITING MANUAL REVIEW" reads as unfinished.
+- No counts inside the label. If the number matters, it belongs in the results heading, not baked into the chip.
+- The same facet uses the same word wherever it appears, so a chip learned in one workspace is recognised in the next.
+
+### Examples
+
+- [demo] Filter
+- [demo] Toggle
+- [demo] Removable
+- [demo] Active
+- [good] One treatment for on — One visual treatment for on, and the labels name values in parallel grammar.
+- [bad] Tonal chips — Never give chips tonal colours — amber means on, and nothing else competes for it.
+- [good] A short row shown in full — A short row shown in full, so every facet is visible without a click.
+- [bad] Chips wrapped onto three lines — Never wrap chips onto three lines — past about seven this wanted a Select (Multi).
+- [good] Removable chips as tokens — Removable chips carry committed values, each with its own dismiss target.
+- [bad] An action inside a chip — Never put an action in a chip — a verb in a pill is a button wearing the wrong shape.
+
+### Accessibility
+
+- Pressed, not checked: A filter or toggle chip is a button that reports aria-pressed, so a screen reader announces "Open, pressed" rather than leaving the operator to infer state from colour.
+- Two targets, two labels: On a removable chip the body and the × are separate controls. The × carries its own label naming what it removes — "Remove Open" — never a bare "close".
+- Never colour alone: On state is amber border plus amber fill plus amber label plus aria-pressed. Three visual signals and one semantic one, because a single hue shift is invisible to a third of operators.
+- Hit area: The pill is 5px/13px padded to clear 32px in dense chrome. The × gets its own padding rather than shrinking the label's target.
+
+### Tokens
+
+- --border, --dim: Resting border and label
+- --border-2, --fg: Hover border and label
+- --accent, --accent-soft: Active border, fill and label
+- --accent-soft, --accent-line: Focus ring and its border
+- --mute: Dismiss glyph, brightening to --fg on hover
+
+### Related
+
+- badge (contrasts-with): Same size, opposite ownership. A badge is system-assigned and inert; if it can be pressed it belongs here.
+- select-multi (alternative): Where removable chips live as tokens. Use it instead when the option list is long enough to need a menu.
+- tabs (contrasts-with): Tabs switch between whole views; chips narrow the one view you are already in.
+
+### Changelog
+
+- v1.2.0 (21 Aug 2026): Removable variant documented; dismiss glyph given its own hit area and label.
+- v1.1.0 (16 Aug 2026): Pill radius kept at 20px as a named exception to the sharp-radius lock.
+- v1.0.0 (12 Aug 2026): Initial release — filter and toggle, single active treatment.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text

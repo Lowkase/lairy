@@ -1,0 +1,10 @@
+export { ChipFilterExample } from "./filter";
+export { ChipToggleExample } from "./toggle";
+export { ChipRemovableExample } from "./removable";
+export { ChipActiveExample } from "./active";
+export { ChipGoodOntoneExample } from "./good-ontone";
+export { ChipBadTonalExample } from "./bad-tonal";
+export { ChipGoodFewfacetsExample } from "./good-fewfacets";
+export { ChipBadToomanyExample } from "./bad-toomany";
+export { ChipGoodRemovableExample } from "./good-removable";
+export { ChipBadVerbExample } from "./bad-verb";

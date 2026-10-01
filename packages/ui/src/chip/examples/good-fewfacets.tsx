@@ -1,0 +1,12 @@
+import { Chip } from "../chip";
+
+export function ChipGoodFewfacetsExample() {
+  return (
+    <div className="flex flex-wrap gap-8">
+      <Chip pressed={true}>OPEN</Chip>
+      <Chip pressed={false}>DONE</Chip>
+      <Chip pressed={false}>ALL</Chip>
+      <Chip pressed={false}>ALERTS</Chip>
+    </div>
+  );
+}

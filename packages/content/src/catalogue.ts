@@ -9,6 +9,7 @@ import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
 import { modal } from "./entries/components/modal";
 import { progress } from "./entries/components/progress";
+import { selectMulti } from "./entries/components/select-multi";
 import { switchComponent } from "./entries/components/switch";
 import { tabs } from "./entries/components/tabs";
 import { text } from "./entries/components/text";
@@ -44,6 +45,7 @@ const components: ComponentEntry[] = [
   button,
   chip,
   progress,
+  selectMulti,
   tabs,
   switchComponent,
   text,
