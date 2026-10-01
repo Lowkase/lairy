@@ -16,7 +16,7 @@ export const cn: CnFunction = createCn({
       "bg-color": [{ bg: colorTokenNames }],
       "text-color": [{ text: colorTokenNames }],
       "border-color": [{ border: colorTokenNames }],
-      "ring-color": [{ ring: ["accent-line"] }],
+      "ring-color": [{ ring: ["accent-line", "accent-soft"] }],
       "ring-offset-color": [{ "ring-offset": ["bg"] }],
       "font-size": [
         { text: ["display", "title", "metric", "small", "label", "callout-title", "micro", "body", "section", "doc-title"] },

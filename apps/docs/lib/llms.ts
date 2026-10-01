@@ -104,6 +104,12 @@ function renderEntry(entry: ComponentEntry): string[] {
     lines.push("");
   }
 
+  if (entry.states.length > 0) {
+    lines.push("### States", "");
+    for (const state of entry.states) lines.push(`- ${state.name}: ${state.description}`);
+    lines.push("");
+  }
+
   if (entry.usage.useWhen.length > 0) {
     lines.push("### Use when", "");
     for (const row of entry.usage.useWhen) lines.push(`- ${row}`);

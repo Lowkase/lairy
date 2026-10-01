@@ -2,9 +2,13 @@ import type { ComponentEntry } from "./schema/component";
 import type { FoundationEntry } from "./schema/foundation";
 import type { TokenEntry } from "./schema/token";
 import { badge } from "./entries/components/badge";
+import { button } from "./entries/components/button";
 import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
+import { chip } from "./entries/components/chip";
 import { modal } from "./entries/components/modal";
+import { switchComponent } from "./entries/components/switch";
+import { tabs } from "./entries/components/tabs";
 import { toast } from "./entries/components/toast";
 import { accessibility } from "./entries/foundations/accessibility";
 import { color as colorFoundation } from "./entries/foundations/color";
@@ -28,7 +32,7 @@ import { extractProps, type ExtractedProp } from "./props";
 
 /** Every populated entry. Pattern entries join this list as their tickets
  * land (docs/prd.md §7) — the schema already exists (./schema/pattern). */
-const components: ComponentEntry[] = [callout, toast, modal, badge, card];
+const components: ComponentEntry[] = [callout, toast, modal, badge, card, button, chip, tabs, switchComponent];
 
 /** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by
  * LDS-015). */

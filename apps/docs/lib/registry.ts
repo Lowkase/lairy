@@ -54,20 +54,33 @@ export interface RegistryIndexItem {
 export const REGISTRY_NAME = "lairy";
 export const REGISTRY_HOMEPAGE = "https://github.com/Lowkase/lairy";
 
+/** Rewrites the package-relative `../cn` import every component source
+ * file uses to the path a registry consumer gets it copied in at instead
+ * (ADR-0002: components copy in, tokens stay a package). Shared by every
+ * builder below rather than only `buildCalloutItem`'s, now that more than
+ * one component exists. */
+function withLairyCnImport(source: string): string {
+  return replaceOrThrow(source, 'import { cn } from "../cn";', 'import { cn } from "@/lib/lairy-cn";');
+}
+
+const BUTTON_FILE = {
+  path: "packages/ui/src/button/button.tsx",
+  target: "components/ui/button/button.tsx",
+  type: "registry:ui" as const,
+};
+
+const CN_FILE = {
+  path: "packages/ui/src/cn.ts",
+  target: "lib/lairy-cn.ts",
+  type: "registry:lib" as const,
+};
+
 function buildCalloutItem(): RegistryItem {
   const entry = getComponent("callout");
   if (!entry) throw new Error('registry: content entry "callout" not found.');
 
-  // The shipped component imports its cn helper from a package-relative
-  // path (../cn); a registry consumer gets it copied in at lib/lairy-cn.ts
-  // instead (ADR-0002: components copy in, tokens stay a package).
-  const calloutSource = replaceOrThrow(
-    readSource("packages/ui/src/callout/callout.tsx"),
-    'import { cn } from "../cn";',
-    'import { cn } from "@/lib/lairy-cn";',
-  );
+  const calloutSource = withLairyCnImport(readSource("packages/ui/src/callout/callout.tsx"));
   const calloutIconSource = readSource("packages/ui/src/callout/callout-icon.tsx");
-  const cnSource = readSource("packages/ui/src/cn.ts");
 
   return {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -79,15 +92,15 @@ function buildCalloutItem(): RegistryItem {
     // file's `dependencies` will end up aggregating every component's
     // needs once more than one exists, which isn't the same list as what
     // *this* item's files import — keep this in sync with what
-    // callout.tsx/callout-icon.tsx/cn.ts actually import instead.
+    // callout.tsx/callout-icon.tsx/button.tsx/cn.ts actually import instead.
     //
     // Bare names (no version): the shadcn CLI skips a dependency that's
     // already present in the target project's package.json instead of
-    // re-resolving it from the npm registry. @lairy/tokens isn't published
-    // there yet (ADR-0002), so a consuming app installs it locally first
-    // (docs/build-guide.md's registry seam test does exactly this) and the
-    // CLI leaves that entry alone; the other two are real npm packages the
-    // CLI installs normally.
+    // re-resolving it from the public registry. @lairy/tokens isn't
+    // published there yet (ADR-0002), so a consuming app installs it
+    // locally first (docs/build-guide.md's registry seam test does exactly
+    // this) and the CLI leaves that entry alone; the other two are real npm
+    // packages the CLI installs normally.
     dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
     files: [
       {
@@ -102,18 +115,47 @@ function buildCalloutItem(): RegistryItem {
         type: "registry:ui",
         content: calloutIconSource,
       },
-      {
-        path: "packages/ui/src/cn.ts",
-        target: "lib/lairy-cn.ts",
-        type: "registry:lib",
-        content: cnSource,
-      },
+      // Callout's action slot renders Button (LDS-018). Inlined directly
+      // here, the same way callout-icon.tsx already is, rather than
+      // declared via `registryDependencies: ["button"]`: the shadcn CLI
+      // resolves bare registryDependency names against the registry
+      // configured in the *consumer's* components.json, which has no entry
+      // for our local "button" item (confirmed against the registry seam
+      // test, apps/docs/e2e/registry-install.spec.ts, which installs
+      // Callout from a raw item URL with no `registries` mapping
+      // configured) — it isn't a path this repo's own fixture can rely on.
+      // Its target matches buildButtonItem's own, so installing both
+      // "callout" and "button" later doesn't duplicate the file.
+      { ...BUTTON_FILE, content: withLairyCnImport(readSource(BUTTON_FILE.path)) },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
+function buildButtonItem(): RegistryItem {
+  const entry = getComponent("button");
+  if (!entry) throw new Error('registry: content entry "button" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "button",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
+    files: [
+      { ...BUTTON_FILE, content: withLairyCnImport(readSource(BUTTON_FILE.path)) },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
     ],
   };
 }
 
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
+  button: buildButtonItem,
 };
 
 export function listRegistryItemNames(): string[] {
