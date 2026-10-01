@@ -47,6 +47,12 @@
       "$description": "Callout title size, harvested from the prototype's renderCallout(). Does not match a documented type style (styles land at 13/Small or 17/Section; nothing between). Proposed as-is pending the token decisions ticket (docs/prd.md Q1-adjacent) — flagged in the PR.",
       "$extensions": { "lairy": { "flagged": true } }
     },
+    "heading": {
+      "$type": "dimension",
+      "$value": "24px",
+      "$description": "Type style for the Text component's Heading role (names a panel, a card or a section inside a block of copy), harvested from the Text page's own specimens (archive/v1 txAnatomy #2 and its \"Live\" ramp panel, template lines 2994 and 3095: 24px, -.02em tracking). Falls between Section (17px) and Title/Metric (28px) and isn't covered by docs/prd.md §8.2's default off-scale mapping, so it is a new, flagged step rather than a reuse of one of the foundation's six documented scales. Proposed as-is pending the token decisions ticket — the same treatment given to Callout's own `callout-title` (LDS-005).",
+      "$extensions": { "lairy": { "flagged": true } }
+    },
     "micro": {
       "$type": "dimension",
       "$value": "11px",
@@ -78,6 +84,12 @@
       "$type": "number",
       "$value": 1.2,
       "$description": "Callout title leading. Not specified in the prototype's inline style (browser normal ~1.2 for a single-line 600-weight label); harvested as a proposed value pending review.",
+      "$extensions": { "lairy": { "flagged": true } }
+    },
+    "heading": {
+      "$type": "number",
+      "$value": 1.15,
+      "$description": "Leading for the Text component's Heading role, harvested from the same specimen as `text.heading` (template lines 2994/3095's inline `line-height:1.15`). Flagged for the same reason.",
       "$extensions": { "lairy": { "flagged": true } }
     },
     "micro": { "$type": "number", "$value": 1.4, "$description": "Leading for Micro (docs/prd.md §8.2)." },

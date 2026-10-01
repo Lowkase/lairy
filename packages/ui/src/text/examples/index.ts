@@ -1,0 +1,11 @@
+export { TextStackExample } from "./stack";
+export { TextEyebrowExample } from "./eyebrow";
+export { TextHeadingExample } from "./heading";
+export { TextBodyExample } from "./body";
+export { TextCaptionExample } from "./caption";
+export { TextGoodHierarchyExample } from "./good-hierarchy";
+export { TextBadHierarchyExample } from "./bad-hierarchy";
+export { TextGoodEmphasisExample } from "./good-emphasis";
+export { TextBadEmphasisExample } from "./bad-emphasis";
+export { TextGoodNumeralExample } from "./good-numeral";
+export { TextBadNumeralExample } from "./bad-numeral";

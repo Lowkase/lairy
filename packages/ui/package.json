@@ -9,7 +9,8 @@
     ".": "./src/index.ts",
     "./icons": "./src/icons/index.ts",
     "./button/examples": "./src/button/examples/index.ts",
-    "./callout/examples": "./src/callout/examples/index.ts"
+    "./callout/examples": "./src/callout/examples/index.ts",
+    "./text/examples": "./src/text/examples/index.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
