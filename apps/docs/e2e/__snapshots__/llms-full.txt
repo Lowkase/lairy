@@ -138,7 +138,12 @@
 
 | Token | Value | Use for | Never for | Rationale |
 |---|---|---|---|---|
-| `--icon-callout` | 17px | Callout's icon width and height (17×17), harvested from the prototype's calloutIcon(). | — | A dimension, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary. It is also a component-specific value rather than a documented scale step: no Icons foundation size scale exists yet (LDS-017), so this token is an exception pending that ticket rather than the first entry of one. |
+| `--icon-callout` | 17px | Callout's icon width and height (17×17), harvested from the prototype's calloutIcon(). | — | A dimension, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary. It predates the Icons foundation size scale below and stays a standalone exception rather than being folded into it: 17px is Callout's own harvested value, not an instance of the Inline icon scale's 16px box. |
+| `--icon-glyph-rail` | 22px | The Glyph box in the dock rail and other collapsed-nav contexts (Icons foundation, Glyph scale). | — | A dimension, not a colour — one value for both themes by design. The lower end of the Glyph scale's documented 22–34px range (icoDocs); packages/content/src/entries/foundations/icons.ts's own extractionNotes flagged this range as tokenless pending this ticket (LDS-017). |
+| `--icon-glyph-tile` | 34px | The Glyph box for section tiles and empty states (Icons foundation, Glyph scale). | — | A dimension, not a colour — one value for both themes by design. The upper end of the Glyph scale's range and the prototype glyph()'s own default size; the Glyph React component (packages/ui/src/icons/glyph.tsx) defaults to this size. |
+| `--icon-inline` | 16px | The Inline icon box (Icons foundation, Inline icon scale). | — | A dimension, not a colour — one value for both themes by design. Fixed rather than a range: the prototype's icon() hardcodes 16×16 with no size parameter, because the Inline icon scale is sized to match 14px body text rather than a rail/tile pair like Glyph. |
+| `--icon-stroke-glyph` | 2.2 | Stroke width for every Glyph path (Icons foundation Construction rule 2). | — | A number, not a colour — one value for both themes by design; a stroke weight has no dark/light axis. Heavier than the inline stroke on purpose, per the Icons foundation: at 22px in a column of its own, a glyph has no adjacent type to borrow weight from. |
+| `--icon-stroke-inline` | 2 | Stroke width for every Inline icon path (Icons foundation Construction rule 2). | — | A number, not a colour — one value for both themes by design. Sized and weighted to match 14px body text, which is why it looks thin if scaled up into Glyph territory. |
 
 ## Motion — easing
 

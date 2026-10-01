@@ -118,7 +118,12 @@ export const tracking = {
 } as const;
 
 export const icon = {
-  "callout": "17px"
+  "callout": "17px",
+  "glyphRail": "22px",
+  "glyphTile": "34px",
+  "inline": "16px",
+  "strokeGlyph": 2.2,
+  "strokeInline": 2
 } as const;
 
 export const easing = {

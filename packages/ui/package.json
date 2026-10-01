@@ -7,6 +7,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./icons": "./src/icons/index.ts",
     "./callout/examples": "./src/callout/examples/index.ts"
   },
   "scripts": {

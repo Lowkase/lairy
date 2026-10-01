@@ -28,13 +28,13 @@ export const icons = FoundationEntrySchema.parse({
   scales: [
     {
       name: "Glyph",
-      tokens: [],
+      tokens: ["icon-glyph-rail", "icon-glyph-tile", "icon-stroke-glyph"],
       description:
         "Navigation and identity: the dock rail at 22px, section tiles and empty states at 30–34px. A glyph stands for a place, so it is drawn to survive being the only thing in the row when the rail collapses. The 2.2 stroke is heavier than the inline family on purpose — at 22px in a column of its own it has no adjacent type to borrow weight from.",
     },
     {
       name: "Inline icon",
-      tokens: [],
+      tokens: ["icon-inline", "icon-stroke-inline"],
       description:
         "Anything that sits on a text baseline: menu rows, command palette results, a leading mark inside a Button. It is sized and weighted to match 14px body text, which is why it looks thin the moment you scale it up into rail territory.",
     },
@@ -120,9 +120,9 @@ export const icons = FoundationEntrySchema.parse({
     },
   ],
   extractionNotes: [
-    "Section 01 \"Families\" (`icoFamilies`, two rows: Glyph and Inline icon) becomes `scales`. Each row's long `b` field becomes the scale's `description`, verbatim. Unlike Color, Typography, Spacing and Radius, neither row names a CSS custom property — the family table documents a grid, a stroke weight and a render-size range, none of which has a token yet (packages/content/src/entries/tokens/icon.ts's own comment: \"No Icons foundation size scale exists yet (LDS-017)\" — this ticket). `tokens` is left empty for both rather than inventing one (AGENTS.md rule 1), and the gap is flagged here for the token decisions backlog rather than silently closed.",
+    "Section 01 \"Families\" (`icoFamilies`, two rows: Glyph and Inline icon) becomes `scales`. Each row's long `b` field becomes the scale's `description`, verbatim. Unlike Color, Typography, Spacing and Radius, neither row originally named a CSS custom property — the family table documents a grid, a stroke weight and a render-size range, none of which had a token (packages/content/src/entries/tokens/icon.ts's own comment: \"No Icons foundation size scale exists yet (LDS-017)\"). `tokens` was left empty for both rather than inventing one (AGENTS.md rule 1); LDS-017 (this ticket, porting the glyph and inline icon React components) adds `--icon-glyph-rail`, `--icon-glyph-tile` and `--icon-stroke-glyph` for Glyph, and `--icon-inline`/`--icon-stroke-inline` for Inline icon, taken directly from the values already stated in this scale's own `description` text rather than new design decisions.",
     "Section 02 \"The set\" (`icoGlyphSet`, 12 named glyphs; `icoInlineSet`, 5 named inline icons) is not stored in this entry: it is a literal icon inventory — which SVG exists under which name — belonging to the icon components themselves once they are ported (docs/build-guide.md §2's \"Icons are ported as SVG React components\"), not Foundation prose. The set's own closing note (\"Seventeen marks total...\") is likewise not carried over, since it explains the table rather than stating a rule.",
-    "Section 07 \"Tokens\" (`icoTokens`) lists five colour tokens (--fg, --dim, --mute, --accent, currentColor) plus literal sizes and stroke widths with no token of their own, mirroring the Families table's own gap. It is not duplicated as a `scales` entry: unlike Elevation's or Visualization's token tables (which name one role per row), `icoTokens` doesn't say which family each colour belongs to, so mapping it onto the two Families rows would be inventing a split the source doesn't state. Flagged rather than guessed.",
+    "Section 07 \"Tokens\" (`icoTokens`) lists five colour tokens (--fg, --dim, --mute, --accent, currentColor) plus the same sizes and stroke widths the Families table states (now tokenised, see the first note above). The colour tokens are not duplicated as a `scales` entry: unlike Elevation's or Visualization's token tables (which name one role per row), `icoTokens` doesn't say which family each colour belongs to, so mapping it onto the two Families rows would be inventing a split the source doesn't state. Flagged rather than guessed.",
     "`icoRelated()`'s three cards target MainNav (a component, no entry yet), Typography and Color. Per catalogue.ts's existing scope boundary (foundation `relationships` resolve only against the foundations catalogue, LDS-014), MainNav is dropped rather than left dangling; Typography and Color are kept.",
     "Section 05 \"Do and don't\" is not stored in this entry, the same as the other foundations extracted so far (docs/build-guide.md §4 step 6 — component examples, not Foundation content).",
   ],

@@ -12,9 +12,9 @@ import {
 /** A table or scale a foundation documents, referenced by the tokens that
  * make it up rather than by re-stating their values (docs/prd.md §7.2).
  * Not every row names a token — a foundation sometimes documents a locked
- * value with no token of its own yet (e.g. Radius's circle, Icons' grid and
- * stroke); an empty `tokens` array is that case, not an error, and the
- * entry's `extractionNotes` says why. */
+ * value with no token of its own yet (e.g. Radius's circle); an empty
+ * `tokens` array is that case, not an error, and the entry's
+ * `extractionNotes` says why. */
 export const ScaleSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),

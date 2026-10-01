@@ -327,10 +327,12 @@ describe("token catalogue (LDS-013)", () => {
 
   it("the real token catalogue covers every token exported by @lairy/tokens", () => {
     // 17 colour + 4 alarm + 33 typography (2 family + 2 weight + 10 size +
-    // 10 leading + 9 tracking) + 9 spacing + 2 radius + 1 icon + 7 motion
-    // (3 easing + 4 duration) + 13 elevation (8 shadow + 5 z-index) +
-    // 3 breakpoint = 89 (docs/prd.md §7.2, #15 acceptance criterion 1).
-    expect(listTokens()).toHaveLength(89);
+    // 10 leading + 9 tracking) + 9 spacing + 2 radius + 6 icon (LDS-017:
+    // callout, glyph-rail, glyph-tile, inline, stroke-glyph, stroke-inline)
+    // + 7 motion (3 easing + 4 duration) + 13 elevation (8 shadow + 5
+    // z-index) + 3 breakpoint = 94 (docs/prd.md §7.2, #15 acceptance
+    // criterion 1).
+    expect(listTokens()).toHaveLength(94);
   });
 
   it("getToken resolves a real colour token by its CSS variable name", () => {
