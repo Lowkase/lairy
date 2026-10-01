@@ -8,6 +8,7 @@ import { card } from "./entries/components/card";
 import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
 import { modal } from "./entries/components/modal";
+import { progress } from "./entries/components/progress";
 import { switchComponent } from "./entries/components/switch";
 import { tabs } from "./entries/components/tabs";
 import { text } from "./entries/components/text";
@@ -42,6 +43,7 @@ const components: ComponentEntry[] = [
   card,
   button,
   chip,
+  progress,
   tabs,
   switchComponent,
   text,

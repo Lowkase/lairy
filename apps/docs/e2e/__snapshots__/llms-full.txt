@@ -195,6 +195,96 @@
 
 # Components
 
+## Badges
+
+Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/badge
+
+Purpose: A small, square, system-assigned label stating a standing condition on a row. The operator cannot dismiss it.
+
+### Description
+
+A badge is a static label that reports the state of the thing it sits beside.
+
+It is assigned by the system, never by the operator, and it is never clickable. The moment a badge can be pressed, filtered or dismissed it has become a Chip and belongs on that page instead. This is the one rule that keeps the two apart — everything below follows from it.
+
+### Anatomy
+
+1. Container — 1px hairline, 2px radius, transparent fill. Never a solid block — filled badges compete with buttons.
+2. Label — 10.5px, uppercase, .12em tracking. One word where possible, two at most.
+3. Padding — 2px vertical, 8px horizontal. Fixed — badges never grow to fill a column.
+4. Parent — The row, card or title the badge annotates. A badge never floats free of one.
+
+### Variants
+
+- Neutral (--mute, --border): Classification with no judgement attached — origin, type, owner.
+- Info (--accent-2, --accent-2-line): A fact worth noticing that needs no response.
+- Success (--accent, --accent-line): A good terminal state — passed, approved, running.
+- Fail (--alarm, --alarm-line): A bad terminal state. The only badge that may sit alone in a row.
+
+There is no Warning tone. A state is either fine, notable, or broken — a fourth degree of alarm gets ignored along with the third.
+
+### Use when
+
+- The state is assigned by the system and the operator cannot change it directly.
+- The state belongs to something else on screen — a row, a card, a title.
+- It matters at a glance, scanned rather than read.
+- The vocabulary is closed: a fixed set of words, not free text.
+
+### Use something else when
+
+- chip: It can be clicked, toggled or removed — that is a Chip.
+- toast: It announces an event that just happened — that is a Toast.
+- progress: It reports a quantity moving over time — that is Progress.
+
+### Content rules
+
+- Uppercase, 10.5px, .12em tracking. Never sentence case.
+- One word wherever the language allows. Two is the ceiling; "PENDING REVIEW" is the longest badge in the system.
+- State, not instruction. "FAILED", never "FIX THIS".
+- No punctuation, no ellipsis, no counts inside the label — a count is its own component.
+- The same state uses the same word everywhere. "LIVE" is never also "ACTIVE" or "RUNNING".
+
+### Examples
+
+- [demo] Neutral
+- [demo] Info
+- [demo] Success
+- [demo] Fail
+- [good] Badge beside its title — Badge annotates its parent, on the same baseline as the title.
+- [bad] Three badges stacked — Never stack badges — if a row needs three, the row needs a column instead.
+- [good] One-word label — One word, uppercase, no punctuation.
+- [bad] A sentence as a label — Never a sentence. Badges are read at a glance, not parsed.
+- [good] Colour plus word — Colour plus word. The word carries the meaning on its own.
+- [bad] Colour alone — Never colour alone — a bare dot is unreadable to a third of operators.
+
+### Accessibility
+
+- Not focusable: A badge takes no tabindex and no role. It is text inside its parent, so a screen reader announces it as part of the row rather than as a separate stop.
+- Never colour alone: Every badge carries a word. Tone reinforces the word; it never replaces it. This is what keeps the four tones legible under deuteranopia.
+- Contrast: All four tones clear 4.5:1 against --panel in both themes. Fail is the tightest at 4.6:1 in light — do not tint it further.
+- Reading order: The badge follows the title it modifies in source order, so the announcement reads "Normalize step, failed" rather than "failed, Normalize step".
+
+### Tokens
+
+- --mute, --border: Neutral tone
+- --accent-2, --accent-2-line: Info tone
+- --accent, --accent-line: Success tone
+- --panel: Assumed backdrop for contrast
+
+### Related
+
+- chip (contrasts-with): Interactive and user-owned. If it can be clicked, filtered or dismissed, it is a chip.
+- toast (often-confused-with): Same four intents, but transient and system-initiated. A badge persists; a toast interrupts.
+- progress (alternative): Use when the state is a quantity over time rather than a name.
+
+### Changelog
+
+- v1.2.0 (16 Aug 2026): Tones realigned to the four Toast intents. Info moved to Ice.
+- v1.1.0 (15 Aug 2026): Container radius locked to 2px with the system-wide sharp lock.
+- v1.0.0 (11 Aug 2026): Initial release — four tones, label format only.
+
+---
+
 ## Buttons
 
 Status: stable · Version: 1.3.0 · Updated: 1 Oct 2026 · /components/button

@@ -8,6 +8,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./icons": "./src/icons/index.ts",
+    "./badge/examples": "./src/badge/examples/index.ts",
     "./button/examples": "./src/button/examples/index.ts",
     "./callout/examples": "./src/callout/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts"

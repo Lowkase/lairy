@@ -1,0 +1,10 @@
+export { BadgeNeutralExample } from "./neutral";
+export { BadgeInfoExample } from "./info";
+export { BadgeSuccessExample } from "./success";
+export { BadgeFailExample } from "./fail";
+export { BadgeGoodInlineExample } from "./good-inline";
+export { BadgeBadStackExample } from "./bad-stack";
+export { BadgeGoodShortExample } from "./good-short";
+export { BadgeBadLongExample } from "./bad-long";
+export { BadgeGoodWordExample } from "./good-word";
+export { BadgeBadDotonlyExample } from "./bad-dotonly";
