@@ -10,6 +10,7 @@ import {
   listComponents,
   listFoundations,
   listTokens,
+  tokensByName,
   validateCatalogue,
   validateFoundationCatalogue,
   validateTokenCatalogue,
@@ -217,15 +218,45 @@ describe("foundation catalogue (LDS-014)", () => {
     expect(entry?.scales).toHaveLength(7);
   });
 
-  it("Typography, Elevation and Accessibility exist as draft stubs for Color's relationships", () => {
-    for (const id of ["typography", "elevation", "accessibility"]) {
-      const stub = getFoundation(id);
-      expect(stub?.meta.status).toBe("draft");
+  it("all nine foundations are stable, with Color's relationships resolving to real entries (LDS-015)", () => {
+    for (const id of [
+      "color",
+      "typography",
+      "spacing",
+      "radius",
+      "icons",
+      "elevation",
+      "motion",
+      "visualization",
+      "accessibility",
+    ]) {
+      const entry = getFoundation(id);
+      expect(entry?.meta.status).toBe("stable");
     }
     const color = getFoundation("color");
     for (const target of ["typography", "elevation", "accessibility"]) {
       expect(color?.relationships.some((r) => r.target === target)).toBe(true);
     }
+  });
+
+  it("every foundation's scale tokens resolve against the real token catalogue", () => {
+    for (const entry of listFoundations()) {
+      for (const scale of entry.scales) {
+        for (const tokenName of scale.tokens) {
+          expect(getToken(`--${tokenName}`), `${entry.meta.id} scale "${scale.name}" → --${tokenName}`).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  it("validateFoundationCatalogue throws when a scale references an unknown token", () => {
+    const withUnknownToken = FoundationEntrySchema.parse({
+      ...validFoundation,
+      scales: [{ name: "Bad", tokens: ["not-a-real-token"], description: "x" }],
+    });
+    expect(() => validateFoundationCatalogue([withUnknownToken], tokensByName)).toThrow(
+      /references unknown token/,
+    );
   });
 });
 

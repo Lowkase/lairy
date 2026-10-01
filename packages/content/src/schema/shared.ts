@@ -15,6 +15,20 @@ export type EntryId = z.infer<typeof EntryIdSchema>;
 export const ColorTokenNameSchema = z.enum(colorTokenNames);
 export type ColorTokenName = z.infer<typeof ColorTokenNameSchema>;
 
+/** A bare token name (no leading `--`), for a Foundation scale that can
+ * reference any token group — not only colour (LDS-015: Typography,
+ * Spacing, Radius, Icons, Elevation and Motion all document their own
+ * tokens, not colour ones). Unlike `ColorTokenNameSchema`, this isn't a
+ * closed enum against a generated list — @lairy/tokens only exports a name
+ * array for colour tokens today (ADR-0008) — so the existence check runs
+ * once both catalogues are loaded, in catalogue.ts's
+ * `validateFoundationCatalogue`, the same way dangling relationship targets
+ * are checked there rather than by Zod alone. */
+export const TokenRefSchema = z.string().regex(/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/, {
+  message: "Token refs are bare, kebab-case token names with no leading \"--\" (e.g. \"text-display\").",
+});
+export type TokenRef = z.infer<typeof TokenRefSchema>;
+
 export const StatusSchema = z.enum(["draft", "stable", "locked", "deprecated"]);
 export type Status = z.infer<typeof StatusSchema>;
 

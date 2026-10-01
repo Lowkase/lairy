@@ -9,7 +9,12 @@ import { toast } from "./entries/components/toast";
 import { accessibility } from "./entries/foundations/accessibility";
 import { color as colorFoundation } from "./entries/foundations/color";
 import { elevation } from "./entries/foundations/elevation";
+import { icons } from "./entries/foundations/icons";
+import { motion } from "./entries/foundations/motion";
+import { radius } from "./entries/foundations/radius";
+import { spacing } from "./entries/foundations/spacing";
 import { typography } from "./entries/foundations/typography";
+import { visualization } from "./entries/foundations/visualization";
 import { alarmTokens } from "./entries/tokens/alarm";
 import { breakpointTokens } from "./entries/tokens/breakpoint";
 import { colorTokens } from "./entries/tokens/color";
@@ -25,8 +30,19 @@ import { extractProps, type ExtractedProp } from "./props";
  * land (docs/prd.md §7) — the schema already exists (./schema/pattern). */
 const components: ComponentEntry[] = [callout, toast, modal, badge, card];
 
-/** Every Foundation entry (docs/prd.md §7.2 — LDS-014). */
-const foundations: FoundationEntry[] = [colorFoundation, typography, elevation, accessibility];
+/** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by
+ * LDS-015). */
+const foundations: FoundationEntry[] = [
+  colorFoundation,
+  typography,
+  spacing,
+  radius,
+  icons,
+  elevation,
+  motion,
+  visualization,
+  accessibility,
+];
 
 /** Every token entry (docs/prd.md §7.2, §9 — LDS-013). */
 const tokens: TokenEntry[] = [
@@ -128,13 +144,48 @@ export function getComponentProps(id: string): ComponentProp[] | undefined {
   return entry && buildComponentProps(entry);
 }
 
-/** Exported for its own tests — duplicate ids and dangling relationship
- * targets, run against synthetic entries rather than only the real
- * catalogue below. Foundations relate only to other foundations so far
- * (docs/prd.md §9's `get_foundation`, LDS-014), so this checks relationship
- * targets against the foundations list alone, the same way
- * `validateTokenCatalogue` below checks only within its own list. */
-export function validateFoundationCatalogue(entries: FoundationEntry[]): Map<string, FoundationEntry> {
+/** Exported for its own tests — a duplicate token name, run against
+ * synthetic entries rather than only the real catalogue below. */
+export function validateTokenCatalogue(entries: TokenEntry[]): Map<string, TokenEntry> {
+  const byName = new Map<string, TokenEntry>();
+  for (const entry of entries) {
+    if (byName.has(entry.name)) {
+      throw new Error(`@lairy/content: duplicate token name "${entry.name}" (docs/prd.md §7).`);
+    }
+    byName.set(entry.name, entry);
+  }
+  return byName;
+}
+
+/** Validated at import time, same as `componentsById` above. Computed ahead
+ * of `foundationsById` (below) so a foundation's `scales[].tokens` can be
+ * checked against it — a Scale now references any token group, not only
+ * colour (LDS-015), so the closed-enum check `ColorTokenNameSchema` used to
+ * provide no longer covers it; this is that check's catalogue-level
+ * replacement, the same pattern as the dangling-relationship check below. */
+export const tokensByName = validateTokenCatalogue(tokens);
+
+export function listTokens(): TokenEntry[] {
+  return [...tokensByName.values()];
+}
+
+export function getToken(name: string): TokenEntry | undefined {
+  return tokensByName.get(name);
+}
+
+/** Exported for its own tests — duplicate ids, dangling relationship
+ * targets and unknown scale tokens, run against synthetic entries rather
+ * than only the real catalogue below. Foundations relate only to other
+ * foundations so far (docs/prd.md §9's `get_foundation`, LDS-014), so this
+ * checks relationship targets against the foundations list alone, the same
+ * way `validateTokenCatalogue` above checks only within its own list.
+ * `knownTokens` is optional so the unit tests exercising duplicate-id and
+ * dangling-relationship behaviour (catalogue.test.ts) don't also have to
+ * supply a token catalogue; the real call below always passes one. */
+export function validateFoundationCatalogue(
+  entries: FoundationEntry[],
+  knownTokens?: Map<string, TokenEntry>,
+): Map<string, FoundationEntry> {
   const byId = new Map<string, FoundationEntry>();
   for (const entry of entries) {
     const { id } = entry.meta;
@@ -152,13 +203,24 @@ export function validateFoundationCatalogue(entries: FoundationEntry[]): Map<str
         );
       }
     }
+    if (knownTokens) {
+      for (const scale of entry.scales) {
+        for (const tokenName of scale.tokens) {
+          if (!knownTokens.has(`--${tokenName}`)) {
+            throw new Error(
+              `@lairy/content: "${entry.meta.id}" scale "${scale.name}" references unknown token "--${tokenName}" (docs/prd.md §7: an unknown token name fails the build).`,
+            );
+          }
+        }
+      }
+    }
   }
 
   return byId;
 }
 
 /** Validated at import time, same as `componentsById` above. */
-export const foundationsById = validateFoundationCatalogue(foundations);
+export const foundationsById = validateFoundationCatalogue(foundations, tokensByName);
 
 export function listFoundations(): FoundationEntry[] {
   return [...foundationsById.values()];
@@ -166,28 +228,4 @@ export function listFoundations(): FoundationEntry[] {
 
 export function getFoundation(id: string): FoundationEntry | undefined {
   return foundationsById.get(id);
-}
-
-/** Exported for its own tests — a duplicate token name, run against
- * synthetic entries rather than only the real catalogue below. */
-export function validateTokenCatalogue(entries: TokenEntry[]): Map<string, TokenEntry> {
-  const byName = new Map<string, TokenEntry>();
-  for (const entry of entries) {
-    if (byName.has(entry.name)) {
-      throw new Error(`@lairy/content: duplicate token name "${entry.name}" (docs/prd.md §7).`);
-    }
-    byName.set(entry.name, entry);
-  }
-  return byName;
-}
-
-/** Validated at import time, same as `componentsById` above. */
-export const tokensByName = validateTokenCatalogue(tokens);
-
-export function listTokens(): TokenEntry[] {
-  return [...tokensByName.values()];
-}
-
-export function getToken(name: string): TokenEntry | undefined {
-  return tokensByName.get(name);
 }
