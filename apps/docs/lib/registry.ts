@@ -284,6 +284,34 @@ function buildLoadingItem(): RegistryItem {
   };
 }
 
+function buildProgressItem(): RegistryItem {
+  const entry = getComponent("progress");
+  if (!entry) throw new Error('registry: content entry "progress" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "progress",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. No class-variance-authority: like
+    // Loading, Progress's three variants are a discriminated union, not a
+    // cva style map.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/progress/progress.tsx",
+        target: "components/ui/progress/progress.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/progress/progress.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildButtonItem(): RegistryItem {
   const entry = getComponent("button");
   if (!entry) throw new Error('registry: content entry "button" not found.');
@@ -364,6 +392,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   chip: buildChipItem,
   "empty-state": buildEmptyStateItem,
   loading: buildLoadingItem,
+  progress: buildProgressItem,
   button: buildButtonItem,
   text: buildTextItem,
   "usage-card": buildUsageCardItem,

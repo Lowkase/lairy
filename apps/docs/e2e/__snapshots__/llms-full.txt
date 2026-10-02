@@ -838,6 +838,95 @@ There is no spinner in this system, and no full-screen loading overlay. A rotati
 
 ---
 
+## Progress
+
+Status: stable · Version: 1.1.0 · Updated: 2 Oct 2026 · /components/progress
+
+Purpose: Reports a measured fraction of a known total, and nothing else.
+
+### Description
+
+Progress reports a measured fraction of a known total, and nothing else.
+
+The whole component rests on one condition: the system honestly knows the denominator. That is the line against Loading — while the total is unknown the answer is a phase label and a sweep, and the moment it becomes knowable this takes over. A bar that fakes a fraction is worse than no bar at all, because the operator plans around it.
+
+### Anatomy
+
+1. Label — What is being counted, in 12.5px --dim sentence case: "Exporting runs". It names the work rather than the state, so the bar is legible the second the operator glances at it.
+2. Value — The measured fraction in --mute, written as a count wherever a count exists — 132 / 214 rather than 62%. A percentage is a derived number; the count is the thing the operator can act on.
+3. Fill — --accent at 85% opacity, animating its width over 300ms so a jump of several percent reads as movement rather than a redraw. It only ever moves forward.
+4. Track — A 5px --panel-2 bar, square-cornered like everything else, spanning the full width of its container. Its length is the denominator made visible, which is why it is never sized to the content.
+5. Caption — One optional 11px --faint line under the bar, in the // phase voice, for what the fraction cannot say: which shard is being written, how much time is left. Present only when it is true.
+
+### Variants
+
+- Bar (--panel-2, --accent): One long task with a countable total — 132 of 214 runs exported. The default, and the only variant allowed to carry an estimate of time remaining.
+- Steps (--accent, --panel-2): A pipeline with named stages, where being halfway through stage two is not information the operator can use. Segments fill whole; they never fill partially.
+- Meter (--panel-2, --accent): A quantity inside a table row or a card, where the surrounding row already names it — quota used, coverage, capacity. It reports a level, not necessarily work in flight.
+
+There is no indeterminate bar and no spinner. A bar that animates without a denominator is a lie told smoothly — that case belongs to Loading, which says what the system is doing instead of pretending to know how far along it is.
+
+### Use when
+
+- The system can count both what is done and what is left.
+- The work runs long enough that the operator would otherwise wonder — roughly five seconds and up.
+- The fraction is a level worth knowing on its own: quota, coverage, capacity.
+- The stages are named and discrete, and finishing one is the news.
+
+### Use something else when
+
+- loading: The total is unknown — that is Loading, with a phase label.
+- toast: The result is already in and only needs reporting — that is a Toast.
+
+### Content rules
+
+- The label is a present participle naming the work: "Exporting runs", "Indexing documents" — never "Loading", never "Please wait".
+- Write the value as a count with the total: 132 / 214. Percentages are for continuous quantities, and then with no decimal places.
+- Time estimates are approximate and say so — "~3M LEFT" — and they only appear once the rate has settled enough to be worth printing.
+- The caption uses the // phase voice in uppercase mono, matching Loading, so the two components read as one system when a task moves between them.
+- On completion say what finished, in the past tense and with the number — "214 runs exported" — then let the bar go.
+
+### Examples
+
+- [demo] Bar
+- [demo] Steps
+- [demo] Meter
+- [good] A real count beside the bar — A real count beside the bar, so the fraction can be checked against something.
+- [bad] Invented decimals and “Working…” — Never invent decimals or say "Working" — false precision over a vague label fools nobody twice.
+- [good] Steps fill whole segments — Steps fill whole segments — stage two is either done or it is not.
+- [bad] A part-filled segment — Never part-fill a segment — if the inside of a stage is measurable, use a bar.
+- [good] On failure the fill holds its position — On failure the fill holds its position and turns, so the operator sees how far it got.
+- [bad] Resetting to zero on failure — Never reset the bar to zero on failure — the work that did happen is the useful part.
+
+### Accessibility
+
+- Progressbar with values: role="progressbar" carrying aria-valuenow, aria-valuemin and aria-valuemax, labelled by the visible label. Meters use role="meter", because a level is not work in flight.
+- Announced in steps: The value is announced at coarse intervals — roughly every 10% or on each stage change — not on every tick. A bar that speaks per frame is a bar nobody can listen to.
+- Colour is never alone: The fill is always paired with a count or percentage in text, and failure is stated in words as well as in #ff8f6b. Amber over --panel-2 measures 5.8:1, but the number is what carries the meaning.
+- Reduced motion: Under prefers-reduced-motion the width snaps instead of animating. The value still updates on the same schedule, so nothing about the reading is lost with the movement.
+
+### Tokens
+
+- --panel-2: Track
+- --accent: Fill while running
+- --accent: Fill at completion
+- --dim, --mute: Label and value
+- --mute: Phase caption
+
+### Related
+
+- loading (contrasts-with): Where work goes while the total is unknown. The two hand over to each other mid-task, which is why they share the // caption voice.
+- table (composes-with): Meters live in table rows to compare levels down a column, which is why the inline variant carries no label of its own.
+- toast (contrasts-with): The bar reports work in flight; the toast reports that it finished. When the count reaches the total, one replaces the other.
+
+### Changelog
+
+- v1.1.0 (24 Aug 2026): Indeterminate bars and spinners ruled out; failure now freezes the fill instead of resetting it.
+- v1.0.1 (18 Aug 2026): Counts made the default value format, with percentages reserved for continuous quantities.
+- v1.0.0 (10 Aug 2026): Bar, steps and meter variants introduced on a 5px track with a 300ms advance.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text
