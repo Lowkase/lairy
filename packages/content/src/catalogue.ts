@@ -11,6 +11,7 @@ import { modal } from "./entries/components/modal";
 import { progress } from "./entries/components/progress";
 import { selectMulti } from "./entries/components/select-multi";
 import { switchComponent } from "./entries/components/switch";
+import { table } from "./entries/components/table";
 import { tabs } from "./entries/components/tabs";
 import { text } from "./entries/components/text";
 import { toast } from "./entries/components/toast";
@@ -46,6 +47,7 @@ const components: ComponentEntry[] = [
   chip,
   progress,
   selectMulti,
+  table,
   tabs,
   switchComponent,
   text,
