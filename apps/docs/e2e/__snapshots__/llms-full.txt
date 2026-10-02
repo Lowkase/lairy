@@ -749,6 +749,95 @@ There is no error variant and no illustrated variant. A failed request is not em
 
 ---
 
+## Loading
+
+Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/loading
+
+Purpose: What a region shows while it still does not know the answer.
+
+### Description
+
+Loading is what a region shows while it still does not know the answer.
+
+It is the only place in the system where amber moves without something having happened, and it earns that because motion is the one honest way to say “still working”. The line against Progress is knowledge: progress states a measured fraction of a known total, loading states nothing but that work is under way. Never fake one as the other — a bar creeping to 90% and stopping is worse than a sweep that admits it cannot say.
+
+### Anatomy
+
+1. Region — The waiting area, scoped as tightly as possible — one panel, one row, one field. It keeps the frame it already had, so the page does not reflow when the answer arrives.
+2. Track — A 2px hairline in --accent-line, one per line of text that has not arrived. Widths are deliberately unequal — 86%, 64%, 74% — because prose does not arrive in a rectangle.
+3. Sweep — A gradient a third of the track wide, travelling left to right over 1.8s and staggered 220ms per track. The direction is the direction of reading, which is what makes it feel like text being written.
+4. Phase label — 11.5px in --faint, mono, prefixed // and uppercased: the one piece of real information in the whole component. It names what the system is doing right now, not that it is busy.
+5. Caret — A 5×11px amber block blinking on a 1s step, sitting where the next character would land. It is the smallest unit of liveness the system has, and the only one allowed inside a table row.
+
+### Variants
+
+- Sweep stack (--accent-line, --accent): The default, and the house style. Two or three hairlines of unequal width, staggered by 220ms, standing in for text that has not arrived. Use it when an agent is working and the shape of the answer is not yet known.
+- Skeleton (--border, --border-2): For layouts whose shape is already known — table rows, a card grid. It holds the exact geometry the content will occupy so nothing jumps when it lands, and it is grey, not amber: the shape is the message, not the motion.
+- Inline caret (--accent, --mute): For dense chrome where a stack will not fit: a table row mid-refresh, a button mid-submit, a status line. The phase name carries the meaning and the caret carries the liveness.
+
+There is no spinner in this system, and no full-screen loading overlay. A rotating disc says only that something is happening somewhere, which the operator already assumed; and blanking the whole workspace to say it takes away the very context they were reading. Loading is always scoped to the region that is actually waiting.
+
+### Use when
+
+- The wait will exceed about 400ms — below that, showing anything only flickers.
+- The duration cannot be measured, so no honest percentage exists.
+- A named phase can be reported, and it will change as the work moves on.
+- The region that is waiting can be pointed at precisely.
+
+### Use something else when
+
+- progress: The total is known and the fraction is real — that is Progress.
+- empty-state: The work finished with nothing to show — that is an Empty state.
+- toast: The work finished elsewhere and needs acknowledging — that is a Toast.
+
+### Content rules
+
+- The phase label is a present participle in mono uppercase behind a // prefix: "// ANALYZING", "// READING 214 RUNS".
+- Name the phase, never the state: "// SYNCING" tells the operator something; "// LOADING" and "Please wait" tell them nothing they had not worked out.
+- Include a real count when one exists — it turns an indefinite wait into a measurable one without pretending to know the total time.
+- Change the label as the work moves through phases. A label that never changes for thirty seconds reads as a hang.
+- Past about ten seconds, say what is slow — "// WAITING ON UPSTREAM" — rather than leaving the same phase spinning.
+
+### Examples
+
+- [demo] Sweep stack
+- [demo] Skeleton
+- [demo] Inline caret
+- [good] A named phase with a real count — A named phase with a real count — the wait reports what it is doing.
+- [bad] A spinner and “Loading…” — Never a spinner, and never "Loading…" — neither says anything the operator did not know.
+- [good] A skeleton in the exact geometry of the rows — A skeleton in the exact geometry of the rows, so nothing moves when data lands.
+- [bad] Generic grey slabs — Never generic grey slabs — a skeleton that lies about the layout causes the jump it was meant to prevent.
+- [good] One row refreshing in place — One row refreshing keeps its data and reports in place with a caret.
+- [bad] Replacing data with skeletons on refresh — Never replace data already on screen with skeletons on refresh — the operator loses what they were reading.
+
+### Accessibility
+
+- Busy, announced once: The region carries aria-busy while it waits and its label is announced politely a single time. The sweep itself is aria-hidden — an animation has nothing to say out loud.
+- Phase changes are polite: When the phase name changes the new one is announced, at most every few seconds. A label that updates per frame would make a screen reader unusable.
+- Reduced motion: Under prefers-reduced-motion the sweep stops travelling and the tracks hold a static amber segment; the caret stops blinking and stays lit. The information survives without the movement.
+- Skeletons are silent: Skeleton bars are aria-hidden and carry no text. They exist to hold geometry, and announcing "loading" once per row would say the same thing twelve times.
+
+### Tokens
+
+- --accent-line: Track behind the sweep
+- --accent: Sweep gradient and caret
+- --border, --border-2: Skeleton bars
+- --mute: Phase label
+
+### Related
+
+- progress (contrasts-with): Progress reports a measured fraction of a known total. The moment you can honestly say 40%, stop using this.
+- empty-state (contrasts-with): What replaces this when the work finishes with nothing to show. Never show both, and never show empty while this is still running.
+- table (composes-with): Tables load as skeleton rows and refresh in place with a row caret — the two variants that are not the sweep stack.
+
+### Changelog
+
+- v1.2.0 (23 Aug 2026): Three variants separated by what is known; spinner and full-screen overlay ruled out for good.
+- v1.1.0 (15 Aug 2026): Phase label made mandatory alongside the sweep stack; reduced-motion fallback specified.
+- v1.0.0 (7 Aug 2026): Sweep stack introduced at 1.8s with a 220ms stagger.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text

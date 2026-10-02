@@ -12,6 +12,7 @@ import { CALLOUT_EXAMPLES } from "./callout-examples";
 import { CARD_EXAMPLES } from "./card-examples";
 import { CHIP_EXAMPLES } from "./chip-examples";
 import { EMPTY_STATE_EXAMPLES } from "./empty-state-examples";
+import { LOADING_EXAMPLES } from "./loading-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 import { USAGE_CARD_EXAMPLES } from "./usage-card-examples";
 
@@ -22,6 +23,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   card: CARD_EXAMPLES,
   chip: CHIP_EXAMPLES,
   "empty-state": EMPTY_STATE_EXAMPLES,
+  loading: LOADING_EXAMPLES,
   text: TEXT_EXAMPLES,
   "usage-card": USAGE_CARD_EXAMPLES,
 };
