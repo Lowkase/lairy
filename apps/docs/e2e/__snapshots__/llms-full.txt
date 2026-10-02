@@ -660,6 +660,95 @@ There is no tonal chip — no info chip, no danger chip. Amber means on and that
 
 ---
 
+## Empty state
+
+Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/empty-state
+
+Purpose: What a region says when it has loaded successfully and has nothing to show.
+
+### Description
+
+An empty state is what a region says when it has loaded successfully and has nothing to show.
+
+It is a statement of fact with a way forward, not an apology and not decoration. The line against Loading is certainty: loading means the answer is unknown, empty means the answer is known and it is none. Showing an empty state while a request is still in flight is the one failure mode that matters here, because it tells the operator to act on a conclusion the system has not reached.
+
+### Anatomy
+
+1. Region — The empty state borrows the frame it sits in and adds none of its own. No dashed box, no nested card — the panel or table already drew the boundary.
+2. Mark — One 22px hairline glyph in --faint, naming the kind of thing that is missing. It is the only ornament allowed, and it never carries accent — nothing here is live.
+3. Headline — 14.5px in --dim, stating the fact in the operator’s vocabulary: "No runs in this window". Not a greeting, not an apology.
+4. Support line — 12.5px in --faint, capped near 330px so it stays one or two lines. It says what would appear here and how it gets here — the only teaching this component does.
+5. Action — At most one, and only when there is genuinely a next step. Primary for a first run, ghost for undoing a filter, absent when the operator cannot act.
+
+### Variants
+
+- First run (--faint, --dim, --accent): Nothing exists yet because nothing has been made. This is the only kind that earns a primary button, because creating the first record is genuinely the next thing to do.
+- No results (--faint, --dim, --border-2): Records exist, but the operator’s own query excluded them. Name the filter that did it and offer to undo it — the way out is backwards, not forwards, so the action is a ghost.
+- Restricted (--faint, --dim): There is content, but not for this operator. Say so plainly and name who can change it. Offering a button they cannot use is worse than offering none.
+
+There is no error variant and no illustrated variant. A failed request is not empty — it gets an inline error with a retry, because "nothing here" would quietly turn a broken system into a normal one. And art in place of data reads as celebration; a 22px hairline glyph is as much decoration as this system allows.
+
+### Use when
+
+- The request finished and the result is legitimately nothing.
+- A region would otherwise be a blank rectangle with no explanation.
+- There is a clear next step, or a clear reason there is none.
+- The operator’s own filter is why they see nothing, and they may not remember setting it.
+
+### Use something else when
+
+- loading: The answer is not known yet — that is Loading.
+- toast: Something was completed and needs acknowledging — that is a Toast.
+
+### Content rules
+
+- The headline states what is absent, not how the system feels: "No runs in this window", never "Oops, nothing here!".
+- Never apologise and never thank — an empty list is an ordinary condition, and treating it as a failure teaches operators to distrust it.
+- The support line answers one question: what would be here, and what puts it here. Anything more belongs in documentation.
+- When a filter is the cause, name the filter in the headline and say how many records it hid, so the operator can judge whether to clear it.
+- One action at most, verb-first and specific — "Schedule a run", never "Get started" — and no action at all rather than a disabled one.
+
+### Examples
+
+- [demo] First run
+- [demo] No results
+- [demo] Restricted
+- [good] The fact, one line, one way forward — The fact, one line of use, and exactly one way forward.
+- [bad] An apology instead of a fact — Never apologise — the API allows only one action, so a second primary is a mistake this component can't make, but tone still can.
+- [good] The filter stays named and undoable — The filter stays visible, is named in the line, and can be undone from here.
+- [bad] A dashed box around the state — Never wrap an empty state in its own box, and never say "No data" without saying why — the region it sits in already drew the boundary.
+- [good] Naming who has access — When there is no next step, name who has it instead of inventing a button.
+
+### Accessibility
+
+- Not an alert: The region is a plain labelled container, not role="alert". An empty result is not urgent, and announcing it as an alert interrupts whatever the operator was reading.
+- Announced once: When the state replaces loaded content — after a filter change — the region is aria-live="polite" so the headline is read once, and the count in the support line is part of that sentence rather than a separate node.
+- Decorative mark: The glyph is aria-hidden. It repeats what the headline already says, so a screen reader hearing it twice would only add noise.
+- Measured contrast: --dim on --panel-2 clears 7:1 and the --faint support line clears 4.6:1 at 12.5px. Faint is the quietest token allowed to carry a sentence — below it, text becomes decoration.
+
+### Tokens
+
+- --faint: Mark
+- --mute: Support line
+- --dim: Headline
+- --panel-2: Surface, inherited from the region
+- --accent: Primary action — first run only
+- --border-2: Ghost action border
+
+### Related
+
+- loading (contrasts-with): Loading means the answer is unknown; empty means it is known and it is none. Never show this one while a request is in flight.
+- table (composes-with): A table’s empty state replaces the rows and keeps the header, so the columns still explain what would have been listed.
+- card (composes-with): A card body with nothing in it becomes this — the card keeps its frame and the empty state fills the inside.
+
+### Changelog
+
+- v1.1.0 (23 Aug 2026): Three kinds separated — first run, no results, restricted — with the primary action limited to first run. Error variant ruled out.
+- v1.0.1 (17 Aug 2026): Illustration removed in favour of a single 22px hairline mark in --faint.
+- v1.0.0 (9 Aug 2026): Empty state introduced with mark, headline, support line and optional action.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text

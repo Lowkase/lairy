@@ -13,6 +13,7 @@
     "./callout/examples": "./src/callout/examples/index.ts",
     "./card/examples": "./src/card/examples/index.ts",
     "./chip/examples": "./src/chip/examples/index.ts",
+    "./empty-state/examples": "./src/empty-state/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./usage-card/examples": "./src/usage-card/examples/index.ts"
   },

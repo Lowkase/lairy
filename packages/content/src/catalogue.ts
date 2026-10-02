@@ -7,6 +7,7 @@ import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
 import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
+import { loading } from "./entries/components/loading";
 import { modal } from "./entries/components/modal";
 import { progress } from "./entries/components/progress";
 import { selectMulti } from "./entries/components/select-multi";
@@ -53,6 +54,7 @@ const components: ComponentEntry[] = [
   switchComponent,
   text,
   emptyState,
+  loading,
   usageCard,
 ];
 
