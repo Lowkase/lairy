@@ -216,6 +216,46 @@ function buildCardItem(): RegistryItem {
   };
 }
 
+function buildEmptyStateItem(): RegistryItem {
+  const entry = getComponent("empty-state");
+  if (!entry) throw new Error('registry: content entry "empty-state" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "empty-state",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. class-variance-authority is here
+    // because the inlined Button file (below) imports it, the same way
+    // buildCalloutItem's own list already accounts for it.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/empty-state/empty-state.tsx",
+        target: "components/ui/empty-state/empty-state.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/empty-state/empty-state.tsx")),
+      },
+      {
+        path: "packages/ui/src/empty-state/empty-state-icon.tsx",
+        target: "components/ui/empty-state/empty-state-icon.tsx",
+        type: "registry:ui",
+        content: readSource("packages/ui/src/empty-state/empty-state-icon.tsx"),
+      },
+      // Its action slot renders Button — inlined directly here, the same way
+      // buildCalloutItem's own Button inclusion is (see its own comment:
+      // registryDependencies isn't a path this repo's fixture can rely on).
+      // Its target matches buildButtonItem's own, so installing both
+      // "empty-state" and "button" later doesn't duplicate the file.
+      { ...BUTTON_FILE, content: withLairyCnImport(readSource(BUTTON_FILE.path)) },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildButtonItem(): RegistryItem {
   const entry = getComponent("button");
   if (!entry) throw new Error('registry: content entry "button" not found.');
@@ -294,6 +334,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   badge: buildBadgeItem,
   card: buildCardItem,
   chip: buildChipItem,
+  "empty-state": buildEmptyStateItem,
   button: buildButtonItem,
   text: buildTextItem,
   "usage-card": buildUsageCardItem,
