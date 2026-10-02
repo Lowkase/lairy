@@ -359,6 +359,34 @@ function buildTextItem(): RegistryItem {
   };
 }
 
+function buildScrollbarItem(): RegistryItem {
+  const entry = getComponent("scrollbar");
+  if (!entry) throw new Error('registry: content entry "scrollbar" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "scrollbar",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. No class-variance-authority: unlike
+    // Callout/Empty state, Scrollbar has no cva variant map — it has no
+    // variants at all (Scrollbar Content rule 1).
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/scrollbar/scrollbar.tsx",
+        target: "components/ui/scrollbar/scrollbar.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/scrollbar/scrollbar.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildUsageCardItem(): RegistryItem {
   const entry = getComponent("usage-card");
   if (!entry) throw new Error('registry: content entry "usage-card" not found.');
@@ -395,6 +423,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   progress: buildProgressItem,
   button: buildButtonItem,
   text: buildTextItem,
+  scrollbar: buildScrollbarItem,
   "usage-card": buildUsageCardItem,
 };
 

@@ -16,6 +16,7 @@
     "./empty-state/examples": "./src/empty-state/examples/index.ts",
     "./loading/examples": "./src/loading/examples/index.ts",
     "./progress/examples": "./src/progress/examples/index.ts",
+    "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./usage-card/examples": "./src/usage-card/examples/index.ts"
   },

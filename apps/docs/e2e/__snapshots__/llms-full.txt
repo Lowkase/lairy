@@ -927,6 +927,74 @@ There is no indeterminate bar and no spinner. A bar that animates without a deno
 
 ---
 
+## Scrollbar
+
+Status: stable · Version: 1.0.0 · Updated: 2 Oct 2026 · /components/scrollbar
+
+Purpose: The browser's own scroll control, restyled to two greys — never a custom-built replacement.
+
+### Description
+
+A scrollbar is the browser's own control, restyled to two greys — never a custom-built replacement.
+
+It exists so any pane that overflows can be scrolled without inventing a new way to do it. That is the boundary against a Progress bar or any other painted indicator: this shell is never drawn by the system, only recoloured — the browser keeps every native behaviour, and the design keeps only the two colours it is allowed to change.
+
+### Anatomy
+
+1. Thumb — A 4px pill inset inside the 10px lane by a 3px transparent border, so it never touches the page edge. --border-2 at rest, --mute on hover — the only two states it has.
+2. Track — Transparent underneath the thumb, always. It never grows a fill, a hairline, or a hover state of its own — the page edge is the only boundary it needs.
+
+### States
+
+- Default: Present but quiet — visible enough to find, quiet enough to ignore while reading.
+- Hover: One step up the grey ramp for as long as the pointer is over the thumb or the track beside it. No transition is timed; the browser owns the swap.
+
+### Use when
+
+- Any pane, list, or dock column can overflow and the browser already knows how to scroll it.
+
+### Use something else when
+
+- progress: The value being shown is a quantity, not a scroll position — that is Progress.
+- main-rail: The column is the 56px collapsed rail — MainNav hides this control there instead of shrinking it further.
+
+### Content rules
+
+- Width is fixed at 10px everywhere — content panes, the subnav rail, modals. There is no thin or thick variant to choose between.
+- Radius is 2px, matching the system lock. The thumb never grows a pointed or pill shape of its own.
+- The corner where a vertical and horizontal track meet is always transparent — it never draws a swatch.
+- Firefox gets the same two greys through scrollbar-color rather than a separate design; the two engines must always resolve to one look.
+- The main rail's own list (.dock-scroll) hides this control entirely rather than restyling it — a 56px column has no room to spare for a lane.
+
+### Examples
+
+- [demo] Panel
+- [good] Thin and quiet — Thin, grey, and nearly invisible until the pointer is on it.
+- [bad] Widened and coloured — Never widen or colour the thumb to draw attention — it competes with the content it's meant to stay out of the way of.
+
+### Accessibility
+
+- Native, not custom: This is the browser's own scrollbar, restyled through the two standard pseudo-element and scrollbar-color hooks — never a JS-built replacement. Keyboard scrolling, wheel, trackpad and OS gestures all keep working exactly as the platform defines them.
+- Colour never alone: The hover state changes lightness (--border-2 to --mute), not hue, so it reads under any colour-vision deficiency and in either theme.
+- Hit target is the OS default: The visual thumb is 4px, but the browser's own scrollbar hit area — wider than what is painted — is untouched, so pointer users never lose the margin for error the platform already gives them.
+- No motion to reduce: The thumb has no transition or animation of its own; hover is an instant colour swap, so prefers-reduced-motion has nothing here to turn off.
+
+### Tokens
+
+- --border-2: Thumb at rest
+- --mute: Thumb on hover
+
+### Related
+
+- table (composes-with): The component most often responsible for a horizontal thumb appearing at all — a wide row set is what puts this control to work.
+- main-rail (contrasts-with): Hides this exact control on its own item list, because a 56px collapsed rail has no width left to give it.
+
+### Changelog
+
+- v1.0.0 (20 Sept 2026): Documented as its own component: 10px lane, 4px inset thumb, two states, and the corner rule that keeps it out of every layout's way.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text
