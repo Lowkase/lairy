@@ -19,6 +19,7 @@
     "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./text-input/examples": "./src/text-input/examples/index.ts",
+    "./textarea/examples": "./src/textarea/examples/index.ts",
     "./usage-card/examples": "./src/usage-card/examples/index.ts"
   },
   "scripts": {

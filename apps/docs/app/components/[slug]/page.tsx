@@ -17,6 +17,7 @@ import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 import { TEXT_INPUT_EXAMPLES } from "./text-input-examples";
+import { TEXTAREA_EXAMPLES } from "./textarea-examples";
 import { USAGE_CARD_EXAMPLES } from "./usage-card-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
@@ -31,6 +32,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   scrollbar: SCROLLBAR_EXAMPLES,
   text: TEXT_EXAMPLES,
   "text-input": TEXT_INPUT_EXAMPLES,
+  textarea: TEXTAREA_EXAMPLES,
   "usage-card": USAGE_CARD_EXAMPLES,
 };
 

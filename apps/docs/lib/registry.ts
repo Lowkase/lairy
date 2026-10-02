@@ -385,6 +385,32 @@ function buildTextInputItem(): RegistryItem {
   };
 }
 
+function buildTextareaItem(): RegistryItem {
+  const entry = getComponent("textarea");
+  if (!entry) throw new Error('registry: content entry "textarea" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "textarea",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/textarea/textarea.tsx",
+        target: "components/ui/textarea/textarea.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/textarea/textarea.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildScrollbarItem(): RegistryItem {
   const entry = getComponent("scrollbar");
   if (!entry) throw new Error('registry: content entry "scrollbar" not found.');
@@ -450,6 +476,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   button: buildButtonItem,
   text: buildTextItem,
   "text-input": buildTextInputItem,
+  textarea: buildTextareaItem,
   scrollbar: buildScrollbarItem,
   "usage-card": buildUsageCardItem,
 };
