@@ -1179,6 +1179,98 @@ There is no success state and no read-only variant distinct from disabled. A fie
 
 ---
 
+## Textarea
+
+Status: stable · Version: 1.1.0 · Updated: 2 Oct 2026 · /components/textarea
+
+Purpose: The text input grown tall enough to hold a sentence the operator writes in their own words.
+
+### Description
+
+A textarea is the text input grown tall enough to hold a sentence the operator writes in their own words.
+
+Border, radius, padding and type are inherited from Text input unchanged — only the height, the line-height and the resize handle are new, which is why the two never look like different components. Reach for it when the answer is prose: a note, a reason, a description. If the value is a name, a key or a number, the taller box is a promise the content will not keep.
+
+### Anatomy
+
+1. Label — The same 12px --dim caps line as every other field. A textarea is often the last question in a form, which is exactly when the label matters most — it is the one the operator reads after thinking.
+2. Field — The input’s box with a 56px minimum height and 1.55 line-height, opening at about three lines. The height is the only promise the component makes about length, so it is set to the expected answer rather than to the maximum.
+3. Handle — The native corner grip, vertical only. The operator can make room for a longer answer, but the box can never get wider than the column it sits in.
+4. Hint — One 11px --faint line for the constraint — plain text, no formatting, what the note is for. It shares its slot with the error, so validation never moves the field.
+5. Counter — The live count against the limit, right-aligned on the hint row. It is present from the first keystroke wherever a limit exists, and it turns with the message when the limit is passed.
+
+### States
+
+- Default: Empty, three lines tall. The empty height is the component’s only cue about how much is wanted, so it is chosen deliberately rather than left at the browser default.
+- Filled: Holds prose. Line-height goes to 1.55 — the one measurement that differs from the input — because several lines of mono at 1.6 start to read as a paragraph rather than a field.
+- Focus: Being written in. Identical to the input’s focus, and the field never scrolls or grows underneath the operator while they type.
+- Error: Over the limit or missing when required. The counter turns with the border and the message says how much to cut, since “too long” without a number is not actionable.
+- Disabled: Not editable now. The handle goes with it — a box that can still be resized but not typed into reads as a bug rather than a restriction.
+
+The handle is vertical only, and there is no auto-growing variant. A box that resizes itself while the operator types moves the buttons under their cursor, and a box that resizes horizontally breaks the one column of boxes every form here is built on.
+
+### Use when
+
+- The answer is a sentence or two in the operator’s own words.
+- Line breaks are part of the meaning — a note, a list, a pasted log.
+- What is written will be read back later, by a person.
+- The operator may want to see the whole answer at once before submitting.
+
+### Use something else when
+
+- text-input: The answer is a value on one line — that is a Text input.
+- select: The answers are a known list — that is a Select.
+
+### Content rules
+
+- Set the opening height to the answer you expect, about three lines. A taller box asks for an essay; a one-line box tells the operator to be brief when they should not be.
+- Write the placeholder as an example of a useful note, never as the label repeated — and never as the only statement of what the field is for.
+- Show the counter from the first keystroke wherever a limit exists, counting up to the limit, and never let the limit arrive as a surprise.
+- Say what the note is for in the hint — who reads it, whether it is kept — because prose is only worth writing if the operator knows where it goes.
+- Never accept formatting the field cannot render. If markdown or headings are needed, the answer is an editor and not a taller box.
+
+### Examples
+
+- [demo] Why it was skipped
+- [good] Three lines of room — Three lines of room for a two-line answer, with the limit shown from the start.
+- [bad] A one-line textarea — Never ship a one-line textarea — if the answer will not fit, the operator writes less than they meant to.
+- [good] A vertical-only handle — A vertical-only handle in the corner: the operator can make room, and the column stays intact.
+- [bad] Resized wider than the form — Never allow horizontal resize — one box wider than the rest breaks the column every form is read down.
+- [good] The counter turns over the limit — Over the limit, the counter turns with the message and says how much to cut.
+- [bad] Keystrokes swallowed at the limit — Never swallow keystrokes at the limit with no counter — the operator thinks the field is broken.
+
+### Accessibility
+
+- Labelled like any field: A real <label for> and an aria-describedby pointing at the hint or error, exactly as the text input does. The taller box does not change the contract, and the label is never a placeholder.
+- The counter is spoken: The count is a polite live region, so an operator who cannot see it hears how much room is left rather than discovering the limit when keystrokes stop landing.
+- Tab leaves the field: Tab moves to the next control and Enter inserts a newline — the reverse of the input, and the reason a textarea is never the last thing before an implicit submit.
+- Resize is not the only way: The handle is a convenience: the field scrolls its content and the value is never truncated visually without the counter saying so, so nothing depends on a drag a keyboard cannot perform.
+
+### Tokens
+
+- --border: Resting field border
+- --accent-line: Field border while focused
+- --accent-soft: Focus ring
+- --bg: Field fill
+- --border-2: Resize handle grip
+- --faint: Disabled value
+- --mute: Hint and counter
+- --alarm-line: Error border
+
+### Related
+
+- text-input (composes-with): The box this inherits. Everything except height, line-height and the handle is documented there, and any change to the input changes this too.
+- modal (composes-with): Where a long note usually belongs. A textarea inline in a dense panel is a hint the task deserved its own surface.
+- button (composes-with): What commits the note. Enter is a newline here, so the submit has to be a real button rather than an implicit one.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Resize locked to vertical; auto-grow ruled out; counter required wherever a limit exists.
+- v1.0.1 (17 Aug 2026): Minimum height set to 56px and line-height to 1.55; disabled state now disables the handle.
+- v1.0.0 (11 Aug 2026): Textarea introduced as the text input with three lines of room.
+
+---
+
 ## Usage card
 
 Status: stable · Version: 1.0.0 · Updated: 1 Oct 2026 · /components/usage-card
