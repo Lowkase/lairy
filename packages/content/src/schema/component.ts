@@ -88,6 +88,11 @@ export const ComponentEntrySchema = z.object({
    * explaining a deliberate omission"). */
   variantsNote: z.string().optional(),
   states: z.array(StateDocSchema).default([]),
+  /** Closing note under the States table, when a state is deliberately
+   * ruled out (docs/build-guide.md §3 — the prototype's own closing line
+   * under `inStates`, the same "deliberate omission" pattern
+   * `variantsNote` already carries for Variants). */
+  statesNote: z.string().optional(),
   usage: UsageSchema.default({ useWhen: [], useInstead: [] }),
   contentRules: z.array(RuleSchema).default([]),
   examples: z.array(ExampleSchema).default([]),

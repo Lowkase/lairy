@@ -16,6 +16,7 @@ import { LOADING_EXAMPLES } from "./loading-examples";
 import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
+import { TEXT_INPUT_EXAMPLES } from "./text-input-examples";
 import { USAGE_CARD_EXAMPLES } from "./usage-card-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
@@ -29,6 +30,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   progress: PROGRESS_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
   text: TEXT_EXAMPLES,
+  "text-input": TEXT_INPUT_EXAMPLES,
   "usage-card": USAGE_CARD_EXAMPLES,
 };
 
@@ -158,6 +160,9 @@ export default async function ComponentPage({
                 </div>
               ))}
             </div>
+            {entry.statesNote ? (
+              <div className="text-micro text-faint">{entry.statesNote}</div>
+            ) : null}
           </Section>
         ) : null}
 

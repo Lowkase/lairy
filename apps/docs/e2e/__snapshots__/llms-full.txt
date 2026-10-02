@@ -1085,6 +1085,100 @@ Space Grotesk sets headings and numerals; IBM Plex Mono sets everything else, wh
 
 ---
 
+## Text input
+
+Status: stable · Version: 1.1.0 · Updated: 2 Oct 2026 · /components/text-input
+
+Purpose: One line the operator types into, and the box every other field in the system is measured against.
+
+### Description
+
+A text input is one line the operator types into, and the box every other field in the system is measured against.
+
+Select, multi-select and textarea all inherit its border, radius, padding and height, so a form of mixed controls reads as one column of boxes rather than a collection of parts. It holds a value the operator authors, which is the line against every picker: if the legal answers are known in advance, hiding them behind free text is a trap. Anything longer than a line is a Textarea.
+
+### Anatomy
+
+1. Label — A 12px --dim caps line at .16em, always above the field and always present. It is never replaced by the placeholder, because the label has to survive the first keystroke.
+2. Field — The reference box for the whole system: 10px/13px padding, 1px --border, 2px corner, --bg fill, 14px mono. Select, multi-select and textarea are this box with something added, never a box of their own.
+3. Hint — One 11px --faint line stating the constraint before it is broken — casing, format, allowed characters. It occupies the same slot the error will, so the layout does not jump when validation fails.
+4. Counter — An optional --faint count on the right of the hint row, shown only where a real limit exists. It counts up to the limit rather than down from it, so the number means the same thing as the value.
+5. Error — Replaces the hint in #ff8f6b, naming what is wrong and what to type instead. The border turns with it, but the words are what the operator acts on — the colour is a locator.
+
+### States
+
+- Default: Empty and waiting. The placeholder is an example or an instruction in --mute, and it is never the only place the field says what it is.
+- Filled: Holds a value. The border does not change on filling — only the text colour does, so a column of filled and empty fields still reads as one grid.
+- Focus: Being typed into. The amber border plus the soft ring is the system focus treatment, and it is the one moment a field is allowed to be amber.
+- Error: Failed validation, and only ever after the operator has finished — never while they are still typing the value that will pass.
+- Disabled: Not editable now. The value stays readable and something adjacent says why; a field that cannot be typed into without explanation reads as broken.
+
+There is no success state and no read-only variant distinct from disabled. A field that validated is simply a field with a value in it — a green tick on every correct answer teaches the operator to ignore the one that is wrong.
+
+### Use when
+
+- The operator authors the value and only they know it — a name, a key, a query.
+- The answer is short enough to read back in one line.
+- The legal answers cannot be listed in advance.
+- Typing is genuinely faster than choosing, as it is in search.
+
+### Use something else when
+
+- select: The answers are a known list — that is a Select or a Radio group.
+- textarea: The value runs past one line — that is a Textarea.
+- checkbox: The answer is yes or no — that is a Checkbox or a Switch.
+
+### Content rules
+
+- Label every field with the noun it collects, in tracked caps above the box — and never let the placeholder take that job.
+- Write the placeholder as an example of a good answer, not a repeat of the label: "nightly-ingest" beats "Enter pipeline name".
+- State constraints in the hint before the operator types, so the error is a reminder rather than news.
+- Write errors as a fact plus a fix — "Spaces are not allowed — try nightly-ingest" — and never as "Invalid input".
+- Size the field to the answer: a retry count is 74px wide, a name is the column. The width is the first thing the operator reads.
+
+### Examples
+
+- [demo] Pipeline name
+- [good] Persistent label and a stated constraint — A persistent label above and the constraint stated before the operator types.
+- [bad] Placeholder standing in for the label — Never use the placeholder as the label — the first keystroke deletes the only clue what the field is.
+- [good] An error with a fix — An error names what is wrong and offers the fix, in the same place the hint was.
+- [bad] "Invalid input" — Never write an error the operator cannot act on — "Invalid input" is the border saying nothing twice.
+- [good] Field width tracks the answer — Field width tracks the length of the answer, so the box itself says how much is expected.
+- [bad] A one-character field at form width — Never stretch a one-character field to the form width — the box promises an essay and gets a digit.
+
+### Accessibility
+
+- Always a real label: Every field has a <label for> pointing at it — not an aria-label standing in for one, and never a placeholder doing the job. The visible label and the accessible name are the same words.
+- Hints and errors are tied: The hint and the error are the same element, referenced by aria-describedby, so the constraint and the failure are announced with the field. On failure the input takes aria-invalid.
+- Validation waits its turn: Validation runs on blur or submit rather than on every keystroke, because a field that announces an error mid-word talks over the operator typing the value that would have passed.
+- Focus is visible and quiet: The soft amber ring measures 3px and is drawn outside the border, so it never shifts the layout. Amber on --bg reads 7.4:1, and the ring is present for pointer focus too — there is no focus-visible-only hiding here.
+
+### Tokens
+
+- --border: Resting field border
+- --accent-line: Field border while focused
+- --accent-soft: Focus ring
+- --bg: Field fill
+- --fg: Entered value
+- --mute: Placeholder text
+- --faint: Disabled value
+- --mute: Hint and counter
+- --alarm-line: Error border
+
+### Related
+
+- textarea (alternative): The same box grown a line taller and resizable vertically. Use it the moment the answer is a sentence rather than a value.
+- select (alternative): Inherits this box exactly. If the legal answers are a known list, hiding them behind free text turns typing into guessing.
+- button (composes-with): What commits the field. A text input never acts on its own — Enter submits the form, it does not run anything by itself.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Hint and error share one slot so validation never shifts the layout; success state ruled out; field width tied to answer length.
+- v1.0.1 (17 Aug 2026): Validation moved to blur and submit; disabled value lightened to --faint at 55%.
+- v1.0.0 (11 Aug 2026): Text input introduced as the reference box — 10px/13px padding, 2px corner, 14px mono.
+
+---
+
 ## Usage card
 
 Status: stable · Version: 1.0.0 · Updated: 1 Oct 2026 · /components/usage-card

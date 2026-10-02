@@ -107,6 +107,7 @@ function renderEntry(entry: ComponentEntry): string[] {
   if (entry.states.length > 0) {
     lines.push("### States", "");
     for (const state of entry.states) lines.push(`- ${state.name}: ${state.description}`);
+    if (entry.statesNote) lines.push("", entry.statesNote);
     lines.push("");
   }
 

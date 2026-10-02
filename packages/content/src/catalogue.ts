@@ -5,18 +5,23 @@ import { badge } from "./entries/components/badge";
 import { button } from "./entries/components/button";
 import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
+import { checkbox } from "./entries/components/checkbox";
 import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
 import { loading } from "./entries/components/loading";
 import { mainRail } from "./entries/components/main-rail";
 import { modal } from "./entries/components/modal";
 import { progress } from "./entries/components/progress";
+import { radio } from "./entries/components/radio";
 import { scrollbar } from "./entries/components/scrollbar";
+import { select } from "./entries/components/select";
 import { selectMulti } from "./entries/components/select-multi";
 import { switchComponent } from "./entries/components/switch";
 import { table } from "./entries/components/table";
 import { tabs } from "./entries/components/tabs";
 import { text } from "./entries/components/text";
+import { textarea } from "./entries/components/textarea";
+import { textInput } from "./entries/components/text-input";
 import { toast } from "./entries/components/toast";
 import { usageCard } from "./entries/components/usage-card";
 import { accessibility } from "./entries/foundations/accessibility";
@@ -60,6 +65,11 @@ const components: ComponentEntry[] = [
   usageCard,
   scrollbar,
   mainRail,
+  textInput,
+  textarea,
+  select,
+  checkbox,
+  radio,
 ];
 
 /** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by
