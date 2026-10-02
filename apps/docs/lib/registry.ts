@@ -256,6 +256,34 @@ function buildEmptyStateItem(): RegistryItem {
   };
 }
 
+function buildLoadingItem(): RegistryItem {
+  const entry = getComponent("loading");
+  if (!entry) throw new Error('registry: content entry "loading" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "loading",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. No class-variance-authority: unlike
+    // Callout/Empty state, Loading doesn't render Button and has no cva
+    // variant map of its own.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/loading/loading.tsx",
+        target: "components/ui/loading/loading.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/loading/loading.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildButtonItem(): RegistryItem {
   const entry = getComponent("button");
   if (!entry) throw new Error('registry: content entry "button" not found.');
@@ -335,6 +363,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   card: buildCardItem,
   chip: buildChipItem,
   "empty-state": buildEmptyStateItem,
+  loading: buildLoadingItem,
   button: buildButtonItem,
   text: buildTextItem,
   "usage-card": buildUsageCardItem,

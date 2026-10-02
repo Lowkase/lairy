@@ -81,6 +81,7 @@ export const cn: CnFunction = createCn({
             "breathe",
             "shimmer",
             "sweepline",
+            "caretblink",
           ],
         },
       ],

@@ -137,6 +137,7 @@
   --animate-breathe: breathe 2s ease-in-out infinite; /* Live-status breathe loop (Motion page motTokens: '2s ease-in-out'). */
   --animate-shimmer: shimmer 1.2s linear infinite; /* Loading skeleton shimmer (animation: shimmer 1.2s linear infinite, every call site). */
   --animate-sweepline: sweepline 1.8s cubic-bezier(.45, 0, .55, 1) infinite; /* The sweeping progress line (Motion page motTokens: '1.8s cubic-bezier(.45,0,.55,1)', every call site). */
+  --animate-caretblink: caretblink 1s steps(1,end) infinite; /* Loading's caret (animation: caretblink 1s steps(1,end) infinite, every call site) — named in the Motion page's own Loops paragraph alongside sweepline and shimmer, wired up here for the first time now that Loading (LDS-025) is its first consumer. */
 }
 
 /* Keyframe bodies, harvested verbatim from the prototype's own @keyframes
@@ -172,12 +173,25 @@
 @keyframes sweepline {
   0% { transform: translateX(-110%); } 100% { transform: translateX(320%); }
 }
+@keyframes caretblink {
+  0%, 48% { opacity: 1; } 49%, 100% { opacity: .12; }
+}
 
 /* prefers-reduced-motion (AGENTS.md rule 7, Accessibility foundation motA11y):
-   every loop stops and entrances collapse to opacity alone. */
+   every loop stops and entrances collapse to opacity alone. A few loops
+   freeze on the wrong frame this way (their 100% keyframe isn't the state
+   the Motion page's own accessibilityNotes promise) and get their own,
+   more specific override below instead — see each animation's own
+   `reducedMotion` comment above. */
 @media (prefers-reduced-motion: reduce) {
   [class*="animate-"] {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
+  }
+  .animate-sweepline {
+    animation: none; transform: translateX(105%);
+  }
+  .animate-caretblink {
+    animation: none; opacity: 1;
   }
 }

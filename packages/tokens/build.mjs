@@ -113,6 +113,25 @@ const ANIMATIONS = [
     easing: val(motion.easing.symmetric),
     iteration: "infinite",
     note: "The sweeping progress line (Motion page motTokens: '1.8s cubic-bezier(.45,0,.55,1)', every call site).",
+    // The generic freeze-at-last-keyframe reduced-motion rule below would
+    // leave this fully translated past the track (its 100% frame), not "a
+    // static amber segment" the way the Motion page's own accessibilityNotes
+    // ("Reduced motion is honoured") describe it — so this animation gets
+    // its own override instead of relying on the generic one.
+    reducedMotion: "animation: none; transform: translateX(105%);",
+  },
+  {
+    name: "caretblink",
+    keyframeBody: "0%, 48% { opacity: 1; } 49%, 100% { opacity: .12; }",
+    duration: "1s",
+    easing: "steps(1,end)",
+    iteration: "infinite",
+    note: "Loading's caret (animation: caretblink 1s steps(1,end) infinite, every call site) — named in the Motion page's own Loops paragraph alongside sweepline and shimmer, wired up here for the first time now that Loading (LDS-025) is its first consumer.",
+    // Same reasoning as sweepline's own override above: the generic rule
+    // would freeze this at its 100% frame (opacity .12, nearly invisible),
+    // not "the caret stays lit" the Motion page's own accessibilityNotes
+    // promise.
+    reducedMotion: "animation: none; opacity: 1;",
   },
 ];
 
@@ -277,12 +296,22 @@ for (const a of ANIMATIONS) {
 }
 themeLines.push("");
 themeLines.push("/* prefers-reduced-motion (AGENTS.md rule 7, Accessibility foundation motA11y):");
-themeLines.push("   every loop stops and entrances collapse to opacity alone. */");
+themeLines.push("   every loop stops and entrances collapse to opacity alone. A few loops");
+themeLines.push("   freeze on the wrong frame this way (their 100% keyframe isn't the state");
+themeLines.push("   the Motion page's own accessibilityNotes promise) and get their own,");
+themeLines.push("   more specific override below instead — see each animation's own");
+themeLines.push("   `reducedMotion` comment above. */");
 themeLines.push("@media (prefers-reduced-motion: reduce) {");
 themeLines.push('  [class*="animate-"] {');
 themeLines.push("    animation-duration: .01ms !important;");
 themeLines.push("    animation-iteration-count: 1 !important;");
 themeLines.push("  }");
+for (const a of ANIMATIONS) {
+  if (!a.reducedMotion) continue;
+  themeLines.push(`  .animate-${a.name} {`);
+  themeLines.push(`    ${a.reducedMotion}`);
+  themeLines.push("  }");
+}
 themeLines.push("}");
 writeFileSync(path.join(cssDir, "tailwind-theme.css"), themeLines.join("\n") + "\n");
 
