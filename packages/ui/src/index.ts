@@ -8,5 +8,6 @@ export * from "./empty-state/empty-state";
 export * from "./icons";
 export * from "./loading/loading";
 export * from "./progress/progress";
+export * from "./scrollbar/scrollbar";
 export * from "./text/text";
 export * from "./usage-card/usage-card";

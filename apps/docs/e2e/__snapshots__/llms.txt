@@ -12,5 +12,6 @@
 - [Empty state](/components/empty-state): What a region says when it has loaded successfully and has nothing to show.
 - [Loading](/components/loading): What a region shows while it still does not know the answer.
 - [Progress](/components/progress): Reports a measured fraction of a known total, and nothing else.
+- [Scrollbar](/components/scrollbar): The browser's own scroll control, restyled to two greys — never a custom-built replacement.
 - [Text](/components/text): Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.
 - [Usage card](/components/usage-card): The paired "use when / use something else when" card on a docs page. Not an operator-facing component outside documentation.

@@ -8,8 +8,10 @@ import { card } from "./entries/components/card";
 import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
 import { loading } from "./entries/components/loading";
+import { mainRail } from "./entries/components/main-rail";
 import { modal } from "./entries/components/modal";
 import { progress } from "./entries/components/progress";
+import { scrollbar } from "./entries/components/scrollbar";
 import { selectMulti } from "./entries/components/select-multi";
 import { switchComponent } from "./entries/components/switch";
 import { table } from "./entries/components/table";
@@ -56,6 +58,8 @@ const components: ComponentEntry[] = [
   emptyState,
   loading,
   usageCard,
+  scrollbar,
+  mainRail,
 ];
 
 /** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by
