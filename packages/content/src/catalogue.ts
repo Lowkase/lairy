@@ -15,6 +15,7 @@ import { table } from "./entries/components/table";
 import { tabs } from "./entries/components/tabs";
 import { text } from "./entries/components/text";
 import { toast } from "./entries/components/toast";
+import { usageCard } from "./entries/components/usage-card";
 import { accessibility } from "./entries/foundations/accessibility";
 import { color as colorFoundation } from "./entries/foundations/color";
 import { elevation } from "./entries/foundations/elevation";
@@ -52,6 +53,7 @@ const components: ComponentEntry[] = [
   switchComponent,
   text,
   emptyState,
+  usageCard,
 ];
 
 /** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by

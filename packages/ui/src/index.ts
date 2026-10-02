@@ -6,3 +6,4 @@ export * from "./card/card";
 export * from "./chip/chip";
 export * from "./icons";
 export * from "./text/text";
+export * from "./usage-card/usage-card";

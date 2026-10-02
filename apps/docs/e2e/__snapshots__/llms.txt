@@ -10,3 +10,4 @@
 - [Cards](/components/card): A bordered container that holds one whole object worth looking at on its own.
 - [Chips](/components/chip): A round-ended token representing a value the operator chose, such as a filter. The operator can dismiss it.
 - [Text](/components/text): Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.
+- [Usage card](/components/usage-card): The paired "use when / use something else when" card on a docs page. Not an operator-facing component outside documentation.
