@@ -13,7 +13,8 @@
     "./callout/examples": "./src/callout/examples/index.ts",
     "./card/examples": "./src/card/examples/index.ts",
     "./chip/examples": "./src/chip/examples/index.ts",
-    "./text/examples": "./src/text/examples/index.ts"
+    "./text/examples": "./src/text/examples/index.ts",
+    "./usage-card/examples": "./src/usage-card/examples/index.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

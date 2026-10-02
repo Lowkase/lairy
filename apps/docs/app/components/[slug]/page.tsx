@@ -1,4 +1,5 @@
 import { getComponent, getComponentProps, listComponents } from "@lairy/content";
+import { UsageCard } from "@lairy/ui";
 import { PageHeader } from "@/components/docs-page/page-header";
 import { Section } from "@/components/docs-page/section";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -11,6 +12,7 @@ import { CALLOUT_EXAMPLES } from "./callout-examples";
 import { CARD_EXAMPLES } from "./card-examples";
 import { CHIP_EXAMPLES } from "./chip-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
+import { USAGE_CARD_EXAMPLES } from "./usage-card-examples";
 
 const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   badge: BADGE_EXAMPLES,
@@ -19,6 +21,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   card: CARD_EXAMPLES,
   chip: CHIP_EXAMPLES,
   text: TEXT_EXAMPLES,
+  "usage-card": USAGE_CARD_EXAMPLES,
 };
 
 function formatDate(iso: string) {
@@ -152,28 +155,10 @@ export default async function ComponentPage({
 
         {entry.usage.useWhen.length > 0 || entry.usage.useInstead.length > 0 ? (
           <Section number="04" title="Usage" meta="Use when / use instead">
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
-              <div className="border border-accent-line bg-accent-soft p-18">
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-accent">
-                  Use when
-                </div>
-                <div className="flex flex-col gap-8 text-small text-dim">
-                  {entry.usage.useWhen.map((row) => (
-                    <span key={row}>{row}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="border border-border-2 p-18">
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">
-                  Use something else when
-                </div>
-                <div className="flex flex-col gap-8 text-small text-dim">
-                  {entry.usage.useInstead.map((row) => (
-                    <span key={row.target}>{row.text}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <UsageCard
+              useWhen={entry.usage.useWhen}
+              useInstead={entry.usage.useInstead.map((row) => row.text)}
+            />
           </Section>
         ) : null}
 

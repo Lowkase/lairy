@@ -749,3 +749,71 @@ Space Grotesk sets headings and numerals; IBM Plex Mono sets everything else, wh
 - v1.0.0 (11 Aug 2026): Type system introduced — Space Grotesk for headings, IBM Plex Mono for everything else.
 
 ---
+
+## Usage card
+
+Status: stable · Version: 1.0.0 · Updated: 1 Oct 2026 · /components/usage-card
+
+Purpose: The paired "use when / use something else when" card on a docs page. Not an operator-facing component outside documentation.
+
+### Description
+
+A Usage Card states a rule in two halves — where a component belongs, and where it doesn't.
+
+It exists so a doc page can draw its own boundary in one glance, instead of burying it in a paragraph. That is the line against Callout: a callout reports one live fact with an icon, this card states a standing rule with none. It is documentation furniture, not a product surface — no screen outside this reference site renders one, at least for now.
+
+### Anatomy
+
+1. Pair — Always two, side by side, never one alone — the belongs-here card only means something next to its opposite.
+2. Title — 11px uppercase at .2em: "Use when" / "Reach for X when" on the left, "Use something else when" on the right, always in that order.
+3. Rows — A plain list of full sentences, 13.5px --dim, 9px gap, no bullets or numbers — each row is one condition, not a fragment.
+4. Frame — Left card gets --accent-line border and --accent-soft fill; right card gets a plain --border-2 border and no fill. Colour marks which side is the recommendation.
+
+### Use when
+
+- A doc page needs to draw a hard boundary against its nearest neighbour.
+- The rule has a real opposite worth naming, not just a definition to restate.
+
+### Use something else when
+
+- callout: The fact is live and momentary, not a standing rule — that is a Callout.
+
+### Content rules
+
+- The left title always names the affirmative case in the page’s own words ("Use when", "Reach for amber when") — never a generic "Do".
+- The right title is always the fixed phrase "Use something else when" and always names the correct component inline, in --fg, inside the sentence.
+- Each row is a complete condition an operator could actually be facing, not a restated definition of the component itself.
+- Row count does not have to match between the two sides — the right side is often shorter, because ruling something out takes fewer words than justifying it.
+- Never a single card. If there is nothing to rule out, the usage rule belongs in prose in the opening description instead.
+
+### Examples
+
+- [demo] Pair
+- [good] Custom recommendation title — The left title narrows to the page’s own words ("Reach for amber when") instead of the generic default — Content rule 1.
+- [bad] A single card alone — One card with nothing to rule out reads as unfinished — a standalone rule like this belongs in prose in the opening description instead (Content rule 5).
+
+### Accessibility
+
+- Not interactive: Neither card is a control — no focus ring, no onClick, no tabIndex. It is read, not operated.
+- Colour never alone: The recommended side carries the amber border and fill together; a colour-blind reader still gets the left/right position and the title text.
+- Reading order matches DOM order: The recommended card is always first in markup as well as on screen, so a screen reader hears the affirmative case before the exclusions.
+- Component names are real links: Where the right card names another component inline, that word should be reachable, not just coloured — treat it the way Related treats its cards.
+
+### Tokens
+
+- --accent-line, --accent-soft: Recommended card: border and fill.
+- --border-2: Alternative card: border, no fill.
+- --accent, --mute: Title colour, left vs. right.
+- --dim: Row text.
+- --fg: A named component inline in a row.
+
+### Related
+
+- callout (often-confused-with): The nearest neighbour by look, not by job. A callout has an icon and reports one live fact; this card has no icon and states a standing rule.
+- card (composes-with): The plain bordered box this pattern is built from. Usage Card is a fixed, paired arrangement of that box — never a variant registered on Cards itself.
+
+### Changelog
+
+- v1.0.0 (1 Oct 2026): Documented as its own component — this pattern already appeared, identically, on every Foundations and Components doc page.
+
+---
