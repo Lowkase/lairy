@@ -18,6 +18,7 @@ import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { RADIO_EXAMPLES } from "./radio-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
 import { SWITCH_EXAMPLES } from "./switch-examples";
+import { TABS_EXAMPLES } from "./tabs-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 import { TEXT_INPUT_EXAMPLES } from "./text-input-examples";
 import { TEXTAREA_EXAMPLES } from "./textarea-examples";
@@ -36,6 +37,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   radio: RADIO_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
   switch: SWITCH_EXAMPLES,
+  tabs: TABS_EXAMPLES,
   text: TEXT_EXAMPLES,
   "text-input": TEXT_INPUT_EXAMPLES,
   textarea: TEXTAREA_EXAMPLES,

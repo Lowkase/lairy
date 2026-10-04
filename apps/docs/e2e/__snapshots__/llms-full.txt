@@ -1269,6 +1269,100 @@ There is no indeterminate switch and no loading switch. If the change takes long
 
 ---
 
+## Navigation (Tabs)
+
+Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/tabs
+
+Purpose: Switches between views of the page the operator is already on, with nothing else changing.
+
+### Description
+
+Tabs switch between views of the page the operator is already on.
+
+Nothing about the page changes when a tab is clicked except which slice of it is showing: same route, same header, same object. That is the whole line against Navigation (Subnav) — a subnav row loads a different page, a tab re-dresses this one. The practical test is unsaved work: if moving between two views could lose it, they are tabs; if it could not, they were probably pages.
+
+### Anatomy
+
+1. Tab row — A single left-aligned row of labels with an 8px gap, sitting immediately above the content it governs. It never wraps, never scrolls and never centres — the first tab lines up with the page's left margin so the eye finds it without hunting.
+2. Baseline — A 1px --border rule running the full width beneath the row. It is what makes the tabs read as a set rather than three loose words, and it is the rail the selected marker sits on.
+3. Selected marker — A 2px --accent underline pulled 1px down so it covers the baseline exactly, paired with an --accent label. It moves over 160ms; nothing else in the row changes.
+4. Tab label — Label type at 12px and .14em uppercase, in --mute at rest and --fg on hover, with 9px by 14px of padding to give a comfortable hit area. Hover deliberately stops short of the underline so it can never be mistaken for selection.
+5. Panel — The view itself, on --panel-2 with the tab row's baseline as its top edge. It is the only thing that changes when a tab is clicked — the page header, title and actions above it hold still.
+
+### Variants
+
+- Page tabs (--accent, --mute, --fg, --border, --panel-2): The whole page has more than one shape — a fleet as a map or as a table. They sit directly under the page title, above everything else, because they govern all of it.
+- Panel tabs (--accent, --mute, --fg, --border, --panel-2): One region of a page has alternate readings — a run's logs or its diff. Scoped to the card's header rail so the operator can see the tabs and the card's own edge belong together.
+
+There is one style and it is the underline. No pill tabs — a filled rounded tab is a Chip, and the system will not spend the same shape twice. No vertical tabs, no closable tabs, no second row.
+
+### States
+
+- Default: --mute, no underline.
+- Hover: --fg, still no underline.
+- Selected: --accent + 2px underline.
+- Focus: 3px accent-soft ring.
+
+### Use when
+
+- Two to five readings of the same object, all equally valid.
+- Views the operator switches between often and compares against each other.
+- Content that shares the page's header, title and actions unchanged.
+- A split that can be thrown away without breaking a link, since tabs are not routes.
+
+### Use something else when
+
+- subnav: A different page — that is Navigation (Subnav).
+- chip: A subset of one list — those are Chips above the table.
+
+### Content rules
+
+- Labels are Label case: one or two words, uppercase, .14em tracking — MAP, TABLE, LOGS, DIFF.
+- Name the view, not the act: "MAP", never "VIEW MAP"; "DIFF", never "COMPARE VERSIONS".
+- Keep every label in the row to a similar length; one long tab among three short ones makes the row look broken rather than emphasised.
+- A count is allowed only when the number is the view's whole point — ALERTS 3 — set in --faint after the label, never as a coloured badge.
+- Never put an action, a destination or Settings in a tab row. Everything in the row must be a way of looking at the same thing.
+
+### Examples
+
+- [demo] Page tabs
+- [demo] Panel tabs
+- [good] One row, underline only — One row, left aligned, underline on the selected tab and nothing else.
+- [bad] Pill tabs — Never draw tabs as pills — that shape is a filter chip, and the operator will try to combine them.
+- [good] Title stays put — The title stays put above the tabs, because the object is the same in every view.
+- [bad] Overflow row with a destination — Never overflow or scroll a tab row, and never smuggle a destination like Settings into it.
+- [good] Count in --faint — A count in --faint when the number is the view's whole point, sitting after the label.
+- [bad] Coloured badge in a tab — Never put a coloured badge in a tab — the underline is the only mark a tab row carries.
+
+### Accessibility
+
+- Tablist and panel: The row is role="tablist", each label a role="tab" with aria-selected, and the view a role="tabpanel" labelled by its tab. That pairing is what lets a screen-reader user know how many views exist before choosing one.
+- Arrows move, Tab leaves: Left and right arrows move between tabs and activate as they go; Home and End jump to the ends. One Tab press then lands in the panel, so reaching the content never means walking through every other tab.
+- Colour is never alone: Selection is the 2px underline as well as the --accent label. Amber on --panel measures 6.6:1 and --mute labels 4.9:1 at 12px, but the underline is what carries the state for anyone who cannot separate the hues.
+- Panel keeps its place: Switching a tab replaces the panel's content without moving focus or scrolling the page. The operator's position is preserved, and the change is announced by the panel's own heading rather than a live region.
+
+### Tokens
+
+- --accent: Selected label and 2px underline
+- --mute, --fg: Resting and hover labels
+- --border: Row baseline and panel edge
+- --panel-2: Panel surface
+- --faint: Optional count after a label
+
+### Related
+
+- subnav (often-confused-with): The subnav loads pages; tabs re-dress one. If the switch deserves its own URL and header, it belongs over there.
+- chip (alternative): Chips filter the rows of one view and can combine. Tabs are exclusive and change the whole reading, which is why they never take the pill shape.
+- card (composes-with): Panel tabs live in a card's header rail, so the card's edge and the tab baseline have to agree about where the content starts.
+
+### Changelog
+
+- v1.1.0 (24 Aug 2026): Pill tabs, overflow rows and badge counts ruled out; hover fixed at --fg with no underline.
+- v1.0.1 (17 Aug 2026): Marker pulled 1px down so it covers the baseline instead of sitting above it.
+- v1.0.0 (9 Aug 2026): Underline tabs introduced at two placements with a 160ms marker transition.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text
