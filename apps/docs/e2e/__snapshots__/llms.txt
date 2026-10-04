@@ -16,6 +16,7 @@
 - [Radio](/components/radio): A set of mutually exclusive options, all visible at once, exactly one of them chosen.
 - [Scrollbar](/components/scrollbar): The browser's own scroll control, restyled to two greys — never a custom-built replacement.
 - [Switch](/components/switch): Turns one setting on or off, and the change takes effect the moment it moves.
+- [Table](/components/table): A list of records the operator works on, not a grid of numbers they read.
 - [Navigation (Tabs)](/components/tabs): Switches between views of the page the operator is already on, with nothing else changing.
 - [Text](/components/text): Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.
 - [Text input](/components/text-input): One line the operator types into, and the box every other field in the system is measured against.

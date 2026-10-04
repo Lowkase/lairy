@@ -20,6 +20,7 @@
     "./radio/examples": "./src/radio/examples/index.ts",
     "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
     "./switch/examples": "./src/switch/examples/index.ts",
+    "./table/examples": "./src/table/examples/index.ts",
     "./tabs/examples": "./src/tabs/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./text-input/examples": "./src/text-input/examples/index.ts",
@@ -38,7 +39,8 @@
     "cn": "^0.4.0"
   },
   "peerDependencies": {
-    "react": "^19.3.0"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
