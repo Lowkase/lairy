@@ -15,6 +15,7 @@
 - [Progress](/components/progress): Reports a measured fraction of a known total, and nothing else.
 - [Radio](/components/radio): A set of mutually exclusive options, all visible at once, exactly one of them chosen.
 - [Scrollbar](/components/scrollbar): The browser's own scroll control, restyled to two greys — never a custom-built replacement.
+- [Switch](/components/switch): Turns one setting on or off, and the change takes effect the moment it moves.
 - [Text](/components/text): Renders a block of copy in its role — eyebrow, heading, body or caption — with no typographic decision left to make at the point of use.
 - [Text input](/components/text-input): One line the operator types into, and the box every other field in the system is measured against.
 - [Textarea](/components/textarea): The text input grown tall enough to hold a sentence the operator writes in their own words.

@@ -1176,6 +1176,99 @@ It exists so any pane that overflows can be scrolled without inventing a new way
 
 ---
 
+## Switch
+
+Status: stable · Version: 1.1.0 · Updated: 25 Aug 2026 · /components/switch
+
+Purpose: Turns one setting on or off, and the change takes effect the moment it moves.
+
+### Description
+
+A switch turns one thing on or off, and the change takes effect the moment it moves.
+
+That instant commit is the entire difference from a Checkbox, which records an answer and waits for a submit. A switch has no submit to wait for, so it belongs in settings and toolbars rather than in forms, and it must never appear beside a Save button that implies it was holding its breath. It is also always one thing: two switches offered as alternatives are a Radio group in the wrong clothes.
+
+### Anatomy
+
+1. Track — A 40×22 pill with a 1px border — the one shape in the system allowed a 20px radius, because the rounded ends are what make it read as a thing that slides rather than a box that fills. Amber fill means on; --panel-2 means off.
+2. Knob — A 16px circle travelling 18px in 180ms. The movement is the feedback: it is the only control here that animates its own state change rather than fading between two paints.
+3. Label — A stative phrase naming what is true when the switch is on — "Auto-retry failed runs", never "Turn on auto-retry". Commands belong on buttons; a switch describes a condition.
+4. Hit row — The whole row is the target, so label, sub-line and track all toggle. It gives a 44px-tall hit area out of a 22px control and takes --panel-2 on hover across the full width.
+5. Sub-line — One optional 12px --mute line for the consequence, present only when the label cannot carry it: what happens when on, or what would unlock a disabled row. Never a restatement of the label.
+
+### States
+
+- Off: The resting negative. The track is a filled --panel-2 rather than an empty outline, so off still reads as a deliberate position rather than a control that failed to load.
+- On: Amber track, knob at the right. Amber means act everywhere in the system, and this is the one place it also means "is acting" — the setting is live right now.
+- Hover: Pointer anywhere on the row. The border and knob lift together so it is clear the whole row is pressable, not just the pill.
+- Focus: Reached by keyboard. The ring sits around the track rather than the row, so the operator sees which control they are about to commit.
+- Disabled off: Cannot be turned on right now. The row dims as one piece and the sub-line says what would unlock it — never a tooltip alone.
+- Disabled on: On and locked, usually by policy. The amber drains out so nothing dimmed ever reads as active, but the knob stays right so the state is still legible.
+
+There is no indeterminate switch and no loading switch. If the change takes long enough to need a spinner, the control is a Button and the outcome belongs in a snackbar — a switch that moves and then moves back is worse than one that never moved.
+
+### Use when
+
+- One setting has two states and the change applies immediately.
+- The effect is reversible with the same gesture that caused it.
+- The row lives in settings, a toolbar, or a panel — somewhere with no submit.
+- Both states are legitimate resting places, not a task to be completed.
+
+### Use something else when
+
+- checkbox: The answer is submitted with a form — that is a Checkbox.
+- radio: There are more than two states, or two named alternatives — that is a Radio group.
+- button: The action runs once and finishes — that is a Button.
+- badge: The state is assigned by the system and only reported — that is a Badge.
+
+### Content rules
+
+- Write the label as the state, not the action: "Auto-retry failed runs". If it reads like a button, it will be treated like one.
+- Never label the two ends of the track. The knob position and the amber fill carry on and off; ON/OFF text next to them is a second, competing answer.
+- Keep the label under about six words and put the consequence in the sub-line, so a column of switches stays scannable as a list of settings.
+- Say what a locked switch needs in the sub-line — "Needs an admin on the workspace" — rather than leaving the operator to hover for a reason.
+- Confirm nothing on toggle. If the change deserves feedback beyond the knob moving, that is a snackbar, and if it deserves a confirm dialog it is not a switch.
+
+### Examples
+
+- [demo] Auto-retry failed runs
+- [good] A stative label with its consequence — A stative label naming what is on, and one --mute line for the consequence.
+- [bad] A command label flanked by ON/OFF — Never write the label as a command, and never flank the track with ON/OFF — the knob says which it is.
+- [good] Independent settings stacked — Independent settings stack as rows with the tracks aligned on one right-hand column.
+- [bad] Two switches as alternatives — Never use two switches as alternatives — naming two options one-of is a radio group's job.
+- [good] A locked switch explains itself — A locked switch keeps its label and says, in the sub-line, what would unlock it.
+- [bad] A switch behind a Save button — Never put a switch behind a Save — it already committed, and the button makes the operator doubt it.
+
+### Accessibility
+
+- Role and state: The control is role="switch" with aria-checked, labelled by the visible label and described by the sub-line. Role switch rather than checkbox is what tells a screen reader the change has already happened.
+- Space toggles: The row is one tab stop and Space toggles it; Enter does nothing, since the row is not a button. The whole row being the hit target means pointer and keyboard land on the same thing.
+- Colour is never alone: On is the knob at the right as well as the amber track, and amber on --panel measures 6.6:1. Anyone who cannot see the fill still reads the position, which is why the knob travels the full 18px.
+- No motion, no problem: Under prefers-reduced-motion the knob jumps rather than slides. The state is carried by position, so removing the transition costs nothing at all.
+
+### Tokens
+
+- --accent: Track fill when on
+- --accent-line: Track border when on
+- --panel-2: Track fill when off, row hover
+- --border-2: Track border when off
+- --dim: Knob when off
+- --bg: Knob when on
+
+### Related
+
+- checkbox (alternative): Use instead inside a form. The square records an answer and waits for the submit; the pill has already changed the system.
+- radio (alternative): Use instead when two named alternatives are being compared. A switch has no vocabulary for its off state beyond "not on".
+- button (alternative): Use instead when the thing runs once and finishes. A switch describes a standing condition, never an errand.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Hit row extended across label and sub-line; loading and indeterminate switches ruled out.
+- v1.0.1 (19 Aug 2026): Disabled-on drains the amber to --border-2 so nothing dimmed reads as active.
+- v1.0.0 (12 Aug 2026): Switch introduced at 40×22 with a 16px knob and a 180ms travel.
+
+---
+
 ## Text
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/text
