@@ -10,6 +10,7 @@ import { BADGE_EXAMPLES } from "./badge-examples";
 import { BUTTON_EXAMPLES } from "./button-examples";
 import { CALLOUT_EXAMPLES } from "./callout-examples";
 import { CARD_EXAMPLES } from "./card-examples";
+import { CHECKBOX_EXAMPLES } from "./checkbox-examples";
 import { CHIP_EXAMPLES } from "./chip-examples";
 import { EMPTY_STATE_EXAMPLES } from "./empty-state-examples";
 import { LOADING_EXAMPLES } from "./loading-examples";
@@ -25,6 +26,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   button: BUTTON_EXAMPLES,
   callout: CALLOUT_EXAMPLES,
   card: CARD_EXAMPLES,
+  checkbox: CHECKBOX_EXAMPLES,
   chip: CHIP_EXAMPLES,
   "empty-state": EMPTY_STATE_EXAMPLES,
   loading: LOADING_EXAMPLES,

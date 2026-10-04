@@ -8,6 +8,7 @@
 - [Buttons](/components/button): Commits an action the operator has decided to take.
 - [Callout](/components/callout): Reports a standing condition inside the panel or flow it belongs to.
 - [Cards](/components/card): A bordered container that holds one whole object worth looking at on its own.
+- [Checkbox](/components/checkbox): Records an independent yes-or-no the operator sets themselves.
 - [Chips](/components/chip): A round-ended token representing a value the operator chose, such as a filter. The operator can dismiss it.
 - [Empty state](/components/empty-state): What a region says when it has loaded successfully and has nothing to show.
 - [Loading](/components/loading): What a region shows while it still does not know the answer.

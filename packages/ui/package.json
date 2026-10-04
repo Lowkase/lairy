@@ -12,6 +12,7 @@
     "./button/examples": "./src/button/examples/index.ts",
     "./callout/examples": "./src/callout/examples/index.ts",
     "./card/examples": "./src/card/examples/index.ts",
+    "./checkbox/examples": "./src/checkbox/examples/index.ts",
     "./chip/examples": "./src/chip/examples/index.ts",
     "./empty-state/examples": "./src/empty-state/examples/index.ts",
     "./loading/examples": "./src/loading/examples/index.ts",
