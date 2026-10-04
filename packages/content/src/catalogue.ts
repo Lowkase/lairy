@@ -16,6 +16,7 @@ import { radio } from "./entries/components/radio";
 import { scrollbar } from "./entries/components/scrollbar";
 import { select } from "./entries/components/select";
 import { selectMulti } from "./entries/components/select-multi";
+import { subnav } from "./entries/components/subnav";
 import { switchComponent } from "./entries/components/switch";
 import { table } from "./entries/components/table";
 import { tabs } from "./entries/components/tabs";
@@ -65,6 +66,7 @@ const components: ComponentEntry[] = [
   usageCard,
   scrollbar,
   mainRail,
+  subnav,
   textInput,
   textarea,
   select,
