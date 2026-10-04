@@ -12,6 +12,7 @@ export * from "./progress/progress";
 export * from "./radio/radio";
 export * from "./scrollbar/scrollbar";
 export * from "./switch/switch";
+export * from "./table/table";
 export * from "./tabs/tabs";
 export * from "./text/text";
 export * from "./text-input/text-input";

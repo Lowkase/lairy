@@ -571,6 +571,40 @@ function buildTabsItem(): RegistryItem {
   };
 }
 
+function buildTableItem(): RegistryItem {
+  const entry = getComponent("table");
+  if (!entry) throw new Error('registry: content entry "table" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "table",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. No class-variance-authority: table.tsx
+    // computes its own conditional classes with plain `cn()`, the same call
+    // buildTabsItem's own comment already made for the same reason.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/table/table.tsx",
+        target: "components/ui/table/table.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/table/table.tsx")),
+      },
+      {
+        path: "packages/ui/src/table/table-icons.tsx",
+        target: "components/ui/table/table-icons.tsx",
+        type: "registry:ui",
+        content: readSource("packages/ui/src/table/table-icons.tsx"),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
@@ -587,6 +621,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   textarea: buildTextareaItem,
   scrollbar: buildScrollbarItem,
   switch: buildSwitchItem,
+  table: buildTableItem,
   tabs: buildTabsItem,
   "usage-card": buildUsageCardItem,
 };

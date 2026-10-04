@@ -1269,6 +1269,97 @@ There is no indeterminate switch and no loading switch. If the change takes long
 
 ---
 
+## Table
+
+Status: stable · Version: 1.1.0 · Updated: 25 Aug 2026 · /components/table
+
+Purpose: A list of records the operator works on, not a grid of numbers they read.
+
+### Description
+
+A table is a list of records the operator works on, not a grid of numbers they read.
+
+Every decision here follows from that: rows are selectable, actions live on the row and in a toolbar that changes when a selection exists, and the columns are the few facts needed to decide which row to act on. It is the densest component in the system, so it is the one place where hover reveals rather than decorates. If the content is a matrix of measurements to be compared rather than records to be acted on, that is a Visualization problem, not this component.
+
+### Anatomy
+
+1. Header row — Column names in 10.5px --faint at .16em, sitting above a single hairline. They are labels rather than buttons: nothing in the header is amber, because the header describes the table and never acts on it.
+2. Select column — A fixed 26px column holding the 18px square box, header included. It is first because selection precedes every bulk action, and its width is reserved whether or not the table is selectable, so rows never shift when selection is turned on.
+3. Cell — One fact, one alignment rule: text left, numbers and times right, the record's name at 14px --fg and everything secondary at 12px --mute. Truncation with an ellipsis is allowed on the name only — every other column must fit.
+4. Row — The unit of work: a 54px-tall band — 11px of padding around a 32px action box, content-driven rather than fixed — that takes --panel-2 on hover and, when selected, an --accent-2 tint with a 2px ice rail down its left edge. The rail is what makes a selection legible while scrolling a long body.
+5. Row actions — A right-aligned cluster in a reserved column: the two or three frequent verbs as icons, then an overflow ⋯ for the rest. It fades in on hover and on keyboard focus, and the column is always there so the grid never reflows.
+
+### States
+
+- Toolbar — idle: With nothing selected: the row count on the left in --faint, then EXPORT and the one amber CREATE on the right. It is the table's title bar, so it never scrolls away from the body it counts.
+- Toolbar — selection: The moment a row is checked, the same 56px band swaps to an ice count chip, the bulk verbs, and CLEAR. Swapping in place rather than stacking a second bar keeps the body from jumping under the operator's cursor.
+- Row — default: Resting. Only the hairline under the header separates rows; there are no zebra stripes, because 44px of height and one hover fill already do the work without adding a second rhythm.
+- Row — hover: The whole band fills and the action icons fade in. This is the one component where hover reveals rather than decorates, which is why every revealed action also has a keyboard path.
+- Row — selected: Ice tint plus the 2px rail, held whether or not the pointer is on the row. Selection outranks hover: a selected row under the cursor keeps the ice rather than the grey.
+- Row — menu open: The row raises above its siblings so the overflow panel is not clipped, and the ⋯ trigger stays filled for as long as the menu is up, so the operator can see which row they are aimed at.
+
+### Use when
+
+- Rows are records with a stable identity the operator acts on.
+- The same action is often wanted on several rows at once.
+- Four to seven facts per row decide what to do next.
+- Scanning down one column is a real task — status, owner, last run.
+
+### Use something else when
+
+- card: Each item needs an image, a summary, or free-form text — those are Cards.
+- empty-state: There are no rows yet — that is an Empty state, in place of the body.
+
+### Content rules
+
+- Head columns with a noun in 10.5px caps — NAME, STATUS, OWNER — and never a sentence; the header is an index, not an explanation.
+- Put the record's name in the second column and make it the widest: it is what the operator looks for before they read anything else.
+- Write times as relative until they stop being useful — "2m ago", "6d ago" — and right-align them so the column scans as one measurement.
+- Show status as a word in colour rather than a badge on every row: a column of badges is louder than the data and the rows stop being scannable.
+- Keep the bulk toolbar's verbs to the three that are actually used often, and name them in caps as verbs — RUN, DUPLICATE, DELETE.
+
+### Examples
+
+- [demo] Automations
+- [good] Few columns, each one a fact — Few columns, each one a fact used to decide; times right-aligned and relative.
+- [bad] A column the operator can't read — Never keep a column the operator cannot read — if everything truncates, the extra columns belong in the row's detail.
+- [good] Selection replaces the toolbar in place — A selection replaces the idle toolbar in place, counts what is selected, and keeps DELETE destructive.
+- [bad] A second bar stacked for the selection — Never stack a second bar for the selection, and never let a destructive action pass as an ordinary one.
+- [good] Actions reveal in a reserved column — Row actions appear on hover and focus in a reserved column, so the width never shifts.
+- [bad] Every action spelled out on every row — Never spell every action out on every row — the rare ones belong in the row's overflow menu.
+
+### Accessibility
+
+- Real grid semantics: The body is a role="grid" with row and gridcell descendants and the header row marked columnheader, so a screen reader announces "row 4 of 214, Nightly ingest, Running" rather than reading a wall of unlabelled text.
+- Nothing hover-only: Every action revealed on hover is reachable by tabbing into the row, and the actions column keeps its space at all times. An action that only exists under a pointer does not exist for half the operators.
+- Selection is announced: Each box carries aria-checked and the count chip is a live region, so checking rows speaks "3 selected". The header box is a tri-state: none, some, all — and "some" is announced as mixed rather than as checked.
+- Colour is never alone: Selection is the rail and the checked box as well as the ice tint, and status is a word rather than a colour. Ice on --panel measures 5.9:1; the tint alone is well under that and is never asked to carry meaning by itself.
+
+### Tokens
+
+- --panel-2: Toolbar band, row hover fill
+- --accent-2: Selection rail, checked box, count chip
+- --accent-2-line: Count chip border
+- --accent: CREATE, running status, row triggers
+- --border: Header hairline, card edge
+- --border-2: Unchecked box, toolbar button borders
+- --mute: Column names, row count
+- --alarm-line, --alarm-soft: Destructive verbs' border and hover fill in the toolbar and row menu
+
+### Related
+
+- card (alternative): Use instead when each record needs more than a line — a summary, an image, a chart. Cards trade the scannable column for room to breathe.
+- empty-state (composes-with): Replaces the body, never the toolbar, when there are no rows: the operator still needs CREATE and the column names to know what they are missing.
+- popover (composes-with): The row's ⋯ menu is a popover, and it follows that component's rules — including keeping destructive rows under their own labelled divider.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Selection standardised on ice with a 2px rail; zebra striping ruled out; actions column reserved so rows never reflow.
+- v1.0.1 (21 Aug 2026): Bulk toolbar swaps in place instead of stacking a second bar; header box made tri-state.
+- v1.0.0 (15 Aug 2026): Table introduced with row selection, bulk actions and per-row overflow menus.
+
+---
+
 ## Navigation (Tabs)
 
 Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/tabs

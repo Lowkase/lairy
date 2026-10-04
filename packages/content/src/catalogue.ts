@@ -11,6 +11,7 @@ import { emptyState } from "./entries/components/empty-state";
 import { loading } from "./entries/components/loading";
 import { mainRail } from "./entries/components/main-rail";
 import { modal } from "./entries/components/modal";
+import { popover } from "./entries/components/popover";
 import { progress } from "./entries/components/progress";
 import { radio } from "./entries/components/radio";
 import { scrollbar } from "./entries/components/scrollbar";
@@ -67,6 +68,7 @@ const components: ComponentEntry[] = [
   scrollbar,
   mainRail,
   subnav,
+  popover,
   textInput,
   textarea,
   select,
