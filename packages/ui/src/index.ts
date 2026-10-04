@@ -11,6 +11,7 @@ export * from "./loading/loading";
 export * from "./progress/progress";
 export * from "./radio/radio";
 export * from "./scrollbar/scrollbar";
+export * from "./switch/switch";
 export * from "./text/text";
 export * from "./text-input/text-input";
 export * from "./textarea/textarea";

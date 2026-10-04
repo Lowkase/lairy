@@ -19,6 +19,7 @@
     "./progress/examples": "./src/progress/examples/index.ts",
     "./radio/examples": "./src/radio/examples/index.ts",
     "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
+    "./switch/examples": "./src/switch/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./text-input/examples": "./src/text-input/examples/index.ts",
     "./textarea/examples": "./src/textarea/examples/index.ts",
