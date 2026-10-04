@@ -568,6 +568,96 @@ There is no elevated card. Shadow is how the system says "this floats over the p
 
 ---
 
+## Checkbox
+
+Status: stable · Version: 1.2.0 · Updated: 20 Aug 2026 · /components/checkbox
+
+Purpose: Records an independent yes-or-no the operator sets themselves.
+
+### Description
+
+A checkbox records an independent yes-or-no the operator sets themselves.
+
+Each box stands on its own, so ticking one says nothing about the others, and nothing happens until the form is submitted. If the options are mutually exclusive it is a Radio; if the change lands the instant it is flipped it is a Switch. That deferred, independent quality is what everything below assumes.
+
+### Anatomy
+
+1. Box — 18px square, 1.5px border, 2px radius. Fixed at every density — the box never scales with its label.
+2. Glyph — A tick when on, a dash when indeterminate, nothing when off. Drawn in --bg so it reads as cut out of the fill rather than sat on top.
+3. Label — 14px --fg in sentence case, 12px from the box. It states what being checked means, not what the click does.
+4. Hit row — The box and label share one 9px/11px padded row, so the whole line is clickable and clears the 32px minimum in dense chrome.
+
+### States
+
+- Off: The resting state. An empty box, never a greyed tick — an absent glyph is the only honest way to show "not chosen".
+- On: Filled amber with a --bg tick. Amber is the act colour, and checking something is an act.
+- Indeterminate: A parent whose children are partly checked. Only ever set by the system from its children — never something the operator can click into.
+- Error: A required box left unchecked at submit. The border carries it, never the fill, so the state still reads at a glance.
+- Disabled: Unavailable but still present, and still announced. A checkbox that vanishes reads as a bug.
+
+There is no read-only checkbox distinct from disabled. A value the operator cannot change is either disabled, or it is not a control at all and belongs in the page as text.
+
+### Use when
+
+- The answer is independently yes or no, and other options do not constrain it.
+- The operator may pick none, some, or all of a small set.
+- The change is committed later by a submit, not the instant it is clicked.
+- The full set of options is short enough to show at once — up to about seven.
+
+### Use something else when
+
+- radio: Exactly one option may be chosen — that is a Radio.
+- switch: The setting applies immediately with no submit — that is a Switch.
+- select-multi: The list is long or the chosen set must stay visible — that is Select (Multi).
+- table: It selects rows to act on rather than recording a value — that belongs to Table, where selection is Ice.
+
+### Content rules
+
+- Label in sentence case, 14px, no terminal punctuation: "Send weekly digest", never "SEND WEEKLY DIGEST" or "Send weekly digest."
+- Phrase the label as the positive statement being agreed to, so checking always means yes. "Include archived", never "Do not include archived".
+- Say what the state means, not what the click does — "Retry failed steps", never "Click to retry".
+- Keep labels to a line where possible; if the rule needs explaining, put a 12.5px --mute line beneath rather than lengthening the label.
+- A group of checkboxes shares one grammar and one subject, so the set can be read as a list rather than five unrelated sentences.
+
+### Examples
+
+- [demo] Retry failed steps
+- [good] Labels state the positive — Labels state the positive, so a tick always means yes.
+- [bad] A negated "don't include" label — Never negate a label — a ticked "don't include" forces the reader to do logic.
+- [good] Detail beneath a one-line label — Detail goes on a --mute line beneath, keeping the label to one line.
+- [bad] A label grown into a sentence — Never grow the label into a sentence — the box stops being scannable.
+- [good] Indeterminate derived from children — Indeterminate is derived from children — the system sets it, never a click.
+- [bad] Indeterminate as a third answer — Never use indeterminate as a third answer an operator can choose.
+
+### Accessibility
+
+- Real inputs: Every checkbox is a real input with a bound label, so it takes a tab stop, toggles on Space, and announces its checked state. Indeterminate is set through the DOM property, which is what lets a screen reader say "partially checked".
+- The row is the target: The 18px box is smaller than any hit-target floor, so the padded row carries the interaction. Clicking the label toggles the box — a label that does nothing is a broken control.
+- Never colour alone: Checked is signalled by the tick as well as the fill, and error by a border plus a message. Under greyscale the tick still reads, which is the test.
+- Groups announce: A set of related checkboxes shares a group label so its purpose is announced once, and the reading order follows the visual order down the column.
+
+### Tokens
+
+- --border-2: Box border when off
+- --accent, --bg: Fill when on, and the glyph cut out of it
+- --accent-soft, --accent-line: Focus ring and its border
+- --alarm-line: Error border
+- --fg: Label, and the box border on hover
+
+### Related
+
+- radio (alternative): Use instead when the options are mutually exclusive. A checkbox answers one yes-or-no; a radio picks one of several.
+- switch (alternative): Use instead when the change takes effect immediately. Checkboxes wait for a submit; switches do not.
+- select-multi (alternative): Use instead past roughly seven options, or when the chosen set needs to stay visible after the list closes.
+
+### Changelog
+
+- v1.2.0 (20 Aug 2026): Indeterminate documented as system-set only; hover tint unified with Radio.
+- v1.1.0 (15 Aug 2026): Box radius locked to 2px; focus moved to the soft ring.
+- v1.0.0 (12 Aug 2026): Initial release — real inputs, eight-state matrix.
+
+---
+
 ## Chips
 
 Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/chip
