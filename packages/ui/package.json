@@ -17,6 +17,7 @@
     "./empty-state/examples": "./src/empty-state/examples/index.ts",
     "./loading/examples": "./src/loading/examples/index.ts",
     "./progress/examples": "./src/progress/examples/index.ts",
+    "./radio/examples": "./src/radio/examples/index.ts",
     "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
     "./text/examples": "./src/text/examples/index.ts",
     "./text-input/examples": "./src/text-input/examples/index.ts",

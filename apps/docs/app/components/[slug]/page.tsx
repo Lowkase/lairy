@@ -15,6 +15,7 @@ import { CHIP_EXAMPLES } from "./chip-examples";
 import { EMPTY_STATE_EXAMPLES } from "./empty-state-examples";
 import { LOADING_EXAMPLES } from "./loading-examples";
 import { PROGRESS_EXAMPLES } from "./progress-examples";
+import { RADIO_EXAMPLES } from "./radio-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 import { TEXT_INPUT_EXAMPLES } from "./text-input-examples";
@@ -31,6 +32,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   "empty-state": EMPTY_STATE_EXAMPLES,
   loading: LOADING_EXAMPLES,
   progress: PROGRESS_EXAMPLES,
+  radio: RADIO_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
   text: TEXT_EXAMPLES,
   "text-input": TEXT_INPUT_EXAMPLES,

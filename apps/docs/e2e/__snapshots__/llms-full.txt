@@ -1017,6 +1017,97 @@ There is no indeterminate bar and no spinner. A bar that animates without a deno
 
 ---
 
+## Radio
+
+Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/radio
+
+Purpose: A set of mutually exclusive options, all visible at once, exactly one of them chosen.
+
+### Description
+
+A radio group is a set of mutually exclusive options, all visible at once, exactly one of them chosen.
+
+It exists so the operator can compare the alternatives before committing, which is why it costs vertical space and why it stops being the right control past about five options. The line against Checkbox is arithmetic: checkboxes are independent and can all be off, radios are one-of and can never be none. If “none” is a legitimate answer, it has to be an option in the list rather than an empty group.
+
+### Anatomy
+
+1. Group — The set itself, and the real unit of the component — a radio never exists alone. Options stack one per line with 2px between rows, so the eye reads a list rather than a layout.
+2. Dial — An 18px circle with a 1.5px border, fixed at every density. Round is reserved: with dots and avatars, this is one of the only circles in a system that is otherwise square, and the shape is what says one-of.
+3. Dot — A 9px --accent disc fading in over 160ms, centred in the dial. It fills rather than ticks, because a tick is the checkbox’s word for "yes" and this control answers "which".
+4. Label — 14px Body in --fg, sentence case, and part of the target. It is the option itself — never a description of the dial — and it may carry one --mute line underneath when the trade-off needs stating.
+5. Hit row — Dial and label share one row padded 9px by 11px, so the whole line is clickable and clears the minimum target in dense chrome. Hover fills the row with --panel-2, never just the dial.
+
+### States
+
+- Off: Not chosen. The dial is empty rather than dimmed, because a faint dot would read as a weak choice instead of no choice.
+- On: The chosen option: amber ring, amber 9px dot fading in over 160ms. Exactly one row in the group is ever in this state.
+- Error: A required group submitted with nothing chosen. Every dial in the group takes the border, since the fault belongs to the question and not to one option.
+- Disabled: An option that cannot be chosen right now. It keeps its dot if it was the selection, and something next to the group has to say why it is locked.
+
+There is no indeterminate radio and no way to clear a group by clicking the selected option again. Both would mean a group with nothing chosen, which is the one state a radio set is not allowed to be in — add an explicit option instead.
+
+### Use when
+
+- Two to five options, exactly one of which will be true.
+- The options need comparing before choosing — seeing them all is the point.
+- The choice is part of a form and commits with everything else.
+- The wording of each option matters more than the space it costs.
+
+### Use something else when
+
+- select: Six or more options, or a list that grows — that is Select.
+- checkbox: Several can be true at once — that is Checkbox.
+- switch: It is one setting on or off, committing instantly — that is a Switch.
+- chip: The choice filters a list rather than setting a value — those are Chips.
+
+### Content rules
+
+- Options are sentence case and grammatically parallel: "Every run", "Failures only", "Never" — never a mix of nouns and clauses.
+- Name the outcome, not the mechanism: "Failures only" rather than "Filter where status equals failed".
+- Keep options roughly the same length. One option twice as long as the others reads as the recommended one whether you meant it or not.
+- Add at most one --mute line under an option, and only where the trade-off is not obvious from the label — "Skips validation".
+- The group needs a question above it in --dim: "Notify me about" — short, no colon, and never repeated inside the options.
+
+### Examples
+
+- [demo] Ingest or normalize
+- [good] A default already chosen — “Never” written as an option, stacked one per line, with one already chosen.
+- [bad] A group with nothing chosen — Never leave a group empty — the operator cannot tell a missing default from a broken form.
+- [good] One setting, two states is a Switch — One setting with two states is a switch, and commits the moment it is flipped.
+- [bad] Two rows saying on and off — Never spend two rows saying on and off — that is a switch wearing a radio group.
+- [good] A clarifying line per option — One clarifying line per option, in --mute, when the trade-off is not obvious.
+- [bad] A group wrapped into a grid — Never wrap a group into a grid — the reading order stops being obvious and so does the set.
+
+### Accessibility
+
+- One tab stop: The group is a role="radiogroup" labelled by its question, and the whole set is a single tab stop — Tab enters at the chosen option and Tab again leaves the group entirely.
+- Arrows choose: Arrow keys move between options and select as they move, which is the expected behaviour and the reason radios must not have side effects. Space selects the focused option where nothing is chosen yet.
+- Colour is never alone: Selection is the filled dot as well as the amber ring, and it is carried in aria-checked. Amber on --panel measures 6.6:1, but the dot is what reads for anyone who cannot separate the hues.
+- Locked options explain: A disabled option keeps its label readable and is described by the same text that says why it is locked, so the reason is announced with the option rather than sitting somewhere else on screen.
+
+### Tokens
+
+- --border-2: Dial at rest
+- --accent: Chosen ring and dot
+- --fg: Option labels
+- --mute: Clarifying line under an option
+- --panel-2: Row hover fill
+- --alarm-line: Error border
+
+### Related
+
+- checkbox (alternative): Checkboxes are independent and can all be off. If the answers are not mutually exclusive, the square is the right shape.
+- select (alternative): Past five options the list should collapse into a field. Select trades comparing the options for getting the space back.
+- switch (alternative): A switch is one setting with two states, committing instantly. Two radios saying on and off is always a switch in disguise.
+
+### Changelog
+
+- v1.1.0 (24 Aug 2026): Clearing a group by re-clicking ruled out; error state moved to every dial in the group rather than one.
+- v1.0.1 (20 Aug 2026): Hit row extended to the label with a --panel-2 hover fill across the whole line.
+- v1.0.0 (12 Aug 2026): Radio introduced at an 18px dial with a 9px dot and a 160ms fade.
+
+---
+
 ## Scrollbar
 
 Status: stable · Version: 1.0.0 · Updated: 2 Oct 2026 · /components/scrollbar
