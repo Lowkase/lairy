@@ -1,7 +1,8 @@
 import { getFoundation, getToken, listFoundations } from "@lairy/content";
 import { PageHeader } from "@/components/docs-page/page-header";
 import { Section } from "@/components/docs-page/section";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Shell } from "@/components/shell";
+import { shellMainRailItems, shellSectionMeta, shellSubnavGroup } from "@/lib/shell-nav";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { alarmInkPairing, contrastPairings } from "../../dev/tokens/contrast";
@@ -16,9 +17,7 @@ function formatDate(iso: string) {
 }
 
 export function generateStaticParams() {
-  return listFoundations()
-    .filter((entry) => entry.meta.status !== "draft")
-    .map((entry) => ({ slug: entry.meta.id }));
+  return listFoundations().map((entry) => ({ slug: entry.meta.id }));
 }
 
 function ContrastTable({ theme }: { theme: "dark" | "light" }) {
@@ -70,12 +69,22 @@ export default async function FoundationPage({
   const { slug } = await params;
   const { theme } = await searchParams;
   const entry = getFoundation(slug);
-  if (!entry || entry.meta.status === "draft") notFound();
+  if (!entry) notFound();
 
   const ink = alarmInkPairing();
 
+  const meta = shellSectionMeta("foundations");
   return (
-    <ThemeToggle initialTheme={theme === "light" ? "light" : "dark"}>
+    <Shell
+      section="foundations"
+      moduleIcon={meta.icon}
+      moduleLabel={meta.label}
+      moduleCode={meta.code}
+      items={shellMainRailItems()}
+      group={shellSubnavGroup("foundations")}
+      activeId={slug}
+      initialTheme={theme === "light" ? "light" : "dark"}
+    >
       <div className="flex flex-col gap-32">
         <PageHeader
           title={entry.meta.name}
@@ -260,6 +269,6 @@ export default async function FoundationPage({
           </Section>
         ) : null}
       </div>
-    </ThemeToggle>
+    </Shell>
   );
 }

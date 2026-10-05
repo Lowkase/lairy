@@ -2,7 +2,8 @@ import { getComponent, getComponentProps, listComponents } from "@lairy/content"
 import { UsageCard } from "@lairy/ui";
 import { PageHeader } from "@/components/docs-page/page-header";
 import { Section } from "@/components/docs-page/section";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Shell } from "@/components/shell";
+import { shellMainRailItems, shellSectionMeta, shellSubnavGroup } from "@/lib/shell-nav";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ComponentType } from "react";
@@ -13,10 +14,13 @@ import { CARD_EXAMPLES } from "./card-examples";
 import { CHECKBOX_EXAMPLES } from "./checkbox-examples";
 import { CHIP_EXAMPLES } from "./chip-examples";
 import { EMPTY_STATE_EXAMPLES } from "./empty-state-examples";
+import { HEADER_EXAMPLES } from "./header-examples";
 import { LOADING_EXAMPLES } from "./loading-examples";
+import { MAIN_RAIL_EXAMPLES } from "./main-rail-examples";
 import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { RADIO_EXAMPLES } from "./radio-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
+import { SUBNAV_EXAMPLES } from "./subnav-examples";
 import { SWITCH_EXAMPLES } from "./switch-examples";
 import { TABLE_EXAMPLES } from "./table-examples";
 import { TABS_EXAMPLES } from "./tabs-examples";
@@ -33,10 +37,13 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   checkbox: CHECKBOX_EXAMPLES,
   chip: CHIP_EXAMPLES,
   "empty-state": EMPTY_STATE_EXAMPLES,
+  header: HEADER_EXAMPLES,
   loading: LOADING_EXAMPLES,
+  "main-rail": MAIN_RAIL_EXAMPLES,
   progress: PROGRESS_EXAMPLES,
   radio: RADIO_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
+  subnav: SUBNAV_EXAMPLES,
   switch: SWITCH_EXAMPLES,
   table: TABLE_EXAMPLES,
   tabs: TABS_EXAMPLES,
@@ -56,9 +63,7 @@ function formatDate(iso: string) {
 }
 
 export function generateStaticParams() {
-  return listComponents()
-    .filter((entry) => entry.meta.status !== "draft")
-    .map((entry) => ({ slug: entry.meta.id }));
+  return listComponents().map((entry) => ({ slug: entry.meta.id }));
 }
 
 export default async function ComponentPage({
@@ -71,17 +76,28 @@ export default async function ComponentPage({
   const { slug } = await params;
   const { theme } = await searchParams;
   const entry = getComponent(slug);
-  if (!entry || entry.meta.status === "draft") notFound();
+  if (!entry) notFound();
 
   const examples = EXAMPLE_REGISTRIES[slug] ?? {};
+  const hasBuiltComponent = Object.keys(examples).length > 0;
   const props = getComponentProps(slug) ?? [];
   const demoExamples = entry.examples.filter((example) => example.kind === "demo");
   const goodExamples = entry.examples.filter((example) => example.kind === "good");
   const badExamples = entry.examples.filter((example) => example.kind === "bad");
   const dontPairs = goodExamples.map((good, index) => ({ good, bad: badExamples[index] }));
 
+  const shellMeta = shellSectionMeta("components");
   return (
-    <ThemeToggle initialTheme={theme === "light" ? "light" : "dark"}>
+    <Shell
+      section="components"
+      moduleIcon={shellMeta.icon}
+      moduleLabel={shellMeta.label}
+      moduleCode={shellMeta.code}
+      items={shellMainRailItems()}
+      group={shellSubnavGroup("components")}
+      activeId={slug}
+      initialTheme={theme === "light" ? "light" : "dark"}
+    >
       <div className="flex flex-col gap-32">
         <PageHeader
           title={entry.meta.name}
@@ -89,6 +105,13 @@ export default async function ComponentPage({
           version={entry.meta.version}
           updated={formatDate(entry.meta.updated)}
         />
+
+        {hasBuiltComponent ? null : (
+          <div className="border border-border-2 bg-panel p-16 text-small text-mute">
+            This entry has no built component yet (LDS-035, docs/build-guide.md §4) — its content below is
+            real, but there is nothing to try live.
+          </div>
+        )}
 
         {entry.description ? (
           <div className="flex flex-col gap-8">
@@ -109,7 +132,7 @@ export default async function ComponentPage({
               })()}
             </div>
             {entry.anatomyCaption ? (
-              <div className="text-micro text-faint">{entry.anatomyCaption}</div>
+              <div className="text-micro text-mute">{entry.anatomyCaption}</div>
             ) : null}
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
               {entry.anatomy.map((part) => (
@@ -142,7 +165,7 @@ export default async function ComponentPage({
                   >
                     <div className="flex min-w-0 flex-col gap-8">
                       <span className="text-small text-fg">{variant.name}</span>
-                      <span className="text-micro text-faint">
+                      <span className="text-micro text-mute">
                         {variant.tokens.map((t) => `--${t}`).join(", ")}
                       </span>
                     </div>
@@ -155,7 +178,7 @@ export default async function ComponentPage({
               })}
             </div>
             {entry.variantsNote ? (
-              <div className="text-micro text-faint">{entry.variantsNote}</div>
+              <div className="text-micro text-mute">{entry.variantsNote}</div>
             ) : null}
           </Section>
         ) : null}
@@ -165,7 +188,7 @@ export default async function ComponentPage({
             <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
               {entry.states.map((state) => (
                 <div key={state.name} className="flex flex-col gap-8 border border-border p-16">
-                  <span className="text-micro uppercase tracking-tight-6 text-accent">
+                  <span className="text-micro uppercase tracking-tight-6 text-fg">
                     {state.name}
                   </span>
                   <span className="text-small text-mute">{state.description}</span>
@@ -173,7 +196,7 @@ export default async function ComponentPage({
               ))}
             </div>
             {entry.statesNote ? (
-              <div className="text-micro text-faint">{entry.statesNote}</div>
+              <div className="text-micro text-mute">{entry.statesNote}</div>
             ) : null}
           </Section>
         ) : null}
@@ -228,7 +251,7 @@ export default async function ComponentPage({
                   key={note.title}
                   className="flex flex-col gap-8 border border-border bg-panel p-18"
                 >
-                  <span className="text-micro uppercase tracking-tight-6 text-accent">
+                  <span className="text-micro uppercase tracking-tight-6 text-fg">
                     {note.title}
                   </span>
                   <span className="text-small text-dim">{note.body}</span>
@@ -264,8 +287,8 @@ export default async function ComponentPage({
                 >
                   <span className="text-fg">
                     {prop.name}
-                    {prop.required ? null : <span className="text-faint">?</span>}
-                    <span className="ml-8 text-micro text-faint">{prop.type}</span>
+                    {prop.required ? null : <span className="text-mute">?</span>}
+                    <span className="ml-8 text-micro text-mute">{prop.type}</span>
                   </span>
                   <span className="text-mute">{prop.guidance ?? prop.description}</span>
                 </div>
@@ -312,8 +335,8 @@ export default async function ComponentPage({
                   key={change.version}
                   className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 sm:flex-row"
                 >
-                  <span className="text-micro text-accent">v{change.version}</span>
-                  <span className="text-micro text-faint">{formatDate(change.date)}</span>
+                  <span className="text-micro text-fg">v{change.version}</span>
+                  <span className="text-micro text-mute">{formatDate(change.date)}</span>
                   <span className="flex-1">{change.text}</span>
                 </div>
               ))}
@@ -321,7 +344,7 @@ export default async function ComponentPage({
           </Section>
         ) : null}
       </div>
-    </ThemeToggle>
+    </Shell>
   );
 }
 
@@ -338,7 +361,7 @@ function DoDontCell({
     <div className="flex flex-col border border-border">
       <div className="flex flex-1 items-center bg-panel p-18">{Specimen ? <Specimen /> : null}</div>
       <div className="flex gap-8 border-t border-border p-12">
-        <span className={mark === "good" ? "text-small text-accent" : "text-small text-alarm"}>
+        <span className={mark === "good" ? "text-small text-fg" : "text-small text-alarm"}>
           {mark === "good" ? "✓" : "✕"}
         </span>
         <span className="text-small text-mute">{example.caption}</span>

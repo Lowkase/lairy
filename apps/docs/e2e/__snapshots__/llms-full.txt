@@ -839,6 +839,95 @@ There is no error variant and no illustrated variant. A failed request is not em
 
 ---
 
+## Header
+
+Status: stable · Version: 1.0.0 · Updated: 5 Oct 2026 · /components/header
+
+Purpose: Names the selected top-level module and carries ambient reference and the operator's own identity. Chrome, not content.
+
+### Description
+
+The header is the 52px bar pinned to the top of every screen, naming the selected module and carrying ambient reference and the operator's own identity.
+
+It is chrome, not content: it says where you are in the product and who you are signed in as, and nothing about the page underneath. That is the line against the page header inside the content column — breadcrumb, title, status, actions all live there, because they change with the route. Anything that would need to change when the operator navigates does not belong in this bar.
+
+### Anatomy
+
+1. Bar — 52px tall, pinned to the top, with a blurred 60% background so content stays visible passing under it. Its only hard edge is the 1px bottom hairline, and its left edge starts where the main nav ends.
+2. Module title — The selected top-level rail item, named at the left edge in --accent: its glyph, its name, and a SYS code. It moves with the rail, never with the route.
+3. Ambient cluster — Date in --dim, clock in --mute, split by a 1px 12px divider. Read-only by design — there is nothing here to click and nothing here to act on.
+4. Identity square — A 34px square opening the operator menu: appearance, preferences, sign out. Square rather than round, because a circular avatar would read as a chip.
+5. Status dot — An 8px amber dot ringed in --bg, pulsing on a 2.6s cycle. It is the single live element in the bar, which is exactly why it is legible — one moving thing in otherwise still chrome.
+
+### Variants
+
+- Module title (--accent): The selected top-level rail item — its own glyph, name and a SYS code — anchoring the left edge that the brand lockup vacated. It only ever names the top level; it never follows the operator into a sub-page.
+- Ambient (--dim, --mute): Date then clock, split by a 1px 12px divider. Reference only — nothing in this zone is clickable, and nothing in it is ever amber, because a workspace where the wall clock competes with an alert is a workspace nobody reads.
+- Identity (--accent, --fg): A square opening the operator menu — appearance, preferences, sign out. The status dot is the single live element in the whole bar, which is what makes it readable at a glance.
+
+There is no search field, no notification tray and no page action in this bar, and no compact variant of it. Global search belongs to the command palette on a keystroke; alerts belong to the surface that owns them; a page's primary action belongs beside that page's title. Nothing here changes with the route below it — not even the module title, which tracks the rail, not the page.
+
+### States
+
+- Default: Translucent bar, --dim date, --mute clock, --fg identity square.
+- Live: The status dot pulses on a 2.6s cycle — the one moving element in the bar.
+- Menu open: The identity square's operator menu is open, anchored below it.
+- Focus: 2px accent ring on the identity square.
+
+### Use when
+
+- Ambient reference the operator glances at rather than acts on.
+- Who is signed in, and the menu that changes that.
+- State that is true on every screen, at every route, without exception.
+
+### Use something else when
+
+- main-rail: Moving between workspaces — that is Navigation (Main).
+- subnav: Moving within one — that is Navigation (Subnav).
+- toast: Anything that has just happened — that is a Toast.
+
+### Content rules
+
+- The bar carries no brand mark — the lockup lives in the main rail now. Its left edge instead names the selected top-level module, so the header always says where the rail has you.
+- The date reads WED 23 AUG 2026: uppercase, weekday first, no punctuation, so its width barely changes across the year.
+- The clock is 24-hour with seconds. Seconds are what make it read as a live instrument rather than a decoration nobody trusts.
+- No page title, breadcrumb or record name ever appears in the bar — if it changes with the route, it belongs to the page header below.
+- The identity square carries no count, no initials and no label; the status dot is the only thing it is allowed to say.
+
+### Examples
+
+- [demo] Header
+- [good] Chrome only — Three zones, one accent, and the bar reads in half a second.
+- [bad] A fourth zone — Never grow a fourth zone — search, counts and page actions each have a home already.
+- [good] Ambient stays grey — Ambient stays grey: date in --dim, clock in --mute, divided by a hairline.
+- [bad] Accent clock — Never let the clock take accent — amber in the chrome must mean something happened.
+
+### Accessibility
+
+- Banner, not nav: The bar is the page's banner landmark and contains no navigation list. The main rail is the nav landmark, so a screen-reader user jumping between landmarks does not meet the same links twice.
+- Named identity control: The identity square is a button whose accessible name carries both the operator and the state — "Aria, active" — because the dot alone is invisible to anyone not looking at it.
+- Quiet clock: The ambient cluster is not a live region. A clock announcing itself every second would make the rest of the screen unusable, so it is read only when the operator moves to it.
+- Measured contrast: --fg wordmark clears 12:1 over the translucent bar, --dim date 7.1:1, --mute clock 4.8:1 at 12px. Contrast is measured against the darkest content that can scroll beneath, not against --bg.
+
+### Tokens
+
+- --border-2: Bottom hairline and identity square
+- --accent: Module title icon, label and code; operator status dot
+- --dim: Date, module code
+- --mute: Clock
+
+### Related
+
+- main-rail (composes-with): The rail owns the product mark and moving between workspaces; the header names which top-level item is selected. They share one edge and never share a control.
+- subnav (contrasts-with): Subnav sits inside the content column and changes with the route — which is precisely what the header may never do.
+- popover (composes-with): The operator menu is a popover anchored to the identity square, so the bar itself never grows to hold it.
+
+### Changelog
+
+- v1.0.0 (5 Oct 2026): Header ported: translucent 52px bar, module title, ambient cluster, identity square with an Appearance (theme) control in its operator menu.
+
+---
+
 ## Loading
 
 Status: stable · Version: 1.2.0 · Updated: 1 Oct 2026 · /components/loading
@@ -925,6 +1014,97 @@ There is no spinner in this system, and no full-screen loading overlay. A rotati
 - v1.2.0 (23 Aug 2026): Three variants separated by what is known; spinner and full-screen overlay ruled out for good.
 - v1.1.0 (15 Aug 2026): Phase label made mandatory alongside the sweep stack; reduced-motion fallback specified.
 - v1.0.0 (7 Aug 2026): Sweep stack introduced at 1.8s with a 220ms stagger.
+
+---
+
+## Navigation (Main)
+
+Status: stable · Version: 1.0.0 · Updated: 5 Oct 2026 · /components/main-rail
+
+Purpose: The full-height column on the left that moves the operator between workspaces. The one navigation in the product that never changes.
+
+### Description
+
+The main rail is the full-height column on the left that moves the operator between workspaces.
+
+It is the only navigation in the product that never changes: the same items, in the same order, on every screen. That fixity is the point — it is hit fifty times a day and must be answerable by muscle memory rather than by reading. The line against Navigation (Subnav) is scope: the rail chooses which workspace you are in, the subnav chooses where you are inside it. One level each, and neither borrows the other's job.
+
+### Anatomy
+
+1. Rail — A full-height column on --bg with a single hairline against the content. It scrolls only if the workspace list outgrows the viewport, and it never scrolls the launcher or System out of reach.
+2. Active indicator — A 2px amber rail pinned to the left edge of the current row, 16px tall. It is the one piece of the nav that says where you are, so nothing else in the rail is allowed to use it.
+3. Row — 40px tall with 9px padding — comfortable enough to hit without looking. Hover fills with --panel-2 and takes no rail, which is what keeps hover and active distinguishable.
+4. Icon — A 22px glyph in a fixed 22px box, so icons stay in a straight column whether labels are shown or not. Collapsing the rail changes nothing about their position.
+5. Collapse row — Set apart by 14px at the foot of the rail, in --dim so it reads as chrome rather than a destination. It is the only row that does not navigate.
+6. Brand lockup — The mark and wordmark, pinned above the rows behind a hairline. It is the way back to the launcher and, since the header dropped it, the only place the wordmark appears at all.
+
+### Variants
+
+- Expanded (--accent, --fg, --panel-2): The default, and what a new operator sees. Labels are what make the rail learnable, so it starts open and stays open unless the operator chooses otherwise.
+- Collapsed (--accent, --fg, --panel-2): For operators who know the rail by shape and want the width back for their work. Every item stays present and in the same order — only the labels leave, into a native tooltip. The content shifts by exactly the difference over 260ms.
+
+There is no flyout, no nested tree and no "more" overflow. A rail that hides items behind a second interaction is no longer answerable by memory, and a second level of nesting is what the subnav is for.
+
+### States
+
+- Default: --fg label, no fill.
+- Hover: --panel-2 fill, no rail.
+- Active: Amber rail and label.
+- Focus: 2px accent ring.
+
+### Use when
+
+- A workspace the operator returns to on their own, not one they are sent to.
+- A destination with its own subnav and its own sense of "home".
+- Something that survives a redesign of the page it opens.
+- The launcher, and the system — the two fixed ends of the list.
+
+### Use something else when
+
+- subnav: A page inside a workspace — that is Navigation (Subnav).
+- tabs: A view of the same page — that is Navigation (Tabs).
+- button: Anything that performs an action — that is a Button.
+
+### Content rules
+
+- One word per row wherever possible — "Fleet", "Research", "Console". Two only when one would be ambiguous.
+- Labels are nouns, never verbs: the rail names places, and a verb in a place list reads as an action that will fire.
+- Sentence case at 12px with .08em tracking. The rail is the one navigation that is not uppercased, so it stays quieter than the chrome around it.
+- The label in the rail matches the page title it opens, word for word. A rename in one place is a rename in both.
+- Collapsed rows keep their label in a Tooltip on hover — the text is never dropped, only moved.
+
+### Examples
+
+- [demo] Navigation (Main)
+- [good] Hover fills, active takes the rail — Hover fills; only active takes the amber rail and label. The two never look alike.
+- [bad] Hover given the active treatment — Never give hover the active treatment — the operator loses track of where they are.
+- [good] Collapsed keeps every item — Collapsed keeps every item, in the same order, at the same height.
+- [bad] Items folded into overflow — Never fold items into an overflow menu — a hidden rail cannot be learned.
+
+### Accessibility
+
+- Nav landmark: The rail is the page's single nav landmark, holding one list of links. The header is the banner, so landmark navigation never presents the same destinations twice.
+- Current page: The active row carries aria-current="page", which is what announces position. The amber rail is the visual echo of that attribute, never the only signal.
+- Collapsed still labelled: In the 56px rail each link keeps its accessible name; only the visible text is replaced by a Tooltip. Nothing becomes an unlabelled icon.
+- Focus and hit size: Rows are 40px tall with a visible focus ring drawn inside the rail, so keyboard focus is never clipped by the hairline edge.
+
+### Tokens
+
+- --fg: Resting labels and icons
+- --panel-2: Row hover fill
+- --accent: Active rail and label
+- --dim: Collapse row
+
+### Related
+
+- subnav (contrasts-with): The subnav moves within a workspace and changes per route — the level of nesting this rail refuses to carry.
+- header (composes-with): The header starts where this rail ends. It used to share the brand lockup too; now the rail carries the mark alone and the header opens empty on the left.
+- tabs (contrasts-with): Tabs switch views of one page. If the destination has its own subnav, it was a rail item instead.
+
+### Changelog
+
+- v1.0.0 (5 Oct 2026): Navigation (Main) ported: two-width rail (216px expanded, 56px collapsed), amber active indicator, collapsed-row tooltips, keyboard-complete collapse toggle.
+- v0.1.0 (2 Oct 2026): Draft stub created so Scrollbar's own relationship had somewhere real to point.
 
 ---
 
@@ -1173,6 +1353,98 @@ It exists so any pane that overflows can be scrolled without inventing a new way
 ### Changelog
 
 - v1.0.0 (20 Sept 2026): Documented as its own component: 10px lane, 4px inset thumb, two states, and the corner rule that keeps it out of every layout's way.
+
+---
+
+## Navigation (Subnav)
+
+Status: stable · Version: 1.0.0 · Updated: 5 Oct 2026 · /components/subnav
+
+Purpose: The column of pages inside one workspace, docked to the right of the main rail. The one navigation that changes with the route.
+
+### Description
+
+The subnav is the column of pages inside one workspace, docked to the right of the main rail.
+
+It is the only navigation in the product that changes with the route: a different workspace means a different list, and the list is the workspace's own table of contents. The line against Navigation (Tabs) is what happens when you click. A subnav row loads a different page, with its own URL and its own header; a tab swaps the view of the page you are already on. If leaving the row would lose unsaved work in the panel beside it, it was a tab.
+
+### Anatomy
+
+1. Column — A 214px column docked against the main rail and sticky to the top of the scroll container, so a long page never scrolls its own navigation away. It sits inside the content area because it belongs to the workspace, not to the app.
+2. Section row — A group of pages, set as a Label at 12px and .14em uppercase, and clickable in its own right — it opens the section landing page and expands its children. Only one section is open at a time.
+3. Count — The number of pages the section owns, right-aligned in --faint. It is present only where it is true and absent where a section has no children, which is what keeps it readable as information rather than decoration.
+4. Child list — The expanded pages, indented 12px behind a single --border hairline and set in sentence case at 12.5px. That hairline is the only nesting device in the component, and it is never drawn twice.
+5. Active page — The current route, marked with an --accent label on a --panel-2 fill while its parent section keeps the 2px amber rail at the column edge. Two amber marks, one statement: this section, that page.
+
+### Variants
+
+- Section (--fg, --panel-2): A group of pages that belong together, and itself a destination — clicking it opens the section's own landing page and expands its children. Only one section is ever expanded, so the column's height stays predictable as the operator moves.
+- Page (--accent, --panel-2): One route inside the section, indented behind a hairline. The case change from uppercase to sentence case is what tells the two levels apart — not the indent, which disappears the moment the label wraps.
+
+There is no third level. A page that needs children of its own has outgrown the subnav: give it tabs inside its own header, or promote the section to a workspace on the main rail.
+
+### States
+
+- Default: --mute label, no fill.
+- Hover: --panel-2 fill, --fg label.
+- Active: Amber label, amber rail.
+- Focus: 2px accent ring.
+
+### Use when
+
+- A page inside this workspace with its own route and its own page header.
+- Something the operator will want to reach without going through another page first.
+- A section that owns two or more pages — one child alone is just the section.
+- A destination that stays put: the subnav is per workspace, not per record.
+
+### Use something else when
+
+- main-rail: Another workspace — that is Navigation (Main).
+- tabs: A view of the page already open — that is Navigation (Tabs).
+- chip: A filter over a list — those are Chips above the table.
+- button: Anything that performs work — that is a Button in the page header.
+
+### Content rules
+
+- Sections are one or two words, uppercase, plural where they name a set: OPERATIONS, RESEARCH, ARCHIVE — never a verb and never a sentence.
+- Pages are sentence case and name the thing, not the act: "Live vessels", "Crew roster" — not "View vessels" and not "Vessel management".
+- Keep a page label under about 22 characters so it holds one line at 214px; if it cannot, the page is really two pages or the name is a description.
+- Never repeat the workspace in a row — inside Fleet the page is "Maintenance", not "Fleet maintenance". The header already said where you are.
+- Counts are plain integers. No "12 new", no plus signs, no dots: the subnav says how much exists, never how much has changed.
+
+### Examples
+
+- [demo] Navigation (Subnav)
+- [good] One section open — Only one section is ever expanded, so the column's height stays predictable.
+- [bad] A third level of nesting — There is no third level. A page that needs children has outgrown the subnav.
+- [good] Case signals the level — Uppercase sections, sentence-case pages — the case change tells the two levels apart.
+- [bad] Indent as the only signal — Never rely on indent alone — it disappears the moment a label wraps.
+
+### Accessibility
+
+- Nav landmark, per workspace: The column is a nav landmark labelled with the workspace name, so a screen-reader user meeting two nav landmarks can tell the rail from the pages without exploring either.
+- Current page, spoken: The active page carries aria-current="page" and the open section aria-expanded. The amber rail and the amber label are the visual half of the same statement, never the whole of it.
+- Colour is never alone: Active state is signalled three ways at once: the rail, the --accent label and aria-current. Amber against --panel-2 measures 6.4:1, but the marker is what carries it for anyone who cannot see the hue.
+- Reading order matches sight: Sections and their children follow the DOM in the order they are drawn, and the hidden stub keeps its button in place — collapsing the column changes its width, never its position in the tab order.
+
+### Tokens
+
+- --panel-2: Row hover and active fill
+- --accent: Active rail and active page label
+- --mute: Resting pages and section labels
+- --border: Child-list hairline and stub edge
+- --faint: Section counts
+
+### Related
+
+- main-rail (contrasts-with): The rail chooses the workspace this column belongs to. It never nests, which is exactly the job it hands over here.
+- tabs (often-confused-with): Tabs swap the view of one page without a route change. If clicking would keep you on the same page, it was never a subnav row.
+- header (composes-with): The page header names the row you just clicked. The subnav marks where you are; the header confirms it.
+
+### Changelog
+
+- v1.0.0 (5 Oct 2026): Navigation (Subnav) ported: two-level sections/pages, one section open at a time, sticky 214px column with a hide/show stub.
+- v0.1.0 (4 Oct 2026): Draft stub created so Tabs' own relationship had somewhere real to point.
 
 ---
 

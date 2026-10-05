@@ -1,0 +1,24 @@
+{
+  "shell": {
+    "rail-width": {
+      "$type": "dimension",
+      "$value": "216px",
+      "$description": "Main rail (MainNav) expanded width (mainNavRules \"Two widths\"). No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --icon-callout and --text-callout-title. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-035)."
+    },
+    "rail-width-collapsed": {
+      "$type": "dimension",
+      "$value": "56px",
+      "$description": "Main rail (MainNav) collapsed width — already cited as a true fact of the system by Scrollbar's own shipped entry (\"its own 56px collapsed rail\", packages/content/src/entries/components/scrollbar.ts) and by Navigation (Main)'s own draft stub before this ticket. No Spacing-ramp step matches; kept at this exact value rather than snapped, so it stays consistent with those two already-shipped references. Flagged in the PR (LDS-035)."
+    },
+    "subnav-width": {
+      "$type": "dimension",
+      "$value": "214px",
+      "$description": "Subnav rail (Navigation (Subnav)) column width (subnavAnatomy #1). No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035)."
+    },
+    "header-height": {
+      "$type": "dimension",
+      "$value": "52px",
+      "$description": "Header bar height (headerRules \"Fixed 52px\") — also the main rail's own brand-lockup row height, so the header's top edge and the rail's first hairline land flush. No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035)."
+    }
+  }
+}
