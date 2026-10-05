@@ -165,3 +165,10 @@ export const breakpoint = {
   "desktop": "1024px",
   "wide": "1440px"
 } as const;
+
+export const shell = {
+  "railWidth": "216px",
+  "railWidthCollapsed": "56px",
+  "subnavWidth": "214px",
+  "headerHeight": "52px"
+} as const;

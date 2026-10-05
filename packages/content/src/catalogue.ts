@@ -1,5 +1,6 @@
 import type { ComponentEntry } from "./schema/component";
 import type { FoundationEntry } from "./schema/foundation";
+import type { PatternEntry } from "./schema/pattern";
 import type { TokenEntry } from "./schema/token";
 import { badge } from "./entries/components/badge";
 import { button } from "./entries/components/button";
@@ -8,6 +9,7 @@ import { card } from "./entries/components/card";
 import { checkbox } from "./entries/components/checkbox";
 import { chip } from "./entries/components/chip";
 import { emptyState } from "./entries/components/empty-state";
+import { header } from "./entries/components/header";
 import { loading } from "./entries/components/loading";
 import { mainRail } from "./entries/components/main-rail";
 import { modal } from "./entries/components/modal";
@@ -74,7 +76,16 @@ const components: ComponentEntry[] = [
   select,
   checkbox,
   radio,
+  header,
 ];
+
+/** Every Pattern entry. Empty today — no pattern ticket has landed yet
+ * (docs/prd.md §7's pattern tickets are still ahead of this one) — but the
+ * catalogue plumbing (this list, `validatePatternCatalogue`,
+ * `patternsById`, `listPatterns`, `getPattern`) is wired up now so
+ * apps/docs's `/patterns/[slug]` route (LDS-035, Desktop shell) has a real
+ * content source to generate from rather than a hardcoded empty route. */
+const patterns: PatternEntry[] = [];
 
 /** Every Foundation entry (docs/prd.md §7.2 — LDS-014, extended by
  * LDS-015). */
@@ -274,4 +285,56 @@ export function listFoundations(): FoundationEntry[] {
 
 export function getFoundation(id: string): FoundationEntry | undefined {
   return foundationsById.get(id);
+}
+
+/** Exported for its own tests — duplicate ids, dangling relationship
+ * targets and a `composes` entry naming an unknown component, run against
+ * synthetic entries rather than only the real (currently empty) catalogue
+ * below. A pattern "describes how several components are composed"
+ * (CONTEXT.md), so `composes` is checked against the components catalogue
+ * — a different list than the one this function validates — the same way
+ * `validateFoundationCatalogue` above takes a second, already-built
+ * catalogue (`knownTokens`) to check against. */
+export function validatePatternCatalogue(
+  entries: PatternEntry[],
+  knownComponents: Map<string, ComponentEntry>,
+): Map<string, PatternEntry> {
+  const byId = new Map<string, PatternEntry>();
+  for (const entry of entries) {
+    const { id } = entry.meta;
+    if (byId.has(id)) {
+      throw new Error(`@lairy/content: duplicate entry id "${id}" (docs/prd.md §7, ADR-0001).`);
+    }
+    byId.set(id, entry);
+  }
+
+  for (const entry of entries) {
+    for (const relationship of entry.relationships) {
+      if (!byId.has(relationship.target)) {
+        throw new Error(
+          `@lairy/content: "${entry.meta.id}" has a relationship targeting unknown entry "${relationship.target}" (docs/build-guide.md §3: create a draft stub for any target with no entry yet).`,
+        );
+      }
+    }
+    for (const componentId of entry.composes) {
+      if (!knownComponents.has(componentId)) {
+        throw new Error(
+          `@lairy/content: "${entry.meta.id}" composes unknown component "${componentId}".`,
+        );
+      }
+    }
+  }
+
+  return byId;
+}
+
+/** Validated at import time, same as `componentsById` above. */
+export const patternsById = validatePatternCatalogue(patterns, componentsById);
+
+export function listPatterns(): PatternEntry[] {
+  return [...patternsById.values()];
+}
+
+export function getPattern(id: string): PatternEntry | undefined {
+  return patternsById.get(id);
 }

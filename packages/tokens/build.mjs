@@ -22,6 +22,7 @@ const iconTokens = readTokens("tokens/icon.json");
 const motion = readTokens("tokens/motion.json");
 const elevation = readTokens("tokens/elevation.json");
 const breakpoint = readTokens("tokens/breakpoint.json");
+const shellTokens = readTokens("tokens/shell.json");
 
 const camel = (s) => s.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 const val = (t) => t.$value;
@@ -166,6 +167,7 @@ const SHARED = [
   "tokens/motion.json",
   "tokens/elevation.json",
   "tokens/breakpoint.json",
+  "tokens/shell.json",
 ];
 
 const darkSd = buildCssTheme({
@@ -373,6 +375,8 @@ export const shadow = ${JSON.stringify(flatObject(elevation.shadow), null, 2)} a
 export const zIndex = ${JSON.stringify(flatObject(elevation.z), null, 2)} as const;
 
 export const breakpoint = ${JSON.stringify(flatObject(breakpoint.breakpoint), null, 2)} as const;
+
+export const shell = ${JSON.stringify(flatObject(shellTokens.shell), null, 2)} as const;
 `;
 writeFileSync(path.join(dir, "src/tokens.generated.ts"), ts);
 

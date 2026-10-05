@@ -571,6 +571,108 @@ function buildTabsItem(): RegistryItem {
   };
 }
 
+function buildMainRailItem(): RegistryItem {
+  const entry = getComponent("main-rail");
+  if (!entry) throw new Error('registry: content entry "main-rail" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "main-rail",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. No class-variance-authority: like
+    // Tabs and Table, main-rail.tsx computes its own conditional classes
+    // with plain `cn()`.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/main-rail/main-rail.tsx",
+        target: "components/ui/main-rail/main-rail.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/main-rail/main-rail.tsx")),
+      },
+      {
+        path: "packages/ui/src/main-rail/main-rail-mark.tsx",
+        target: "components/ui/main-rail/main-rail-mark.tsx",
+        type: "registry:ui",
+        content: readSource("packages/ui/src/main-rail/main-rail-mark.tsx"),
+      },
+      // The collapse row's chevron (anatomy #5) reuses the shared Inline
+      // icon set rather than a one-off mark — the first registry item to
+      // depend on it, so its target mirrors main-rail.tsx's own relative
+      // import ("../icons/inline-icon") into the copied tree.
+      {
+        path: "packages/ui/src/icons/inline-icon.tsx",
+        target: "components/ui/icons/inline-icon.tsx",
+        type: "registry:ui",
+        content: readSource("packages/ui/src/icons/inline-icon.tsx"),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
+function buildSubnavItem(): RegistryItem {
+  const entry = getComponent("subnav");
+  if (!entry) throw new Error('registry: content entry "subnav" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "subnav",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/subnav/subnav.tsx",
+        target: "components/ui/subnav/subnav.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/subnav/subnav.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
+function buildHeaderItem(): RegistryItem {
+  const entry = getComponent("header");
+  if (!entry) throw new Error('registry: content entry "header" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "header",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies.
+    dependencies: ["@lairy/tokens", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/header/header.tsx",
+        target: "components/ui/header/header.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/header/header.tsx")),
+      },
+      {
+        path: "packages/ui/src/header/header-icons.tsx",
+        target: "components/ui/header/header-icons.tsx",
+        type: "registry:ui",
+        content: readSource("packages/ui/src/header/header-icons.tsx"),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildTableItem(): RegistryItem {
   const entry = getComponent("table");
   if (!entry) throw new Error('registry: content entry "table" not found.');
@@ -624,6 +726,9 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   table: buildTableItem,
   tabs: buildTabsItem,
   "usage-card": buildUsageCardItem,
+  "main-rail": buildMainRailItem,
+  subnav: buildSubnavItem,
+  header: buildHeaderItem,
 };
 
 export function listRegistryItemNames(): string[] {

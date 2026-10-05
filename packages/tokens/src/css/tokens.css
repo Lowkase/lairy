@@ -100,6 +100,10 @@
   --breakpoint-tablet: 640px; /** Tablet starts here (640–1023px). Below it is phone, the unprefixed default (docs/prd.md §8.6). */
   --breakpoint-desktop: 1024px; /** Desktop starts here (1024–1439px) — the prototype's own minimum width (docs/prd.md §8.6). */
   --breakpoint-wide: 1440px; /** Wide starts here (docs/prd.md §8.6). */
+  --shell-rail-width: 216px; /** Main rail (MainNav) expanded width (mainNavRules "Two widths"). No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --icon-callout and --text-callout-title. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-035). */
+  --shell-rail-width-collapsed: 56px; /** Main rail (MainNav) collapsed width — already cited as a true fact of the system by Scrollbar's own shipped entry ("its own 56px collapsed rail", packages/content/src/entries/components/scrollbar.ts) and by Navigation (Main)'s own draft stub before this ticket. No Spacing-ramp step matches; kept at this exact value rather than snapped, so it stays consistent with those two already-shipped references. Flagged in the PR (LDS-035). */
+  --shell-subnav-width: 214px; /** Subnav rail (Navigation (Subnav)) column width (subnavAnatomy #1). No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
+  --shell-header-height: 52px; /** Header bar height (headerRules "Fixed 52px") — also the main rail's own brand-lockup row height, so the header's top edge and the rail's first hairline land flush. No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
 }
 
 /**

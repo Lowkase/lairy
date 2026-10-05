@@ -6,12 +6,15 @@ import { expect, test, type Page } from "@playwright/test";
 // Linux — asserting there would fail on font rendering, not a real
 // regression. CI should move to a container matching the baseline OS
 // (mcr.microsoft.com/playwright) before this can diff safely everywhere.
-// Mirrors color.spec.ts's own helper (LDS-014).
+// Mirrors color.spec.ts's own helper (LDS-014). The shell's own clock
+// (LDS-035, apps/docs/components/shell.tsx) ticks every second — masked so
+// a baseline captured a second apart from a run doesn't flake on the
+// digits alone.
 async function screenshot(page: Page, name: string) {
   if (process.env.CI) {
     await page.screenshot({ path: `test-results/${name}` });
   } else {
-    await expect(page).toHaveScreenshot(name);
+    await expect(page).toHaveScreenshot(name, { mask: [page.locator('[data-slot="header-time"]')] });
   }
 }
 
@@ -19,6 +22,20 @@ async function axeCheck(page: Page) {
   const results = await new AxeBuilder({ page }).analyze();
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
+}
+
+// The shell's theme toggle (LDS-035) lives in the header's identity menu,
+// under Appearance — not a single always-visible button the way the plain
+// ThemeToggle wrapper's own "Theme: ..." button is on /dev/* routes.
+async function switchToLightTheme(page: Page) {
+  await page.getByRole("button", { name: "Appearance" }).first().click();
+  await page.getByRole("button", { name: "Theme: light" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  // The shell's rail, subnav and header all transition colour at once on a
+  // theme switch (duration-160) — wait for it to settle before axe samples
+  // colour (tabs.spec.ts's own precedent for this exact class of flake,
+  // widened here since the shell transitions many more elements at once).
+  await page.waitForTimeout(800);
 }
 
 // The eight remaining foundations (LDS-015; Color has its own richer spec,
@@ -49,8 +66,7 @@ for (const { id, name } of FOUNDATIONS) {
       await page.goto(`/foundations/${id}`);
       const darkBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
 
-      await page.getByRole("button", { name: /Theme:/ }).click();
-      await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+      await switchToLightTheme(page);
 
       const lightBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
       expect(lightBg).not.toBe(darkBg);
