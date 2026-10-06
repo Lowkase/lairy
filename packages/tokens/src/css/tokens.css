@@ -109,6 +109,9 @@
   --modal-width-sm: 400px; /** Modal Sizes 'SM' (modalSizeData 'sm') — single-decision destructive confirms, two buttons, no scrolling. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --popover-panel-width. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-040). */
   --modal-width-md: 560px; /** Modal Sizes 'MD' (modalSizeData 'md') — the default: a short form or a decision needing a paragraph of context. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040). */
   --modal-width-lg: 760px; /** Modal Sizes 'LG' (modalSizeData 'lg') — dense content that must stay modal: side-by-side comparisons, a table of affected records, a diff. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040). */
+  --drawer-width-sm: 360px; /** Drawer Sizes 'SM' (drawerSizeData 'sm') — a read-only detail panel: properties, metadata, a short activity list. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — the same component-specific exception as --popover-panel-width and --modal-width-*. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-041). */
+  --drawer-width-md: 480px; /** Drawer Sizes 'MD' (drawerSizeData 'md') — the default: detail, settings and editing, anything where the page behind stays relevant. Same non-ramp exception as --drawer-width-sm, flagged in the PR (LDS-041). */
+  --drawer-width-lg: 720px; /** Drawer Sizes 'LG' (drawerSizeData 'lg') — dense editing: multi-section forms, a nested list plus its editor, or a config with a live preview. Same non-ramp exception as --drawer-width-sm, flagged in the PR (LDS-041). */
 }
 
 /**

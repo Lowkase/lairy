@@ -772,6 +772,40 @@ function buildModalItem(): RegistryItem {
   };
 }
 
+function buildDrawerItem(): RegistryItem {
+  const entry = getComponent("drawer");
+  if (!entry) throw new Error('registry: content entry "drawer" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "drawer",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. Scaffolded from shadcn's own `sheet`
+    // item (ADR-0004, built on @radix-ui/react-dialog like modal.tsx's own
+    // `dialog`), restyled with Lairy tokens only.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn", "radix-ui"],
+    files: [
+      {
+        path: "packages/ui/src/drawer/drawer.tsx",
+        target: "components/ui/drawer/drawer.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/drawer/drawer.tsx")),
+      },
+      // Drawer's footer actions render Button (DrawerCancel/DrawerAction) —
+      // inlined directly here, the same way buildModalItem's own Button
+      // inclusion is. Its target matches buildButtonItem's own, so
+      // installing both "drawer" and "button" later doesn't duplicate the
+      // file.
+      { ...BUTTON_FILE, content: withLairyCnImport(readSource(BUTTON_FILE.path)) },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildPopoverItem(): RegistryItem {
   const entry = getComponent("popover");
   if (!entry) throw new Error('registry: content entry "popover" not found.');
@@ -825,6 +859,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   tooltip: buildTooltipItem,
   popover: buildPopoverItem,
   modal: buildModalItem,
+  drawer: buildDrawerItem,
 };
 
 export function listRegistryItemNames(): string[] {

@@ -183,3 +183,9 @@ export const modal = {
   "widthMd": "560px",
   "widthLg": "760px"
 } as const;
+
+export const drawer = {
+  "widthSm": "360px",
+  "widthMd": "480px",
+  "widthLg": "720px"
+} as const;

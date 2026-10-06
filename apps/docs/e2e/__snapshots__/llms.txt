@@ -10,6 +10,7 @@
 - [Cards](/components/card): A bordered container that holds one whole object worth looking at on its own.
 - [Checkbox](/components/checkbox): Records an independent yes-or-no the operator sets themselves.
 - [Chips](/components/chip): A round-ended token representing a value the operator chose, such as a filter. The operator can dismiss it.
+- [Drawer](/components/drawer): A side panel showing the details of one thing without leaving the current view.
 - [Empty state](/components/empty-state): What a region says when it has loaded successfully and has nothing to show.
 - [Header](/components/header): Names the selected top-level module and carries ambient reference and the operator's own identity. Chrome, not content.
 - [Loading](/components/loading): What a region shows while it still does not know the answer.

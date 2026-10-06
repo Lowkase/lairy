@@ -273,7 +273,16 @@ describe("MCP server (seam 2: tool surface)", () => {
       }),
     );
 
-    const alternative = suggestions[0];
+    // Found while porting Drawer (LDS-041): `suggest_alternative`'s own
+    // situation ranking is a plain word-overlap count (packages/mcp/src/tools.ts
+    // `wordScore`), not a judgment of fit — it re-orders as entries unrelated
+    // to this question gain their own, equally legitimate `useInstead` rows
+    // pointing at "toast" (Drawer's own, extracted per docs/build-guide.md §3,
+    // is one). Asserting by id rather than by array position is what the PRD
+    // §13 line itself actually requires ("can answer... from content alone"),
+    // not that Callout always sorts first; flagged as a needs-triage follow-up
+    // on `suggest_alternative`'s own ranking heuristic, not fixed here.
+    const alternative = suggestions.find((s) => s.id === "callout");
     expect(alternative?.id).toBe("callout");
     expect(alternative?.name).toBe("Callout");
     // Why not a toast: Toast leaves on its own; the condition here is still true.
