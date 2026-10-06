@@ -2002,6 +2002,98 @@ The handle is vertical only, and there is no auto-growing variant. A box that re
 
 ---
 
+## Tooltip
+
+Status: stable · Version: 1.2.0 · Updated: 19 Sept 2026 · /components/tooltip
+
+Purpose: Names the thing under the pointer, in one line, and holds nothing the operator has to reach.
+
+### Description
+
+A tooltip names the thing under the pointer, in one line, and holds nothing the operator has to reach.
+
+It exists so an icon can stay an icon. Because it appears on hover and takes no pointer events, everything inside it is unreachable by definition — no links, no buttons, no selectable text. That is the whole line against Popover: the moment content has to be clicked, the trigger has to be clicked too. And a tooltip never carries information that exists nowhere else, because a pointer is one of several ways to use this shell.
+
+### Anatomy
+
+1. Bubble — A --bg box with an --accent-line hairline and a soft drop shadow, fading in over 160ms. Amber on the border rather than a fill: the bubble belongs to the control the operator is already pointing at, and it is gone the moment they are not.
+2. Label — One line of 12px --fg with white-space:nowrap — the bubble is as wide as the sentence and never wraps. If the text cannot survive that constraint, it is not tooltip content.
+3. Offset — 9px between trigger and bubble. Enough that the bubble reads as a separate surface, close enough that the pairing is unambiguous, and small enough that the pointer never crosses it — there is nothing to cross to.
+4. Trigger — The control being named, usually an icon-only button. It owns the hover, keeps its own focus ring, and the tooltip never covers it — the bubble flips sides rather than sitting on top of what it describes.
+
+### States
+
+- Top by default: Every tooltip opens above its trigger, centred. One default side means a row of icons produces a predictable line of bubbles rather than a scatter.
+- Flips when clipped: Against the top of the viewport it goes below; against a side it goes left or right. It flips rather than shifts, so the 9px relationship to the trigger is never stretched.
+- Never covers the trigger: The bubble is not allowed to sit over the control it names. An operator checking what something is should not lose sight of the thing itself.
+- No pointer events: The bubble cannot be hovered, clicked or selected, which is what makes it safe to appear under the cursor — and what makes any interactive content inside it a bug.
+- Delay in, none out: A 400ms wait before showing, so crossing a toolbar does not flash five bubbles; instant hide on leave, so nothing lingers over work.
+- One at a time: Only one tooltip exists at once, and moving between triggers inside 400ms swaps its content rather than re-running the delay.
+
+There is no arrow, no title row, and no rich variant. The 9px offset and the amber hairline are enough to tie the bubble to its trigger, and anything that needed a heading was never one line long.
+
+### Use when
+
+- An icon-only control needs its name spelled out.
+- A truncated cell needs its full value on demand.
+- A keyboard shortcut is worth showing next to the control it fires.
+- The information is a convenience — the operator can work without ever seeing it.
+
+### Use something else when
+
+- popover: Anything inside has to be clicked — that is a Popover.
+- text-input: The text explains a field's constraint — that is the field's own hint line.
+- toast: It reports something that just happened — that is a Toast.
+
+### Content rules
+
+- Write the control’s name, in sentence case, with no full stop: "Duplicate run". It is a label, not a sentence.
+- Keep it under about six words. Anything longer belongs in the layout, where every operator can read it.
+- Append the shortcut after a middot where one exists — "Duplicate run · D" — so the tooltip teaches the faster path.
+- Never repeat text already visible next to the control; a tooltip on a labelled button is noise on every hover.
+- Never put a constraint, a reason or a warning in a tooltip. If the operator needs it to act correctly, it cannot be hidden behind a pointer.
+
+### Examples
+
+- [demo] Demo
+- [good] Name and shortcut, one line — The control's name, and its shortcut, on one line above the icon.
+- [bad] Paragraph and a link — Never put a paragraph or a link in a tooltip — it takes no pointer events, so the link cannot be reached.
+- [good] Constraint in the hint line — A field's constraint lives in its hint line, where it is readable before the operator types.
+- [bad] Constraint behind a question mark — Never hide a rule behind a question mark — a constraint discoverable only by hovering is a constraint most operators will break.
+- [good] Full value on hover — A truncated value gets its full text on hover — the one case where the tooltip repeats what is already on screen.
+- [bad] Repeats a visible label — Never label a control that is already labelled — a tooltip repeating visible text is noise on every hover.
+
+### Accessibility
+
+- Never the only copy: Because a tooltip needs a pointer and a wait, nothing in it is load-bearing. Every icon-only control also carries a real accessible name, and every rule it might state is written in the layout.
+- Described, not labelled: The bubble is role="tooltip" tied to its trigger with aria-describedby, so it is heard as extra description after the control’s own name rather than replacing it.
+- Keyboard shows it too: Focusing the trigger shows the tooltip with no delay and Escape dismisses it, so a keyboard operator gets the same hint a pointer does — hover is not the only path.
+- Nothing to chase: With pointer-events off and a 0ms hide, there is no bubble to move the cursor into and nothing that can be lost by moving too slowly — the failure mode of hoverable tooltips.
+
+### Tokens
+
+- --bg: Bubble surface.
+- --accent-line: Bubble hairline.
+- --fg: Label text.
+- --border-2: Trigger border.
+- --panel-2: Trigger fill.
+
+### Related
+
+- popover (often-confused-with): Where anything clickable goes. The test is the pointer: if the operator has to reach into it, the trigger has to be a click.
+- main-rail (composes-with): Its most common production trigger: every icon in the collapsed rail names itself with a Tooltip instead of a native title.
+- text-input (contrasts-with): Owns field constraints. A rule about what may be typed belongs in the hint line under the field, never behind a question mark.
+- button (composes-with): The usual trigger. An icon-only button needs both a tooltip for the pointer and an accessible name for everything else.
+
+### Changelog
+
+- v1.2.0 (19 Sept 2026): Adopted by the collapsed main rail — icon-only rows and the collapse/expand toggle now use this component in place of a native title.
+- v1.1.0 (25 Aug 2026): Arrow and rich variant ruled out; 400ms in / 0ms out fixed; single-instance swap documented.
+- v1.0.1 (19 Aug 2026): Bubble flips instead of shifting when clipped; keyboard focus now shows it without delay.
+- v1.0.0 (12 Aug 2026): Tooltip introduced above the trigger at a 9px offset with no pointer events.
+
+---
+
 ## Usage card
 
 Status: stable · Version: 1.0.0 · Updated: 1 Oct 2026 · /components/usage-card
