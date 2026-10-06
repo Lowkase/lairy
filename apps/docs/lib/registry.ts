@@ -735,6 +735,34 @@ function buildTableItem(): RegistryItem {
   };
 }
 
+function buildPopoverItem(): RegistryItem {
+  const entry = getComponent("popover");
+  if (!entry) throw new Error('registry: content entry "popover" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "popover",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. The first registry item to depend on
+    // radix-ui: popover.tsx is scaffolded from shadcn's own `popover` and
+    // `dropdown-menu` items (ADR-0004), restyled with Lairy tokens only.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn", "radix-ui"],
+    files: [
+      {
+        path: "packages/ui/src/popover/popover.tsx",
+        target: "components/ui/popover/popover.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/popover/popover.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
@@ -758,6 +786,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   subnav: buildSubnavItem,
   header: buildHeaderItem,
   tooltip: buildTooltipItem,
+  popover: buildPopoverItem,
 };
 
 export function listRegistryItemNames(): string[] {

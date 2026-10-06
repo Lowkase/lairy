@@ -10,6 +10,7 @@ export * from "./header/header";
 export * from "./icons";
 export * from "./loading/loading";
 export * from "./main-rail/main-rail";
+export * from "./popover/popover";
 export * from "./progress/progress";
 export * from "./radio/radio";
 export * from "./scrollbar/scrollbar";

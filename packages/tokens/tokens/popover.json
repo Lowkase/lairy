@@ -1,0 +1,9 @@
+{
+  "popover": {
+    "panel-width": {
+      "$type": "dimension",
+      "$value": "210px",
+      "$description": "Popover anatomy #2's fixed panel width. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --shell-rail-width and --icon-callout. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-039)."
+    }
+  }
+}

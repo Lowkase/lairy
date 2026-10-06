@@ -172,3 +172,7 @@ export const shell = {
   "subnavWidth": "214px",
   "headerHeight": "52px"
 } as const;
+
+export const popover = {
+  "panelWidth": "210px"
+} as const;

@@ -1108,6 +1108,106 @@ There is no flyout, no nested tree and no "more" overflow. A rail that hides ite
 
 ---
 
+## Popover
+
+Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/popover
+
+Purpose: A small anchored overlay holding a short action list or a few detail pairs.
+
+### Description
+
+A popover is a small surface anchored to the control that opened it, holding actions or detail that would otherwise clutter the page.
+
+It is opened by a click, dismissed by looking away, and it never blocks the page behind it. That is the line against Modal: a modal is centred, scrimmed and must be answered before work continues, while a popover is peripheral and costs nothing to abandon. Against Tooltip the line is the click — anything that opens on hover is a tooltip and may contain nothing the operator has to reach.
+
+### Anatomy
+
+1. Trigger — The control that owns the popover, and the only thing that can open it. It stays visibly the source while the surface is up, and clicking it a second time closes what it opened.
+2. Panel — A 210px surface on --bg with a --border-2 hairline and a long soft shadow — one of the few places in the system allowed elevation, because it genuinely floats above the page. It rises 4px over 180ms and never covers its own trigger.
+3. Row — 14px Body in --dim, filling to --panel-2 with an --fg label on hover, at 9px by 11px so the whole width is a target. Every row acts and every row closes the popover; nothing here just changes what the popover looks like.
+4. Divider — A single --border hairline with 5px of air either side, separating destructive rows from safe ones. It is the only structure a menu popover gets — no headings, no nested groups, no second divider.
+5. Destructive row — Delete and its relatives, in #ff8f6b, always last and always below the divider. Choosing one opens a confirming modal rather than acting immediately — a surface this easy to dismiss cannot be trusted with an irreversible click.
+
+### Variants
+
+- Menu (--dim, --fg, --panel-2, --border, --alarm-soft): Three to seven actions on one object, each row closing the popover as it fires. It is the overflow valve for a row or a card: the two actions worth showing stay as buttons, the rest come here.
+- Detail (--faint, --fg, --accent, --border-2): Facts about the anchor that are too long for a tooltip and too minor for a drawer — a run's timings, an operator's account. It may carry one link out, and no more.
+
+A popover never scrolls, never nests a second popover and never holds a form with more than one field. Each of those is the same signal: the content has outgrown a peripheral surface and belongs in a Drawer.
+
+### States
+
+- Default: --dim, no fill.
+- Hover: --panel-2, --fg label.
+- Focus: 3px accent-soft ring.
+- Destructive: Below the divider.
+
+The four row states shown against the live demo's own "ROW STATES" swatches (archive/v1 lines 15997-16002), not the structured `popRules`/`popA11y` lists — see extractionNotes for why they're modelled here rather than folded into Rules.
+
+### Use when
+
+- A control owns three to seven actions that do not deserve permanent space.
+- The operator needs a few facts about one thing without leaving the page.
+- Abandoning the surface should cost nothing — no answer required, no state lost.
+- The content is short enough to be read whole, with no scrolling.
+
+### Use something else when
+
+- modal: The operator must decide before continuing — that is a Modal.
+- drawer: The content scrolls or is edited over time — that is a Drawer.
+- tooltip: It is one short line explaining a control — that is a Tooltip.
+- select: The rows set a single value on a field — that is Select.
+
+### Content rules
+
+- Rows are sentence-case verbs in Body 14px: "Rename", "Duplicate", "Archive", "Delete" — never uppercase Label, which is the tab and nav voice.
+- Name the object only when the row is ambiguous without it: "Delete run" inside a page about one run is noise; on a table row it is necessary.
+- Keep every row to two words. A row that needs a clause is an action with consequences, and the consequence belongs in the modal that follows.
+- Detail popovers use uppercase Label field names in --faint with values in --fg, at most six pairs, and no paragraph of prose.
+- One way out, at most: a single amber link at the foot of a detail popover. Two links make it a page in the wrong place.
+
+### Examples
+
+- [demo] Demo
+- [good] Destructive below the divider — Destructive actions sit last, below a divider, so they cannot be hit on the way past.
+- [bad] Destructive first — Never put Delete first or mix it in with the safe rows — one slip and the object is gone.
+- [good] Anchored to its trigger — Anchored to its trigger with a 9px offset and aligned to its near edge.
+- [bad] A menu with a scrollbar — Never give a popover a scrollbar — if the list is that long, it was a drawer.
+- [good] Facts and one way out — A detail popover holds facts and at most one way out, in amber.
+- [bad] A multi-field form — Never put a multi-field form in one — a surface you can lose by clicking away must not hold work.
+
+### Accessibility
+
+- Menu semantics: The trigger carries aria-haspopup and aria-expanded, and the panel is a role="menu" of role="menuitem" rows — so the number of actions is known before the operator starts walking them.
+- Focus moves and returns: Focus enters the first row on open and returns to the trigger on close, however the popover was dismissed. Focus is not trapped: it is a peripheral surface, and Tab leaving it simply closes it.
+- Escape and outside click: Escape closes it from anywhere, an outside click closes it without acting on what was clicked through, and the page keeps its scroll position. Nothing about dismissal needs to be learned.
+- Destructive is spoken: A destructive row names its object in the accessible name and points at the modal that follows, so a screen-reader user knows a confirm is coming rather than fearing the row itself.
+
+### Tokens
+
+- --bg: Panel surface.
+- --border-2: Panel hairline.
+- --border: Row divider.
+- --dim, --fg: Rows at rest and on hover.
+- --panel-2: Row hover fill.
+- --accent-soft: Row focus ring.
+- --alarm-soft: Destructive row highlight.
+- --faint, --accent: Detail field labels and its one link out.
+
+### Related
+
+- modal (often-confused-with): A modal must be answered and stops the page; a popover can be walked away from. A destructive row here always hands over to one.
+- tooltip (often-confused-with): Tooltips open on hover and hold one unreachable line. The moment the content contains something to click, it has to be a popover.
+- select (contrasts-with): Select uses the same floating surface to set one value on a field. Its rows change state rather than perform work, which is why it is a control and this is a menu.
+
+### Changelog
+
+- v1.1.0 (24 Aug 2026): Scrolling panels, nested popovers and multi-field forms ruled out; destructive rows fixed below the divider.
+- v1.0.1 (16 Aug 2026): Offset standardised at 9px with edge-aware flipping on all four placements.
+- v1.0.0 (8 Aug 2026): Popover introduced at 210px with menu and detail kinds and a 180ms rise.
+
+---
+
 ## Progress
 
 Status: stable · Version: 1.1.0 · Updated: 2 Oct 2026 · /components/progress
