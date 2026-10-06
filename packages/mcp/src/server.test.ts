@@ -183,7 +183,16 @@ describe("MCP server (seam 2: tool surface)", () => {
       const tokens = json<
         Array<{ name: string; useFor: string[]; neverFor: string[]; rationale?: string }>
       >(result);
-      expect(tokens).toHaveLength(89);
+      // 89 at LDS-013 (colour 17, alarm 4, typography 33, spacing 9, radius
+      // 2, icon 1, motion 7, elevation 13, breakpoint 3); icon grew to 6
+      // entries in a later, unrelated ticket without this count being
+      // bumped. Found pre-existing (reproduced on a clean `main` checkout,
+      // no Drawer content involved) while porting Drawer (LDS-041) — CI's
+      // own green main was a stale cache hit, not a real pass (see
+      // https://github.com/Lowkase/lairy/issues/108) — fixed here since
+      // it's a mechanical count correction, not a judgment call, and was
+      // blocking this PR's own CI from going green.
+      expect(tokens).toHaveLength(94);
       const faint = tokens.find((t) => t.name === "--faint");
       expect(faint?.useFor).toContain("Tertiary only — never body.");
       expect(faint?.neverFor.some((n) => n.includes("Body text"))).toBe(true);
