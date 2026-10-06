@@ -1,7 +1,8 @@
 "use client";
 
 import { Header, MainRail, Subnav, type MainRailItem, type SubnavGroup } from "@lairy/ui";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { PhonePagesOverlay, PhoneTabBar } from "./phone-shell";
 
 export type ShellSection = "foundations" | "components" | "patterns";
 
@@ -73,6 +74,8 @@ export function Shell({
   const [theme, setTheme] = useState<"dark" | "light">(initialTheme);
   const [collapsed, setCollapsed] = useState(false);
   const [subnavHidden, setSubnavHidden] = useState(false);
+  const [pagesOpen, setPagesOpen] = useState(false);
+  const pagesTriggerRef = useRef<HTMLButtonElement>(null);
   const now = useClock();
 
   useEffect(() => {
@@ -84,7 +87,12 @@ export function Shell({
 
   return (
     <div className="flex h-screen flex-col bg-bg">
+      {/* Tablet and up: the desktop header (date, clock, module code,
+       * identity). Phone gets its own compact instance below — two
+       * instances, CSS-toggled, rather than one header trying to be both
+       * (docs/prd.md §8.6, LDS-037). */}
       <Header
+        className="hidden tablet:flex"
         moduleIcon={moduleIcon}
         moduleLabel={moduleLabel}
         moduleCode={moduleCode}
@@ -94,9 +102,47 @@ export function Shell({
         theme={theme}
         onThemeChange={setTheme}
       />
-      <div className="flex min-h-0 flex-1">
-        <MainRail items={items} activeId={section} collapsed={collapsed} onCollapsedChange={setCollapsed} />
+      {/* Below tablet: the approved phone shell (LDS-036) — module icon,
+       * label and a "Pages" trigger for the full-screen subnav overlay.
+       * The identity control stays (compact only drops date/clock/code):
+       * LDS-036 flagged appearance as undecided at phone width; reusing
+       * the same, already-accessible control here resolves it without a
+       * second implementation. */}
+      <Header
+        className="tablet:hidden"
+        compact
+        moduleIcon={moduleIcon}
+        moduleLabel={moduleLabel}
+        moduleCode={moduleCode}
+        date={now ? formatDate(now) : ""}
+        time={now ? formatTime(now) : ""}
+        identityLabel="Appearance"
+        theme={theme}
+        onThemeChange={setTheme}
+        trailingAction={
+          <button
+            ref={pagesTriggerRef}
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={pagesOpen}
+            onClick={() => setPagesOpen(true)}
+            className="min-h-44 shrink-0 rounded-ds border border-border-2 py-8 px-16 text-label uppercase tracking-tight-8 text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+          >
+            Pages
+          </button>
+        }
+      />
+
+      <div className="flex min-h-0 flex-1 flex-col tablet:flex-row">
+        <MainRail
+          className="hidden tablet:flex"
+          items={items}
+          activeId={section}
+          collapsed={collapsed}
+          onCollapsedChange={setCollapsed}
+        />
         <Subnav
+          className="hidden tablet:flex"
           label={moduleLabel}
           groups={[group]}
           activeId={activeId}
@@ -105,9 +151,20 @@ export function Shell({
           onHiddenChange={setSubnavHidden}
         />
         <main className="min-w-0 flex-1 overflow-y-auto">
-          <div className="py-32 px-18">{children}</div>
+          <div className="px-16 py-16 tablet:px-18 tablet:py-32">{children}</div>
         </main>
+        <PhoneTabBar items={items} activeId={section} />
       </div>
+
+      {pagesOpen ? (
+        <PhonePagesOverlay
+          label={`${moduleLabel} pages`}
+          group={group}
+          activePageId={activeId}
+          onClose={() => setPagesOpen(false)}
+          triggerRef={pagesTriggerRef}
+        />
+      ) : null}
     </div>
   );
 }
