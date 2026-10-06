@@ -104,6 +104,7 @@
   --shell-rail-width-collapsed: 56px; /** Main rail (MainNav) collapsed width — already cited as a true fact of the system by Scrollbar's own shipped entry ("its own 56px collapsed rail", packages/content/src/entries/components/scrollbar.ts) and by Navigation (Main)'s own draft stub before this ticket. No Spacing-ramp step matches; kept at this exact value rather than snapped, so it stays consistent with those two already-shipped references. Flagged in the PR (LDS-035). */
   --shell-subnav-width: 214px; /** Subnav rail (Navigation (Subnav)) column width (subnavAnatomy #1). No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
   --shell-header-height: 52px; /** Header bar height (headerRules "Fixed 52px") — also the main rail's own brand-lockup row height, so the header's top edge and the rail's first hairline land flush. No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
+  --popover-panel-width: 210px; /** Popover anatomy #2's fixed panel width. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --shell-rail-width and --icon-callout. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-039). */
 }
 
 /**

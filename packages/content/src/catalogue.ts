@@ -8,6 +8,7 @@ import { callout } from "./entries/components/callout";
 import { card } from "./entries/components/card";
 import { checkbox } from "./entries/components/checkbox";
 import { chip } from "./entries/components/chip";
+import { drawer } from "./entries/components/drawer";
 import { emptyState } from "./entries/components/empty-state";
 import { header } from "./entries/components/header";
 import { loading } from "./entries/components/loading";
@@ -79,6 +80,7 @@ const components: ComponentEntry[] = [
   radio,
   header,
   tooltip,
+  drawer,
 ];
 
 /** Every Pattern entry. Empty today — no pattern ticket has landed yet

@@ -29,7 +29,8 @@
     "./text-input/examples": "./src/text-input/examples/index.ts",
     "./textarea/examples": "./src/textarea/examples/index.ts",
     "./tooltip/examples": "./src/tooltip/examples/index.ts",
-    "./usage-card/examples": "./src/usage-card/examples/index.ts"
+    "./usage-card/examples": "./src/usage-card/examples/index.ts",
+    "./popover/examples": "./src/popover/examples/index.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -40,7 +41,8 @@
   "dependencies": {
     "@lairy/tokens": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "cn": "^0.4.0"
+    "cn": "^0.4.0",
+    "radix-ui": "^1.7.0"
   },
   "peerDependencies": {
     "react": "^19.3.0",

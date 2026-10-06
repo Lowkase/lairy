@@ -17,6 +17,7 @@ import { EMPTY_STATE_EXAMPLES } from "./empty-state-examples";
 import { HEADER_EXAMPLES } from "./header-examples";
 import { LOADING_EXAMPLES } from "./loading-examples";
 import { MAIN_RAIL_EXAMPLES } from "./main-rail-examples";
+import { POPOVER_EXAMPLES } from "./popover-examples";
 import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { RADIO_EXAMPLES } from "./radio-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
@@ -41,6 +42,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   header: HEADER_EXAMPLES,
   loading: LOADING_EXAMPLES,
   "main-rail": MAIN_RAIL_EXAMPLES,
+  popover: POPOVER_EXAMPLES,
   progress: PROGRESS_EXAMPLES,
   radio: RADIO_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
