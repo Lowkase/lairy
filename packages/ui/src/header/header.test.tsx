@@ -100,4 +100,17 @@ describe("Header", () => {
     await user.click(screen.getByRole("button", { name: "Preferences" }));
     expect(onSelect).toHaveBeenCalled();
   });
+
+  it("compact hides the date, clock and module code but keeps the identity control (Phone shell, LDS-037)", () => {
+    renderHeader({ compact: true });
+    expect(screen.queryByText("WED 23 AUG 2026")).not.toBeInTheDocument();
+    expect(screen.queryByText("14:02:07")).not.toBeInTheDocument();
+    expect(screen.queryByText("SYS·02")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Appearance" })).toBeInTheDocument();
+  });
+
+  it("renders a trailing action before the identity button", () => {
+    renderHeader({ trailingAction: <button type="button">Pages</button> });
+    expect(screen.getByRole("button", { name: "Pages" })).toBeInTheDocument();
+  });
 });

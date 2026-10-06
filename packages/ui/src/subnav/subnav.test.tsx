@@ -83,4 +83,9 @@ describe("Subnav", () => {
     render(<Subnav label="Fleet" groups={GROUPS} hidden={true} onHiddenChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Show pages" })).toBeInTheDocument();
   });
+
+  it("applies className to the hidden-state stub too (Phone shell, LDS-037)", () => {
+    render(<Subnav label="Fleet" groups={GROUPS} hidden={true} onHiddenChange={() => {}} className="tablet:flex" />);
+    expect(screen.getByRole("button", { name: "Show pages" })).toHaveClass("tablet:flex");
+  });
 });

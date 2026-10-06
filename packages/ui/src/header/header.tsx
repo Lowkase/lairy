@@ -35,6 +35,16 @@ export interface HeaderProps {
   /** Extra rows below Appearance (e.g. preferences, sign out) — optional;
    * the docs app itself passes none, having no operator account. */
   menuItems?: HeaderMenuItem[];
+  /** Drops the date, clock and module code (Phone shell, LDS-037,
+   * docs/prd.md §8.6) — the operator's own device already shows a clock,
+   * and 390px has no room for both. The identity control stays in every
+   * width: appearance must stay reachable (flagged undecided in LDS-036,
+   * resolved here by keeping the one control that's already accessible
+   * and tested, rather than inventing a second one). */
+  compact?: boolean;
+  /** An extra control rendered before the identity button — the phone
+   * shell's own "Pages" trigger (LDS-037). Omitted at tablet and up. */
+  trailingAction?: ReactNode;
   className?: string;
 }
 
@@ -53,6 +63,8 @@ export function Header({
   theme,
   onThemeChange,
   menuItems = [],
+  compact = false,
+  trailingAction,
   className,
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,7 +129,7 @@ export function Header({
         <span className="truncate font-heading text-label font-semibold tracking-tight-20 text-fg">
           {moduleLabel.toUpperCase()}
         </span>
-        {moduleCode ? (
+        {!compact && moduleCode ? (
           <>
             <span aria-hidden="true" className="h-12 w-0 border-l border-accent-line" />
             <span className="whitespace-nowrap text-micro tracking-tight-14 text-dim">{moduleCode}</span>
@@ -126,16 +138,20 @@ export function Header({
       </div>
 
       <div className="flex items-center gap-18">
-        <div className="flex items-center gap-8">
-          <span className="whitespace-nowrap text-label tracking-tight-14 text-dim">{date}</span>
-          <span aria-hidden="true" className="h-12 w-0 border-l border-border-2" />
-          <span
-            data-slot="header-time"
-            className="whitespace-nowrap text-label tracking-tight-14 text-mute"
-          >
-            {time}
-          </span>
-        </div>
+        {!compact ? (
+          <div className="flex items-center gap-8">
+            <span className="whitespace-nowrap text-label tracking-tight-14 text-dim">{date}</span>
+            <span aria-hidden="true" className="h-12 w-0 border-l border-border-2" />
+            <span
+              data-slot="header-time"
+              className="whitespace-nowrap text-label tracking-tight-14 text-mute"
+            >
+              {time}
+            </span>
+          </div>
+        ) : null}
+
+        {trailingAction}
 
         <button
           ref={triggerRef}

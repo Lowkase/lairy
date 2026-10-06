@@ -66,7 +66,10 @@ export function Subnav({
         type="button"
         onClick={() => onHiddenChange(false)}
         title="Show pages"
-        className="flex shrink-0 items-center justify-center border-y border-r border-border bg-panel text-mute transition-colors duration-160 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+        className={cn(
+          "flex shrink-0 items-center justify-center border-y border-r border-border bg-panel text-mute transition-colors duration-160 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+          className,
+        )}
         style={{ width: STUB_WIDTH, height: STUB_HEIGHT }}
       >
         <span aria-hidden="true" className="text-label">
