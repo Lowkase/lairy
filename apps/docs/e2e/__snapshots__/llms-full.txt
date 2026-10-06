@@ -1108,6 +1108,98 @@ There is no flyout, no nested tree and no "more" overflow. A rail that hides ite
 
 ---
 
+## Modal
+
+Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/modal
+
+Purpose: An overlay that must be answered before the operator can do anything else.
+
+### Description
+
+A modal is a centred dialog that stops the workspace until the operator answers it.
+
+It is the most expensive surface in the system, because it takes away every other choice on the screen. That cost is the whole reason it exists: a decision that must not be missed. The line against a Drawer is whether the work behind may continue — a drawer accompanies, a modal interrupts. If the operator could reasonably ignore it for a minute and carry on, it was never a modal.
+
+### Anatomy
+
+1. Scrim — A dim over the whole workspace, blurred enough to say the page is out of reach but not enough to hide it. Clicking it closes a non-destructive modal and does nothing on a destructive one.
+2. Dialog — Centred, square-cornered, on --panel-2 with a --border-2 hairline and a soft drop shadow — one of the few surfaces in the system allowed elevation, because it genuinely floats.
+3. Header — The question itself, set as a question: "Delete 'rebalance'?". The close glyph sits opposite it and is always present except on a destructive confirm.
+4. Body — One or two sentences naming the consequence, in the operator's vocabulary. It never scrolls: if it would, the content was too big for a modal.
+5. Footer — Exactly two actions, right-aligned, primary last. The primary repeats the verb from the header so the operator can read the header and the button and nothing in between.
+
+### Variants
+
+- SM (--panel-2, --border-2, --accent): One question, two buttons, no scrolling. Use SM for destructive confirms and nothing else.
+- MD (--panel-2, --border-2, --accent): The default. Fits a short form — up to six fields — or a decision that needs a paragraph of context. If it starts to scroll, it belongs in a drawer.
+- LG (--panel-2, --border-2, --accent): For dense content that must stay modal: side-by-side comparisons, a table of affected records, a diff. Body scrolls internally; header and footer stay pinned. Past this size, use a full page.
+
+There is no XL modal and no full-screen modal. Past LG the dialog stops being a decision and becomes a workspace, and a workspace that cannot be left is a trap — that content belongs in a Drawer or on a page of its own.
+
+### Use when
+
+- The action is destructive or irreversible and deserves a deliberate pause.
+- Nothing else on the screen makes sense until this is answered.
+- The whole decision fits on one screen with no internal scrolling.
+- There are exactly two ways out, and both are named.
+
+### Use something else when
+
+- drawer: The work behind stays relevant — that is a Drawer.
+- popover: It is a few choices anchored to the control that opened it — that is a Popover.
+- toast: It only reports that something happened — that is a Toast.
+- drawer: It is a form with sections, or anything that scrolls — that is a drawer or a page.
+
+### Content rules
+
+- The header is the question, not the feature: "Delete 'rebalance'?" — never "Confirm deletion" and never "Are you sure?".
+- Name the object in quotes and the consequence in the body: what stops, what survives, and whether it can be undone.
+- The primary button repeats the verb — "Delete workflow", "Stop runs" — so the action is legible without reading back up.
+- The secondary is always the plain word "Cancel". It is not a variation and it is never styled to compete.
+- Two actions maximum. A third option means the decision has not been framed yet, not that the footer needs another button.
+
+### Examples
+
+- [demo] Demo
+- [demo] SM
+- [demo] MD
+- [demo] LG
+- [good] Named object, repeated verb — The object is named, the consequence stated, and the button repeats the verb.
+- [bad] "Are you sure?" with OK — Never "Are you sure?" with OK — the operator has to guess what OK agrees to.
+- [good] Two ways out — Two ways out, one of them primary, and no third path competing.
+- [bad] Four actions in a footer — Never four actions in a footer — a modal with a menu in it is a decision nobody can make.
+- [good] One field — One field is fine — a single input is still one decision.
+- [bad] A scrolling form — Never a scrolling form in a modal — if it needs sections, it needed a drawer.
+
+### Accessibility
+
+- Dialog and modal: role="dialog" with aria-modal, labelled by the header and described by the body, so the announcement carries the question and the consequence together.
+- Focus is trapped: Focus moves to the dialog on open and cycles inside it — this is the one place a trap is correct. On close it returns to the control that opened the modal.
+- Escape, always: Escape closes any modal, including destructive ones, because cancelling is never the dangerous path. The scrim click is only wired up when nothing can be lost.
+- No default on destruct: The primary is focused on a benign modal so Enter confirms; on a destructive one focus lands on Cancel, so a stray keystroke cannot delete anything.
+
+### Tokens
+
+- --panel-2: Dialog surface.
+- --border-2: Dialog hairline.
+- --border: Header and footer rules.
+- --accent: Primary action.
+- --dim, --mute: Body copy and Cancel.
+
+### Related
+
+- drawer (often-confused-with): A drawer accompanies work that carries on; a modal stops it. Anything that scrolls belongs to the drawer.
+- popover (often-confused-with): A popover is anchored to its trigger and dismissible by looking away; a modal is centred and must be answered.
+- toast (often-confused-with): A toast reports what already happened. If no answer is needed, the modal was the wrong shape.
+
+### Changelog
+
+- v1.1.0 (23 Aug 2026): Footer capped at two actions; destructive modals now focus Cancel and ignore scrim clicks.
+- v1.0.2 (18 Aug 2026): Internal scrolling ruled out; oversized content redirected to the drawer.
+- v1.0.0 (10 Aug 2026): Modal introduced at three widths with scrim, header, body and footer.
+
+---
+
 ## Popover
 
 Status: stable · Version: 1.1.0 · Updated: 24 Aug 2026 · /components/popover

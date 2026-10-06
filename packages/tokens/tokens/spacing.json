@@ -1,5 +1,10 @@
 {
   "space": {
+    "0": {
+      "$type": "dimension",
+      "$value": "0px",
+      "$description": "Not a ramp step (docs/prd.md §8.3 names nine: 4–44) — zero carries no designed space to choose between. Added because Tailwind v4's `inset`/`top`/`right`/`bottom`/`left`/`translate` utility families look up their numeric value against this same `--spacing-*` namespace and, unlike `p-0`/`m-0` (which Tailwind special-cases to `0px` regardless of theme), do not fall back when the exact key is missing: confirmed by running `inset-0`/`top-0`/`translate-x-0` with no `--spacing-0` present — each resolved to `auto`/`none` rather than `0px`, silently collapsing any `fixed inset-0` overlay to a 0×0 element. First hit by Modal's own scrim (LDS-040), but blocks every future overlay the same way. Flagged in the PR."
+    },
     "4": {
       "$type": "dimension",
       "$value": "4px",

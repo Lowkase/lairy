@@ -18,6 +18,7 @@
     "./header/examples": "./src/header/examples/index.ts",
     "./loading/examples": "./src/loading/examples/index.ts",
     "./main-rail/examples": "./src/main-rail/examples/index.ts",
+    "./modal/examples": "./src/modal/examples/index.ts",
     "./progress/examples": "./src/progress/examples/index.ts",
     "./radio/examples": "./src/radio/examples/index.ts",
     "./scrollbar/examples": "./src/scrollbar/examples/index.ts",
