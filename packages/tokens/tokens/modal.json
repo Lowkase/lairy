@@ -1,0 +1,19 @@
+{
+  "modal": {
+    "width-sm": {
+      "$type": "dimension",
+      "$value": "400px",
+      "$description": "Modal Sizes 'SM' (modalSizeData 'sm') — single-decision destructive confirms, two buttons, no scrolling. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --popover-panel-width. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-040)."
+    },
+    "width-md": {
+      "$type": "dimension",
+      "$value": "560px",
+      "$description": "Modal Sizes 'MD' (modalSizeData 'md') — the default: a short form or a decision needing a paragraph of context. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040)."
+    },
+    "width-lg": {
+      "$type": "dimension",
+      "$value": "760px",
+      "$description": "Modal Sizes 'LG' (modalSizeData 'lg') — dense content that must stay modal: side-by-side comparisons, a table of affected records, a diff. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040)."
+    }
+  }
+}

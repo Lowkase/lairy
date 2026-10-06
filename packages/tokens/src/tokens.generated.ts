@@ -54,6 +54,7 @@ export const color = {
 export const colorTokenNames = ["bg","fg","dim","mute","faint","border","border-2","panel","panel-2","bracket","glow","accent","accent-soft","accent-line","accent-2","accent-2-soft","accent-2-line","alarm","alarm-soft","alarm-line","alarm-ink"] as const;
 
 export const space = {
+  "0": "0px",
   "4": "4px",
   "6": "6px",
   "8": "8px",
@@ -175,4 +176,10 @@ export const shell = {
 
 export const popover = {
   "panelWidth": "210px"
+} as const;
+
+export const modal = {
+  "widthSm": "400px",
+  "widthMd": "560px",
+  "widthLg": "760px"
 } as const;

@@ -25,6 +25,7 @@
   --alarm-soft: rgba(255, 143, 107, 0.1); /** Alarm fill, low opacity. Non-themeable, same reasoning as --alarm. */
   --alarm-line: rgba(255, 143, 107, 0.4); /** Alarm border/line, reduced opacity. Non-themeable, same reasoning as --alarm. */
   --alarm-ink: #07090b; /** Text/icon colour for content on a solid --alarm fill (the primary action button on Warning/Error). Not in the prototype: renderCallout() used var(--bg) for this, which fails AA in the light theme (2.03:1) since --bg is themeable but --alarm is not. Non-themeable by necessity — proposed pending the token decisions ticket, flagged in the PR. */
+  --space-0: 0px; /** Not a ramp step (docs/prd.md §8.3 names nine: 4–44) — zero carries no designed space to choose between. Added because Tailwind v4's `inset`/`top`/`right`/`bottom`/`left`/`translate` utility families look up their numeric value against this same `--spacing-*` namespace and, unlike `p-0`/`m-0` (which Tailwind special-cases to `0px` regardless of theme), do not fall back when the exact key is missing: confirmed by running `inset-0`/`top-0`/`translate-x-0` with no `--spacing-0` present — each resolved to `auto`/`none` rather than `0px`, silently collapsing any `fixed inset-0` overlay to a 0×0 element. First hit by Modal's own scrim (LDS-040), but blocks every future overlay the same way. Flagged in the PR. */
   --space-4: 4px; /** Spacing ramp step 4. */
   --space-6: 6px; /** Spacing ramp step 6. */
   --space-8: 8px; /** Spacing ramp step 8. */
@@ -105,6 +106,9 @@
   --shell-subnav-width: 214px; /** Subnav rail (Navigation (Subnav)) column width (subnavAnatomy #1). No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
   --shell-header-height: 52px; /** Header bar height (headerRules "Fixed 52px") — also the main rail's own brand-lockup row height, so the header's top edge and the rail's first hairline land flush. No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035). */
   --popover-panel-width: 210px; /** Popover anatomy #2's fixed panel width. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --shell-rail-width and --icon-callout. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-039). */
+  --modal-width-sm: 400px; /** Modal Sizes 'SM' (modalSizeData 'sm') — single-decision destructive confirms, two buttons, no scrolling. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — a component-specific exception, the same category as --popover-panel-width. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-040). */
+  --modal-width-md: 560px; /** Modal Sizes 'MD' (modalSizeData 'md') — the default: a short form or a decision needing a paragraph of context. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040). */
+  --modal-width-lg: 760px; /** Modal Sizes 'LG' (modalSizeData 'lg') — dense content that must stay modal: side-by-side comparisons, a table of affected records, a diff. Same non-ramp exception as --modal-width-sm, flagged in the PR (LDS-040). */
 }
 
 /**

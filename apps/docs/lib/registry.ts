@@ -735,6 +735,43 @@ function buildTableItem(): RegistryItem {
   };
 }
 
+function buildModalItem(): RegistryItem {
+  const entry = getComponent("modal");
+  if (!entry) throw new Error('registry: content entry "modal" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "modal",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. The second registry item to depend on
+    // radix-ui, after popover: modal.tsx is scaffolded from shadcn's own
+    // `dialog` and `alert-dialog` items (ADR-0004), restyled with Lairy
+    // tokens only.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn", "radix-ui"],
+    files: [
+      {
+        path: "packages/ui/src/modal/modal.tsx",
+        target: "components/ui/modal/modal.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/modal/modal.tsx")),
+      },
+      // Modal's footer actions render Button (ModalCancel/ModalAction and
+      // their Confirm counterparts) — inlined directly here, the same way
+      // buildCalloutItem's and buildPopoverItem's own Button inclusion is
+      // (registryDependencies isn't a path this repo's fixture can rely on,
+      // see buildCalloutItem's own comment). Its target matches
+      // buildButtonItem's own, so installing both "modal" and "button"
+      // later doesn't duplicate the file.
+      { ...BUTTON_FILE, content: withLairyCnImport(readSource(BUTTON_FILE.path)) },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 function buildPopoverItem(): RegistryItem {
   const entry = getComponent("popover");
   if (!entry) throw new Error('registry: content entry "popover" not found.');
@@ -787,6 +824,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   header: buildHeaderItem,
   tooltip: buildTooltipItem,
   popover: buildPopoverItem,
+  modal: buildModalItem,
 };
 
 export function listRegistryItemNames(): string[] {

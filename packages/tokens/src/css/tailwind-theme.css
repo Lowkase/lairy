@@ -42,6 +42,7 @@
      name to preserve, so there's nothing for an alias to buy here — only
      color needs the indirection, to switch at runtime by theme. */
   /* Spacing ramp (docs/prd.md §8.3). */
+  --spacing-0: 0px;
   --spacing-4: 4px;
   --spacing-6: 6px;
   --spacing-8: 8px;
