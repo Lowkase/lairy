@@ -27,6 +27,7 @@ import { text } from "./entries/components/text";
 import { textarea } from "./entries/components/textarea";
 import { textInput } from "./entries/components/text-input";
 import { toast } from "./entries/components/toast";
+import { tooltip } from "./entries/components/tooltip";
 import { usageCard } from "./entries/components/usage-card";
 import { accessibility } from "./entries/foundations/accessibility";
 import { color as colorFoundation } from "./entries/foundations/color";
@@ -77,6 +78,7 @@ const components: ComponentEntry[] = [
   checkbox,
   radio,
   header,
+  tooltip,
 ];
 
 /** Every Pattern entry. Empty today — no pattern ticket has landed yet
