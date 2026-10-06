@@ -14,6 +14,7 @@
 - [Header](/components/header): Names the selected top-level module and carries ambient reference and the operator's own identity. Chrome, not content.
 - [Loading](/components/loading): What a region shows while it still does not know the answer.
 - [Navigation (Main)](/components/main-rail): The full-height column on the left that moves the operator between workspaces. The one navigation in the product that never changes.
+- [Popover](/components/popover): A small anchored overlay holding a short action list or a few detail pairs.
 - [Progress](/components/progress): Reports a measured fraction of a known total, and nothing else.
 - [Radio](/components/radio): A set of mutually exclusive options, all visible at once, exactly one of them chosen.
 - [Scrollbar](/components/scrollbar): The browser's own scroll control, restyled to two greys — never a custom-built replacement.
