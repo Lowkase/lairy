@@ -252,8 +252,8 @@ function wordScore(text: string, words: string[]): number {
  * connected to `component` by an edge in either direction (its own
  * relationships/useInstead pointing at `component`, or `component`'s
  * pointing at it) — the tool surfaces the content's own reasoning text
- * rather than judging the situation itself; `situation` only orders
- * multiple candidates by word overlap.
+ * rather than judging the situation itself. `situation` is echoed back for
+ * the caller's own reading and does not affect the order.
  */
 export function suggestAlternative(input: { component: string; situation: string }): {
   component: string;
@@ -304,19 +304,17 @@ export function suggestAlternative(input: { component: string; situation: string
     addReason(useInstead.target, "use-instead", useInstead.text);
   }
 
-  const situationWords = significantWords(input.situation);
-  const suggestions = [...candidates.values()].sort((a, b) => {
-    const scoreOf = (candidate: AlternativeSuggestion) =>
-      wordScore(
-        [
-          ...candidate.reasons.map((r) => r.text),
-          ...candidate.useWhen,
-          candidate.boundary ?? "",
-        ].join(" "),
-        situationWords,
-      );
-    return scoreOf(b) - scoreOf(a);
-  });
+  // Deterministic order, not a judgment of fit: candidates the content itself
+  // names as "use this instead" come first, then those only related by a
+  // relationship, each group alphabetical. Word overlap against `situation`
+  // used to reorder these, but it had no ground truth and shifted whenever
+  // unrelated entries gained a `useInstead` row (#108); the caller reads every
+  // reason and decides.
+  const directness = (candidate: AlternativeSuggestion) =>
+    candidate.reasons.some((r) => r.kind === "use-instead") ? 0 : 1;
+  const suggestions = [...candidates.values()].sort(
+    (a, b) => directness(a) - directness(b) || a.name.localeCompare(b.name),
+  );
 
   return { component: input.component, situation: input.situation, suggestions };
 }

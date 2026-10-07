@@ -96,7 +96,9 @@ export function createServer(): McpServer {
         situation: z
           .string()
           .min(1)
-          .describe("What the message or UI needs to do. Used to order multiple candidates."),
+          .describe(
+            "What the message or UI needs to do. Echoed back in the result; it does not filter or rank the candidates, so read every reason.",
+          ),
       },
     },
     ({ component, situation }) => {

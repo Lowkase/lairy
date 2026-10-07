@@ -95,7 +95,9 @@ describe("MCP server (seam 2: tool surface)", () => {
       }>(result);
       const amber = entry.scales.find((s) => s.name === "Amber");
       expect(amber?.tokens).toEqual(["accent", "accent-soft", "accent-line"]);
-      expect(entry.relationships.find((r) => r.target === "typography")?.targetName).toBe("Typography");
+      expect(entry.relationships.find((r) => r.target === "typography")?.targetName).toBe(
+        "Typography",
+      );
     });
 
     it("errors for an id that doesn't exist in the catalogue", async () => {
@@ -123,7 +125,12 @@ describe("MCP server (seam 2: tool surface)", () => {
       const entry = json<{
         props: Array<{ name: string; type: string; required: boolean; guidance?: string }>;
       }>(result);
-      expect(entry.props.map((p) => p.name).sort()).toEqual(["actions", "children", "title", "tone"]);
+      expect(entry.props.map((p) => p.name).sort()).toEqual([
+        "actions",
+        "children",
+        "title",
+        "tone",
+      ]);
       const tone = entry.props.find((p) => p.name === "tone");
       expect(tone?.required).toBe(true);
       expect(tone?.guidance).toContain("Match the tone to the state");
@@ -174,16 +181,21 @@ describe("MCP server (seam 2: tool surface)", () => {
       const client = await connect();
       const result = await client.callTool({ name: "get_tokens", arguments: { group: "accent" } });
       const tokens = json<Array<{ name: string; group: string }>>(result);
-      expect(tokens.map((t) => t.name).sort()).toEqual(["--accent", "--accent-line", "--accent-soft"]);
+      expect(tokens.map((t) => t.name).sort()).toEqual([
+        "--accent",
+        "--accent-line",
+        "--accent-soft",
+      ]);
       expect(tokens.every((t) => t.group === "Accent")).toBe(true);
     });
 
     it("returns every token, with use for, never for and rationale, when no group is given", async () => {
       const client = await connect();
       const result = await client.callTool({ name: "get_tokens", arguments: {} });
-      const tokens = json<
-        Array<{ name: string; useFor: string[]; neverFor: string[]; rationale?: string }>
-      >(result);
+      const tokens =
+        json<Array<{ name: string; useFor: string[]; neverFor: string[]; rationale?: string }>>(
+          result,
+        );
       // Derived from the catalogue, not hardcoded: a literal count went stale
       // every time a token was added (issues #80, #86, #89, #93, #97, #107, #108).
       expect(tokens.length).toBeGreaterThan(0);
@@ -221,7 +233,9 @@ describe("MCP server (seam 2: tool surface)", () => {
       const tokens = json<Array<{ name: string; value: string; rationale: string }>>(result);
       const alarm = tokens.find((t) => t.name === "--alarm");
       expect(alarm?.value).toBe("#ff8f6b");
-      expect(alarm?.rationale).toContain("a theme should never be able to redefine what broken looks like");
+      expect(alarm?.rationale).toContain(
+        "a theme should never be able to redefine what broken looks like",
+      );
     });
   });
 
@@ -238,8 +252,35 @@ describe("MCP server (seam 2: tool surface)", () => {
       const { suggestions } = json<{
         suggestions: Array<{ id: string; reasons: Array<{ kind: string; text: string }> }>;
       }>(result);
-      expect(suggestions[0]?.id).toBe("callout");
-      expect(suggestions[0]?.reasons.some((r) => r.kind === "often-confused-with")).toBe(true);
+      const callout = suggestions.find((s) => s.id === "callout");
+      expect(callout?.reasons.some((r) => r.kind === "often-confused-with")).toBe(true);
+    });
+
+    it("orders candidates by directness then name, ignoring the situation text (#108)", async () => {
+      const client = await connect();
+      const call = async (situation: string) =>
+        json<{
+          situation: string;
+          suggestions: Array<{ id: string; name: string; reasons: Array<{ kind: string }> }>;
+        }>(
+          await client.callTool({
+            name: "suggest_alternative",
+            arguments: { component: "toast", situation },
+          }),
+        );
+
+      const a = await call("A message that should stay until the operator acts on it.");
+      const b = await call("Confirm a save that just finished.");
+
+      expect(a.suggestions.map((s) => s.id)).toEqual(b.suggestions.map((s) => s.id));
+      expect(b.situation).toBe("Confirm a save that just finished.");
+
+      const direct = (s: { reasons: Array<{ kind: string }> }) =>
+        s.reasons.some((r) => r.kind === "use-instead");
+      const flags = a.suggestions.map((s) => (direct(s) ? 0 : 1));
+      expect(flags).toEqual([...flags].sort());
+      const names = a.suggestions.filter(direct).map((s) => s.name);
+      expect(names).toEqual([...names].sort((x, y) => x.localeCompare(y)));
     });
 
     it("errors for a component that doesn't exist", async () => {
@@ -277,15 +318,9 @@ describe("MCP server (seam 2: tool surface)", () => {
       }),
     );
 
-    // Found while porting Drawer (LDS-041): `suggest_alternative`'s own
-    // situation ranking is a plain word-overlap count (packages/mcp/src/tools.ts
-    // `wordScore`), not a judgment of fit — it re-orders as entries unrelated
-    // to this question gain their own, equally legitimate `useInstead` rows
-    // pointing at "toast" (Drawer's own, extracted per docs/build-guide.md §3,
-    // is one). Asserting by id rather than by array position is what the PRD
-    // §13 line itself actually requires ("can answer... from content alone"),
-    // not that Callout always sorts first; flagged as a needs-triage follow-up
-    // on `suggest_alternative`'s own ranking heuristic, not fixed here.
+    // Found by id, not position: the order is deterministic but says nothing
+    // about fit (see the ordering test below), and the PRD §13 line only
+    // requires that the answer is present in the tool output.
     const alternative = suggestions.find((s) => s.id === "callout");
     expect(alternative?.id).toBe("callout");
     expect(alternative?.name).toBe("Callout");
