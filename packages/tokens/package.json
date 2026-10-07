@@ -1,6 +1,6 @@
 {
   "name": "@lairy/tokens",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
@@ -9,12 +9,28 @@
     ".": "./src/index.ts",
     "./css/*": "./src/css/*"
   },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./css/*": "./dist/css/*"
+    }
+  },
   "scripts": {
     "generate": "node build.mjs",
-    "build": "pnpm run generate && tsc -p tsconfig.build.json",
+    "build": "pnpm run generate && tsc -p tsconfig.build.json && node scripts/add-js-extensions.mjs && pnpm run copy-css",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "copy-css": "node -e \"import('node:fs').then((fs) => fs.cpSync('src/css', 'dist/css', { recursive: true }))\"",
+    "prepack": "pnpm run build"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
