@@ -56,8 +56,8 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
             page shows this note, not only entries lacking a built component
             (docs/build-guide.md, LDS-035 acceptance criteria). */}
         <div className="border border-border-2 bg-panel p-16 text-small text-mute">
-          Patterns have no code of their own — they describe how the components below are composed. See
-          each component's own page to try it live.
+          Patterns have no code of their own — they describe how the components below are composed.
+          See each component's own page to try it live.
         </div>
 
         <div className="text-body text-mute">{entry.description}</div>
@@ -66,7 +66,10 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           <Section number="01" title="When it applies" meta={`${entry.whenItApplies.length}`}>
             <div className="border border-border bg-panel">
               {entry.whenItApplies.map((row) => (
-                <div key={row} className="border-b border-border p-16 text-small text-mute last:border-b-0">
+                <div
+                  key={row}
+                  className="border-b border-border p-16 text-small text-mute last:border-b-0"
+                >
                   {row}
                 </div>
               ))}
@@ -76,7 +79,7 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
 
         {entry.composes.length > 0 ? (
           <Section number="02" title="Composes" meta={`${entry.composes.length} components`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.composes.map((componentId) => {
                 const component = getComponent(componentId);
                 return (
@@ -97,7 +100,10 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           <Section number="03" title="Rules" meta={`${entry.rules.length}`}>
             <div className="border border-border bg-panel">
               {entry.rules.map((rule) => (
-                <div key={rule.text} className="border-b border-border p-16 text-small text-mute last:border-b-0">
+                <div
+                  key={rule.text}
+                  className="border-b border-border p-16 text-small text-mute last:border-b-0"
+                >
                   {rule.text}
                 </div>
               ))}
@@ -107,9 +113,12 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
 
         {entry.relationships.length > 0 ? (
           <Section number="04" title="Related" meta={`${entry.relationships.length}`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.relationships.map((relationship) => (
-                <div key={relationship.target} className="flex flex-col gap-8 border border-border bg-panel p-16">
+                <div
+                  key={relationship.target}
+                  className="flex flex-col gap-8 border border-border bg-panel p-16"
+                >
                   <span className="text-small text-fg">{relationship.target}</span>
                   <span className="text-small text-mute">{relationship.text}</span>
                 </div>
@@ -124,7 +133,7 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
               {entry.changelog.map((change) => (
                 <div
                   key={change.version}
-                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 sm:flex-row"
+                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 tablet:flex-row"
                 >
                   <span className="text-micro text-fg">v{change.version}</span>
                   <span className="text-micro text-mute">{formatDate(change.date)}</span>

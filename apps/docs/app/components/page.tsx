@@ -16,8 +16,10 @@ export default function ComponentsIndexPage() {
       group={shellSubnavGroup("components")}
     >
       <div className="flex flex-col gap-32">
-        <h1 className="font-heading text-doc-title font-semibold tracking-tight-neg-2 text-fg">Components</h1>
-        <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+        <h1 className="font-heading text-doc-title font-semibold tracking-tight-neg-2 text-fg">
+          Components
+        </h1>
+        <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
           {entries.map((entry) => (
             <Link
               key={entry.meta.id}
