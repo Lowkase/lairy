@@ -104,7 +104,7 @@ export default async function FoundationPage({
               {entry.scales.map((scale) => (
                 <div
                   key={scale.name}
-                  className="grid grid-cols-1 gap-16 border-b border-border p-16 last:border-b-0 sm:grid-cols-2"
+                  className="grid grid-cols-1 gap-16 border-b border-border p-16 last:border-b-0 tablet:grid-cols-2"
                 >
                   <div className="flex min-w-0 flex-col gap-8">
                     <span className="text-small text-fg">{scale.name}</span>
@@ -112,24 +112,30 @@ export default async function FoundationPage({
                       className="h-22 w-44 border border-border-2"
                       style={{ background: `var(--${scale.tokens[0]})` }}
                     />
-                    <span className="text-micro text-mute">{scale.tokens.map((t) => `--${t}`).join(" · ")}</span>
+                    <span className="text-micro text-mute">
+                      {scale.tokens.map((t) => `--${t}`).join(" · ")}
+                    </span>
                   </div>
                   <span className="min-w-0 text-small text-mute">{scale.description}</span>
                 </div>
               ))}
             </div>
-            {entry.scalesNote ? <div className="text-micro text-mute">{entry.scalesNote}</div> : null}
+            {entry.scalesNote ? (
+              <div className="text-micro text-mute">{entry.scalesNote}</div>
+            ) : null}
           </Section>
         ) : null}
 
         {entry.usage.useWhen.length > 0 || entry.usage.useInstead.length > 0 ? (
           <Section number="02" title="Usage" meta="Reach for / use something else">
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               <div className="border border-accent-line bg-accent-soft p-18">
                 {/* text-fg, not text-accent: the same --accent-on-soft
                     pairing fails AA for text at this size in the light
                     theme (see components/docs-page/page-header.tsx). */}
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-fg">Reach for it when</div>
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-fg">
+                  Reach for it when
+                </div>
                 <div className="flex flex-col gap-8 text-small text-dim">
                   {entry.usage.useWhen.map((row) => (
                     <span key={row}>{row}</span>
@@ -137,7 +143,9 @@ export default async function FoundationPage({
                 </div>
               </div>
               <div className="border border-border-2 p-18">
-                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">Use something else when</div>
+                <div className="mb-12 text-micro uppercase tracking-tight-6 text-mute">
+                  Use something else when
+                </div>
                 <div className="flex flex-col gap-8 text-small text-dim">
                   {entry.usage.useInstead.map((row) => (
                     <span key={row}>{row}</span>
@@ -152,7 +160,10 @@ export default async function FoundationPage({
           <Section number="03" title="Application" meta={`${entry.principles.length} rules`}>
             <div className="border border-border bg-panel">
               {entry.principles.map((rule) => (
-                <div key={rule.text} className="border-b border-border p-16 text-small text-mute last:border-b-0">
+                <div
+                  key={rule.text}
+                  className="border-b border-border p-16 text-small text-mute last:border-b-0"
+                >
                   {rule.text}
                 </div>
               ))}
@@ -162,21 +173,30 @@ export default async function FoundationPage({
 
         {entry.accessibilityNotes.length > 0 ? (
           <Section number="04" title="Accessibility" meta="Measured">
-            <div className="grid grid-cols-1 gap-22 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-22 tablet:grid-cols-2">
               <ContrastTable theme="dark" />
               <ContrastTable theme="light" />
             </div>
             <div className="flex items-center gap-12 border border-alarm-line p-12">
-              <span className="inline-block h-16 w-16 border border-border-2" style={{ background: ink.bg }} />
+              <span
+                className="inline-block h-16 w-16 border border-border-2"
+                style={{ background: ink.bg }}
+              />
               <span className="text-small text-dim">
-                <code className="text-mute">--alarm-ink</code> on <code className="text-mute">--alarm</code>{" "}
-                (non-themeable, same in both themes): {ink.ratio.toFixed(2)}:1 — {ink.level}
+                <code className="text-mute">--alarm-ink</code> on{" "}
+                <code className="text-mute">--alarm</code> (non-themeable, same in both themes):{" "}
+                {ink.ratio.toFixed(2)}:1 — {ink.level}
               </span>
             </div>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.accessibilityNotes.map((note) => (
-                <div key={note.title} className="flex flex-col gap-8 border border-border bg-panel p-18">
-                  <span className="text-micro uppercase tracking-tight-6 text-fg">{note.title}</span>
+                <div
+                  key={note.title}
+                  className="flex flex-col gap-8 border border-border bg-panel p-18"
+                >
+                  <span className="text-micro uppercase tracking-tight-6 text-fg">
+                    {note.title}
+                  </span>
                   <span className="text-small text-dim">{note.body}</span>
                 </div>
               ))}
@@ -192,16 +212,25 @@ export default async function FoundationPage({
           >
             <div className="border border-border bg-panel">
               {entry.scales.map((scale) => (
-                <div key={scale.name} className="flex flex-col gap-12 border-b border-border p-16 last:border-b-0">
-                  <span className="text-micro uppercase tracking-tight-6 text-mute">{scale.name}</span>
-                  <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+                <div
+                  key={scale.name}
+                  className="flex flex-col gap-12 border-b border-border p-16 last:border-b-0"
+                >
+                  <span className="text-micro uppercase tracking-tight-6 text-mute">
+                    {scale.name}
+                  </span>
+                  <div className="grid grid-cols-1 gap-12 tablet:grid-cols-2">
                     {scale.tokens.map((tokenName) => {
                       const token = getToken(`--${tokenName}`);
                       if (!token) return null;
                       const dark = typeof token.value === "string" ? token.value : token.value.dark;
-                      const light = typeof token.value === "string" ? token.value : token.value.light;
+                      const light =
+                        typeof token.value === "string" ? token.value : token.value.light;
                       return (
-                        <div key={tokenName} className="flex items-center gap-12 border border-border p-12">
+                        <div
+                          key={tokenName}
+                          className="flex items-center gap-12 border border-border p-12"
+                        >
                           <span
                             className="h-32 w-32 shrink-0 border border-border-2"
                             style={{ background: `var(--${tokenName})` }}
@@ -226,13 +255,15 @@ export default async function FoundationPage({
 
         {entry.relationships.length > 0 ? (
           <Section number="06" title="Related" meta={`${entry.relationships.length}`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.relationships.map((relationship) => {
                 const target = getFoundation(relationship.target);
                 const linkable = target && target.meta.status !== "draft";
                 const card = (
                   <div className="flex flex-col gap-8 border border-border bg-panel p-16">
-                    <span className="text-small text-fg">{target?.meta.name ?? relationship.target}</span>
+                    <span className="text-small text-fg">
+                      {target?.meta.name ?? relationship.target}
+                    </span>
                     <span className="text-small text-mute">{relationship.text}</span>
                   </div>
                 );
@@ -258,7 +289,7 @@ export default async function FoundationPage({
               {entry.changelog.map((change) => (
                 <div
                   key={change.version}
-                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 sm:flex-row"
+                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 tablet:flex-row"
                 >
                   <span className="text-micro text-fg">v{change.version}</span>
                   <span className="text-micro text-mute">{formatDate(change.date)}</span>

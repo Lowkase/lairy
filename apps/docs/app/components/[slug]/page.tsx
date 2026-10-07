@@ -116,8 +116,8 @@ export default async function ComponentPage({
 
         {hasBuiltComponent ? null : (
           <div className="border border-border-2 bg-panel p-16 text-small text-mute">
-            This entry has no built component yet (LDS-035, docs/build-guide.md §4) — its content below is
-            real, but there is nothing to try live.
+            This entry has no built component yet (LDS-035, docs/build-guide.md §4) — its content
+            below is real, but there is nothing to try live.
           </div>
         )}
 
@@ -142,7 +142,7 @@ export default async function ComponentPage({
             {entry.anatomyCaption ? (
               <div className="text-micro text-mute">{entry.anatomyCaption}</div>
             ) : null}
-            <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-12 tablet:grid-cols-2">
               {entry.anatomy.map((part) => (
                 <div key={part.number} className="flex items-start gap-12">
                   <span className="flex size-22 shrink-0 items-center justify-center rounded-full bg-accent font-heading text-label font-semibold text-bg">
@@ -169,7 +169,7 @@ export default async function ComponentPage({
                 return (
                   <div
                     key={variant.name}
-                    className="grid grid-cols-1 gap-16 border border-border bg-panel p-16 sm:grid-cols-2"
+                    className="grid grid-cols-1 gap-16 border border-border bg-panel p-16 tablet:grid-cols-2"
                   >
                     <div className="flex min-w-0 flex-col gap-8">
                       <span className="text-small text-fg">{variant.name}</span>
@@ -193,7 +193,7 @@ export default async function ComponentPage({
 
         {entry.states.length > 0 ? (
           <Section number="03" title="States" meta={`${entry.states.length}`}>
-            <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-12 tablet:grid-cols-2">
               {entry.states.map((state) => (
                 <div key={state.name} className="flex flex-col gap-8 border border-border p-16">
                   <span className="text-micro uppercase tracking-tight-6 text-fg">
@@ -235,7 +235,7 @@ export default async function ComponentPage({
 
         {dontPairs.length > 0 ? (
           <Section number="06" title="Do and don't" meta={`${dontPairs.length} pairs`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {dontPairs.flatMap(({ good, bad }) => [
                 <DoDontCell
                   key={good.id}
@@ -253,7 +253,7 @@ export default async function ComponentPage({
 
         {entry.accessibility.length > 0 ? (
           <Section number="07" title="Accessibility" meta={`${entry.accessibility.length}`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.accessibility.map((note) => (
                 <div
                   key={note.title}
@@ -275,7 +275,7 @@ export default async function ComponentPage({
               {entry.tokens.map((row) => (
                 <div
                   key={row.tokens.join(",")}
-                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 sm:grid-cols-2"
+                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 tablet:grid-cols-2"
                 >
                   <span className="text-fg">{row.tokens.map((t) => `--${t}`).join(", ")}</span>
                   <span className="text-mute">{row.usage}</span>
@@ -291,7 +291,7 @@ export default async function ComponentPage({
               {props.map((prop) => (
                 <div
                   key={prop.name}
-                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 sm:grid-cols-2"
+                  className="grid grid-cols-1 gap-16 border-b border-border p-16 text-small last:border-b-0 tablet:grid-cols-2"
                 >
                   <span className="text-fg">
                     {prop.name}
@@ -307,7 +307,7 @@ export default async function ComponentPage({
 
         {entry.relationships.length > 0 ? (
           <Section number="10" title="Related" meta={`${entry.relationships.length}`}>
-            <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
               {entry.relationships.map((relationship) => {
                 const target = getComponent(relationship.target);
                 const linkable = target && target.meta.status !== "draft";
@@ -341,7 +341,7 @@ export default async function ComponentPage({
               {entry.changelog.map((change) => (
                 <div
                   key={change.version}
-                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 sm:flex-row"
+                  className="flex flex-col gap-8 border-b border-border p-16 text-small text-mute last:border-b-0 tablet:flex-row"
                 >
                   <span className="text-micro text-fg">v{change.version}</span>
                   <span className="text-micro text-mute">{formatDate(change.date)}</span>

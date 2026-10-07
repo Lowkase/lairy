@@ -16,13 +16,15 @@ export default function PatternsIndexPage() {
       group={shellSubnavGroup("patterns")}
     >
       <div className="flex flex-col gap-32">
-        <h1 className="font-heading text-doc-title font-semibold tracking-tight-neg-2 text-fg">Patterns</h1>
+        <h1 className="font-heading text-doc-title font-semibold tracking-tight-neg-2 text-fg">
+          Patterns
+        </h1>
         {entries.length === 0 ? (
           <div className="border border-border-2 bg-panel p-16 text-small text-mute">
             No patterns yet — docs/prd.md §7's pattern tickets are still ahead of this one.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-16 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-16 tablet:grid-cols-2">
             {entries.map((entry) => (
               <Link
                 key={entry.meta.id}
