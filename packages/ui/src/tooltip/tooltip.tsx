@@ -1,8 +1,8 @@
 "use client";
 
 import { zIndex } from "@lairy/tokens";
-import type { FocusEvent, KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
-import { cloneElement, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import type { KeyboardEvent, ReactElement, ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../cn";
 
@@ -60,12 +60,6 @@ function coordsFor(side: TooltipSide, trigger: DOMRect, bubble: DOMRect) {
   }
 }
 
-type TriggerProps = Record<string, unknown>;
-
-function callHandler(handler: unknown, event: unknown) {
-  if (typeof handler === "function") (handler as (event: unknown) => void)(event);
-}
-
 export interface TooltipProps {
   /** The control's name, one short line, no full stop — append a shortcut
    * after a middot where one exists (Content rules 1-3). */
@@ -77,7 +71,7 @@ export interface TooltipProps {
   /** The control being named, usually an icon-only button (anatomy #4). It
    * keeps its own focus ring; this only adds the hover/focus handlers and
    * the `aria-describedby` link. */
-  children: ReactElement<TriggerProps>;
+  children: ReactElement;
   id?: string;
   className?: string;
   /** Renders the trigger with no bubble and no `aria-describedby`, but keeps
@@ -147,9 +141,13 @@ export function Tooltip({
   useLayoutEffect(() => {
     if (!open || !mounted) return;
     function place() {
-      const trigger = wrapperRef.current;
+      const wrapper = wrapperRef.current;
       const bubble = bubbleRef.current;
-      if (!trigger || !bubble) return;
+      if (!wrapper || !bubble) return;
+      // Measure the trigger itself: the wrapper can be wider than it (a flex
+      // column stretches it to the full row), which would centre the bubble
+      // on the row instead of on the control.
+      const trigger = wrapper.firstElementChild ?? wrapper;
       const triggerRect = trigger.getBoundingClientRect();
       const bubbleRect = bubble.getBoundingClientRect();
       setPosition(coordsFor(resolveSide(side, triggerRect, bubbleRect), triggerRect, bubbleRect));
@@ -164,34 +162,31 @@ export function Tooltip({
     };
   }, [open, mounted, side]);
 
-  const trigger = disabled
-    ? children
-    : cloneElement(children, {
-        "aria-describedby": tooltipId,
-        onMouseEnter: (event: MouseEvent) => {
-          callHandler(children.props.onMouseEnter, event);
-          show(SHOW_DELAY);
-        },
-        onMouseLeave: (event: MouseEvent) => {
-          callHandler(children.props.onMouseLeave, event);
-          hide();
-        },
-        onFocus: (event: FocusEvent) => {
-          callHandler(children.props.onFocus, event);
-          show(0);
-        },
-        onBlur: (event: FocusEvent) => {
-          callHandler(children.props.onBlur, event);
-          hide();
-        },
-        onKeyDown: (event: KeyboardEvent) => {
-          callHandler(children.props.onKeyDown, event);
-          if (event.key === "Escape" && open) {
-            event.stopPropagation();
-            hide();
-          }
-        },
-      });
+  // `aria-describedby` goes on the trigger element itself, set through the
+  // DOM rather than `cloneElement`: when a Server Component passes a plain
+  // element (`<button>`) as `children`, React Flight can hand it over as a
+  // `react.lazy` object, which `cloneElement` can't clone — it produced an
+  // "Element type is invalid" crash on the client (#116). So the trigger is
+  // never cloned; the wrapper takes the pointer, focus and key handlers
+  // (React's focus events bubble) and the trigger is the wrapper's first child.
+  useLayoutEffect(() => {
+    if (disabled) return;
+    const trigger = wrapperRef.current?.firstElementChild;
+    if (!trigger) return;
+    const previous = trigger.getAttribute("aria-describedby");
+    trigger.setAttribute("aria-describedby", tooltipId);
+    return () => {
+      if (previous === null) trigger.removeAttribute("aria-describedby");
+      else trigger.setAttribute("aria-describedby", previous);
+    };
+  }, [disabled, tooltipId]);
+
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.key === "Escape" && open) {
+      event.stopPropagation();
+      hide();
+    }
+  }
 
   const bubble = (
     <span
@@ -210,8 +205,16 @@ export function Tooltip({
   );
 
   return (
-    <span ref={wrapperRef} className={cn("inline-flex", className)}>
-      {trigger}
+    <span
+      ref={wrapperRef}
+      className={cn("inline-flex", className)}
+      onMouseEnter={disabled ? undefined : () => show(SHOW_DELAY)}
+      onMouseLeave={disabled ? undefined : hide}
+      onFocus={disabled ? undefined : () => show(0)}
+      onBlur={disabled ? undefined : hide}
+      onKeyDown={disabled ? undefined : onKeyDown}
+    >
+      {children}
       {mounted && !disabled ? createPortal(bubble, document.body) : null}
     </span>
   );
