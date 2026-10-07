@@ -7,7 +7,9 @@ export function TooltipBadParagraphWithLinkExample() {
     <Tooltip
       content={
         <span className="flex flex-col gap-4">
-          <span>Copies the definition and its schedule, but not its history. The copy starts paused.</span>
+          <span>
+            Copies the definition and its schedule, but not its history. The copy starts paused.
+          </span>
           <span className="text-accent">Read more</span>
         </span>
       }
