@@ -3,14 +3,6 @@
 import type { MainRailItem, SubnavGroup } from "@lairy/ui";
 import { useEffect, useRef, type RefObject } from "react";
 
-// `min-h-0` and `inset-0` below are set via inline style, not their
-// Tailwind class: this repo's theme resets `--spacing-*: initial`
-// (ADR-0003/ADR-0004, tailwind-theme.css) and replaces it with a fixed
-// ramp starting at 4px (packages/tokens/tokens/spacing.json has no 0
-// step), which silently drops every utility that resolves its "0" through
-// that scale — confirmed absent from a production build. Filed as #100
-// (needs-triage, found during LDS-036), not fixed here.
-
 /**
  * Traps Tab inside `panelRef`, closes on Escape, and returns focus to
  * `triggerRef` on close — the same behaviour Header's own identity menu
@@ -94,7 +86,9 @@ export function PhoneTabBar({ items, activeId }: PhoneTabBarProps) {
                   isActive ? "text-fg" : "text-dim"
                 }`}
               >
-                <span className="flex size-22 shrink-0 items-center justify-center">{item.icon}</span>
+                <span className="flex size-22 shrink-0 items-center justify-center">
+                  {item.icon}
+                </span>
                 <span className="text-micro tracking-tight-6">{item.label}</span>
               </a>
             </li>
@@ -122,7 +116,13 @@ export interface PhonePagesOverlayProps {
  * own pages — the same scope as the desktop Subnav column it replaces
  * below tablet width.
  */
-export function PhonePagesOverlay({ label, group, activePageId, onClose, triggerRef }: PhonePagesOverlayProps) {
+export function PhonePagesOverlay({
+  label,
+  group,
+  activePageId,
+  onClose,
+  triggerRef,
+}: PhonePagesOverlayProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   useOverlayFocusTrap(true, panelRef, triggerRef, onClose);
 
@@ -132,8 +132,7 @@ export function PhonePagesOverlay({ label, group, activePageId, onClose, trigger
       role="dialog"
       aria-modal="true"
       aria-label={label}
-      className="animate-panel-in fixed z-20 flex flex-col bg-bg"
-      style={{ inset: 0 }}
+      className="animate-panel-in fixed inset-0 z-20 flex flex-col bg-bg"
     >
       <div
         className="flex shrink-0 items-center justify-between gap-12 border-b border-border px-16"
@@ -148,7 +147,7 @@ export function PhonePagesOverlay({ label, group, activePageId, onClose, trigger
           Close
         </button>
       </div>
-      <nav aria-label={label} className="flex-1 overflow-y-auto p-12" style={{ minHeight: 0 }}>
+      <nav aria-label={label} className="min-h-0 flex-1 overflow-y-auto p-12">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-12 py-8 px-4 text-label uppercase tracking-tight-14 text-dim">
             <span className="truncate">{group.label}</span>
@@ -168,8 +167,7 @@ export function PhonePagesOverlay({ label, group, activePageId, onClose, trigger
                 {isActive ? (
                   <span
                     aria-hidden="true"
-                    className="absolute top-1/2 h-16 -translate-y-1/2 border-l-2 border-accent"
-                    style={{ left: 0, width: 0 }}
+                    className="absolute left-0 top-1/2 h-16 w-0 -translate-y-1/2 border-l-2 border-accent"
                   />
                 ) : null}
                 {page.label}

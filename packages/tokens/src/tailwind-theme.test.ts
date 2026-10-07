@@ -50,6 +50,19 @@ describe("Tailwind theme (seam 4: no off-system CSS)", () => {
     expect(spacing).toContain("var(--spacing-16)");
   });
 
+  it("produces CSS for bare-zero spacing utilities (#100)", async () => {
+    // `--spacing-*: initial` removes Tailwind's implicit base spacing, so a
+    // utility whose value is the literal 0 compiles to nothing unless the
+    // ramp has its own 0 step. Silent in the browser, hence asserted here.
+    const design = await loadLairyDesignSystem();
+    const candidates = ["min-h-0", "min-w-0", "inset-0", "top-0", "left-0", "p-0", "gap-0", "w-0"];
+    const css = design.candidatesToCss(candidates);
+
+    candidates.forEach((candidate, i) => {
+      expect(css[i], candidate).not.toBeNull();
+    });
+  });
+
   it("produces CSS for the full LDS-012 token set", async () => {
     const design = await loadLairyDesignSystem();
     const [breakpoint, ease, shadow, animate, chip, color] = design.candidatesToCss([
