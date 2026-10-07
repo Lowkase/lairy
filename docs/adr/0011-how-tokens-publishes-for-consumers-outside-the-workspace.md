@@ -1,6 +1,6 @@
 # ADR-0011: How `@lairy/tokens` publishes for consumers outside the workspace
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-10-07
 
 ## Context
@@ -46,24 +46,29 @@ Use a custom export condition, for example `"lairy-source": "./src/index.ts"` ah
 - **For:** zero change to how workspace packages consume tokens, which removes the risk named in #64. Consumers get compiled JS, `.d.ts` and the CSS with no `transpilePackages`. The seam test already installs a packed tarball, so it can verify the real thing: drop `transpilePackages` from the fixture and the test fails today and passes with the fix.
 - **Against:** the published shape differs from the in-repo shape, so something has to prove the tarball is right (the seam test does). The package must be built before packing, and `dist/` must include the CSS (a copy step in `build`, with `publishConfig.exports` pointing `./css/*` at it). The package must stop being `private`, gain a real version, and have a `files` list.
 
-## Recommendation
+## Decision
 
-**Option D.** It is the only option that fixes the consumer problem without touching how the rest of the workspace resolves tokens, which was the explicit worry in #64. Option A can stand in as a one-line note until D lands. Option B and C each trade a consumer fix for workspace-wide churn.
+**Option D.** `exports` keeps pointing at `./src/` in the repo, and `publishConfig` overrides `main`, `types` and `exports` to point at `dist/` for the packed and published package. It is the only option that fixes the consumer problem without touching how the rest of the workspace resolves tokens, which was the explicit worry in #64. Options B and C each trade a consumer fix for workspace-wide churn. Option A can stand in as a one-line note until D lands.
 
-If D is accepted, the follow-up work is:
+Implementation, as one ticket:
 
-1. Add `files`, a real `version`, and remove `private` (or keep `private` until the first publish, if publishing is not yet decided).
+1. Add `files`, and make the version real (keep `private` until the publishing questions below are settled).
 2. Make `build` copy `src/css/` to `dist/css/`.
-3. Add `publishConfig` with `main`, `types` and `exports` pointing at `dist/`.
-4. Remove `transpilePackages: ["@lairy/tokens"]` from the seam test's fixture so the test proves the packed package works on its own.
+3. Add `publishConfig` with `main`, `types` and `exports` pointing at `dist/`, including `./css/*`.
+4. Remove `transpilePackages: ["@lairy/tokens"]` from the seam test's fixture, so the test proves the packed package works on its own.
 5. Remove the now-stale comments in `apps/docs/lib/registry.ts` and the seam test.
 
-## Questions for the owner
+## Still open
+
+These do not block the decision above, because D works with a packed tarball alone, but they need answers before the first real publish:
 
 - **Where does it publish?** Public npm, a private registry or GitHub Packages? ADR-0002 says "versioned package" but not where it lives. This decides whether registry items can use a version range instead of the bare name, and whether the shadcn CLI can resolve it without a manual install.
-- **Is publishing needed now,** or only a package shaped correctly for when it is? Option D works with a packed tarball alone, so the seam test can prove the shape before any publish.
 - **Versioning policy.** Do token changes follow semver (a palette change is a minor, a removed token is a major), and who bumps it?
 
 ## Consequences
 
-To be filled in once an option is accepted.
+- Consumers outside the workspace get compiled JS, type declarations and the CSS from a normal install, with no `transpilePackages` and no Next-specific setup. Non-Next consumers and plain Node scripts can import it.
+- Nothing changes for workspace packages: they keep resolving tokens from source, so there is no new build-ordering or stale-`dist/` risk in the dev loop.
+- The published shape differs from the in-repo shape. The seam test is what keeps that honest: it installs the packed tarball into a fresh app and must pass without `transpilePackages`. Any change to `publishConfig` or `files` is covered by it.
+- `dist/` must include the CSS, so `build` has a copy step that can drift from `src/css/`; the seam test's CSS imports cover it.
+- The package stays `private` until the publishing destination and versioning policy are decided, so no accidental publish can happen in the meantime.
