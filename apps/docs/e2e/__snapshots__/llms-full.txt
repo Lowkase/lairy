@@ -750,6 +750,97 @@ There is no tonal chip — no info chip, no danger chip. Amber means on and that
 
 ---
 
+## Drawer
+
+Status: stable · Version: 1.1.0 · Updated: 23 Aug 2026 · /components/drawer
+
+Purpose: A side panel showing the details of one thing without leaving the current view.
+
+### Description
+
+A drawer is a full-height panel that slides in from the right and sits beside the work instead of on top of it.
+
+It is the surface for detail, settings and editing — anything where the page behind stays relevant and the operator should still be able to read it. That is the line against a Modal: a modal interrupts and demands one answer before anything else happens, while a drawer accompanies. If the operator can safely keep looking at the table they came from, it is a drawer.
+
+### Anatomy
+
+1. Scrim — A dim over the work behind, never a blur strong enough to hide it. It is there to say the panel has focus, not to take the page away — a click on it closes the drawer.
+2. Panel and left hairline — Full height, anchored to the right, square on every corner. The 1px left hairline is the only thing separating it from the page, which is why it is the one border allowed to carry accent.
+3. Header — The record's name at 17.5px with a tracked meta line under it, and the close glyph in the far corner. It stays pinned so the operator always knows what they are looking at.
+4. Body — The only scrolling region. One column at SM and MD; labels sit above values so a long value can wrap without breaking the grid.
+5. Footer — Pinned to the bottom, actions right-aligned, primary last. It holds the single commit for everything in the body — nothing above it saves on its own.
+
+### Variants
+
+- SM (--bg, --border, --accent): 360px wide. One column, labels above values, no nested panels.
+- MD (--bg, --border, --accent): 480px wide, full height, 1px left hairline, no radius on the outer edge. Slides in over 260ms; the scrim dims rather than blurs the work behind it.
+- LG (--bg, --border, --accent): 720px wide. Two columns are allowed at this size only; keep the primary action pinned to the footer so it survives long scrolls.
+
+There is no full-screen drawer. A panel that covers the page has stopped accompanying the work and become a route of its own — at that point it is a page, and it should have a URL, a breadcrumb and a back button rather than a scrim.
+
+### Use when
+
+- The operator is inspecting or editing one record while the list it came from stays useful.
+- The content is longer than a modal should be — a form with sections, an activity log, a config.
+- They will move through several records in turn, and reopening a centred dialog each time would be punishing.
+- The work behind must remain readable for reference while the panel is open.
+
+### Use something else when
+
+- modal: One decision must be made before anything else can proceed — that is a Modal.
+- popover: It is a short set of choices anchored to the control that opened it — that is a Popover.
+- toast: It is only confirming that something happened — that is a Toast.
+
+### Content rules
+
+- The header names the thing, not the task: "Details", "AUT·02" — never "Edit item details" repeated from the button that opened it.
+- The meta line under the title carries the identifier and nothing else, so the operator can quote it without opening anything further.
+- Labels are sentence case and sit above their values; a value that is empty says so in --faint rather than leaving a blank.
+- The footer verb states the outcome — "Save changes", "Run now" — and its neighbour is always the plain word "Cancel".
+- If the body needs more than two headed sections, the content has outgrown a drawer and belongs on a page.
+
+### Examples
+
+- [demo] Demo
+- [demo] SM
+- [demo] MD
+- [demo] LG
+- [good] Pinned footer commit — The commit lives in a pinned footer, so it survives any length of scroll.
+- [bad] Commits scattered in the body — Never scatter commits through the body — the operator stops knowing what is saved.
+- [good] One panel — One panel, and the work behind it still legible through a dimming scrim.
+- [bad] A drawer on a drawer — Never stack a drawer on a drawer — the second one has no way back that reads as one.
+- [good] Named header, visible close — A header that names the record, with the close glyph in its own corner.
+- [bad] No title, no visible close — Never open a drawer with no title and no visible close — the scrim is not an exit.
+
+### Accessibility
+
+- Dialog, and modal about it: The panel is role="dialog" with aria-modal, labelled by its own header, so the announcement names the record rather than "dialog".
+- Focus in, focus back: Focus moves to the panel on open and is trapped inside it; on close it returns to the exact control that opened the drawer, never to the top of the page.
+- Two ways out: Escape and the close glyph both dismiss, and the scrim click is a third — but the glyph is the only one a keyboard user is required to find, so it is never hidden on hover.
+- Reading order: Header, then body, then footer in the DOM, matching what the eye does. The pinned footer is last in source even though it is visually fixed.
+
+### Tokens
+
+- --bg: Panel surface.
+- --border-2: Left hairline against the page.
+- --border: Header and footer rules.
+- --accent: Primary commit in the footer.
+- --dim, --mute: Body copy and meta line.
+
+### Related
+
+- modal (often-confused-with): A modal interrupts and needs one answer; a drawer accompanies work that carries on around it.
+- popover (often-confused-with): A popover is anchored to its trigger and holds a few choices; a drawer is anchored to the viewport and holds a record.
+- table (often-confused-with): The table is where drawers are opened from, and the row stays highlighted while its panel is up.
+
+### Changelog
+
+- v1.1.0 (23 Aug 2026): Scrim changed from blur to dim so the work behind stays readable; footer commit made mandatory.
+- v1.0.1 (19 Aug 2026): LG widened to 720px and allowed two columns; full-screen drawer ruled out.
+- v1.0.0 (11 Aug 2026): Drawer introduced at three widths with a pinned header and footer.
+
+---
+
 ## Empty state
 
 Status: stable · Version: 1.1.0 · Updated: 1 Oct 2026 · /components/empty-state

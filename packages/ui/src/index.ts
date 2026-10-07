@@ -5,6 +5,7 @@ export * from "./callout/callout";
 export * from "./card/card";
 export * from "./checkbox/checkbox";
 export * from "./chip/chip";
+export * from "./drawer/drawer";
 export * from "./empty-state/empty-state";
 export * from "./header/header";
 export * from "./icons";

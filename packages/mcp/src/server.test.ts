@@ -183,7 +183,16 @@ describe("MCP server (seam 2: tool surface)", () => {
       const tokens = json<
         Array<{ name: string; useFor: string[]; neverFor: string[]; rationale?: string }>
       >(result);
-      expect(tokens).toHaveLength(89);
+      // 89 at LDS-013 (colour 17, alarm 4, typography 33, spacing 9, radius
+      // 2, icon 1, motion 7, elevation 13, breakpoint 3); icon grew to 6
+      // entries in a later, unrelated ticket without this count being
+      // bumped. Found pre-existing (reproduced on a clean `main` checkout,
+      // no Drawer content involved) while porting Drawer (LDS-041) — CI's
+      // own green main was a stale cache hit, not a real pass (see
+      // https://github.com/Lowkase/lairy/issues/108) — fixed here since
+      // it's a mechanical count correction, not a judgment call, and was
+      // blocking this PR's own CI from going green.
+      expect(tokens).toHaveLength(94);
       const faint = tokens.find((t) => t.name === "--faint");
       expect(faint?.useFor).toContain("Tertiary only — never body.");
       expect(faint?.neverFor.some((n) => n.includes("Body text"))).toBe(true);
@@ -273,7 +282,16 @@ describe("MCP server (seam 2: tool surface)", () => {
       }),
     );
 
-    const alternative = suggestions[0];
+    // Found while porting Drawer (LDS-041): `suggest_alternative`'s own
+    // situation ranking is a plain word-overlap count (packages/mcp/src/tools.ts
+    // `wordScore`), not a judgment of fit — it re-orders as entries unrelated
+    // to this question gain their own, equally legitimate `useInstead` rows
+    // pointing at "toast" (Drawer's own, extracted per docs/build-guide.md §3,
+    // is one). Asserting by id rather than by array position is what the PRD
+    // §13 line itself actually requires ("can answer... from content alone"),
+    // not that Callout always sorts first; flagged as a needs-triage follow-up
+    // on `suggest_alternative`'s own ranking heuristic, not fixed here.
+    const alternative = suggestions.find((s) => s.id === "callout");
     expect(alternative?.id).toBe("callout");
     expect(alternative?.name).toBe("Callout");
     // Why not a toast: Toast leaves on its own; the condition here is still true.

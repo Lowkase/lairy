@@ -1,0 +1,19 @@
+{
+  "drawer": {
+    "width-sm": {
+      "$type": "dimension",
+      "$value": "360px",
+      "$description": "Drawer Sizes 'SM' (drawerSizeData 'sm') — a read-only detail panel: properties, metadata, a short activity list. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — the same component-specific exception as --popover-panel-width and --modal-width-*. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-041)."
+    },
+    "width-md": {
+      "$type": "dimension",
+      "$value": "480px",
+      "$description": "Drawer Sizes 'MD' (drawerSizeData 'md') — the default: detail, settings and editing, anything where the page behind stays relevant. Same non-ramp exception as --drawer-width-sm, flagged in the PR (LDS-041)."
+    },
+    "width-lg": {
+      "$type": "dimension",
+      "$value": "720px",
+      "$description": "Drawer Sizes 'LG' (drawerSizeData 'lg') — dense editing: multi-section forms, a nested list plus its editor, or a config with a live preview. Same non-ramp exception as --drawer-width-sm, flagged in the PR (LDS-041)."
+    }
+  }
+}

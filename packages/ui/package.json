@@ -14,6 +14,7 @@
     "./card/examples": "./src/card/examples/index.ts",
     "./checkbox/examples": "./src/checkbox/examples/index.ts",
     "./chip/examples": "./src/chip/examples/index.ts",
+    "./drawer/examples": "./src/drawer/examples/index.ts",
     "./empty-state/examples": "./src/empty-state/examples/index.ts",
     "./header/examples": "./src/header/examples/index.ts",
     "./loading/examples": "./src/loading/examples/index.ts",

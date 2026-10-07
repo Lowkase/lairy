@@ -119,10 +119,11 @@ test.describe("Shell", () => {
   });
 
   test("an entry with no built component shows a placeholder, not a 404", async ({ page }) => {
-    // Modal (LDS-040) used to be this test's example of an unbuilt entry;
-    // Drawer is next in line now, per modal.ts's own extractionNotes.
-    await page.goto("/components/drawer");
+    // Drawer (LDS-041) used to be this test's example of an unbuilt entry;
+    // Toast (LDS-044) is next in line now, per drawer.ts's own
+    // extractionNotes.
+    await page.goto("/components/toast");
     await expect(page.getByText(/no built component yet/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Drawer", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Toast", level: 1 })).toBeVisible();
   });
 });
