@@ -94,6 +94,20 @@ describe("Tooltip", () => {
     expect(bubble.className).toContain("opacity-0");
   });
 
+  it("renders the bubble in a portal on document.body, outside any clipping ancestor (#114)", () => {
+    render(
+      <div data-testid="clip" style={{ overflow: "hidden" }}>
+        <Tooltip content="Duplicate run · D">
+          <button type="button">Duplicate run</button>
+        </Tooltip>
+      </div>,
+    );
+    const bubble = screen.getByRole("tooltip", { hidden: true });
+    expect(screen.getByTestId("clip")).not.toContainElement(bubble);
+    expect(bubble.parentElement).toBe(document.body);
+    expect(bubble.className).toContain("fixed");
+  });
+
   it("the bubble never carries pointer events (Rules 'No pointer events')", () => {
     renderTooltip();
     const bubble = screen.getByRole("tooltip", { hidden: true });

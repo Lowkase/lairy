@@ -1,7 +1,9 @@
 "use client";
 
+import { zIndex } from "@lairy/tokens";
 import type { FocusEvent, KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import { cloneElement, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "../cn";
 
 export type TooltipSide = "top" | "bottom" | "left" | "right";
@@ -17,12 +19,10 @@ const SHOW_DELAY = 400;
  * Space-8 per docs/prd.md §8.3's own default ("9 → 8"). */
 const EDGE_GAP = 8;
 
-const SIDE_CLASS: Record<TooltipSide, string> = {
-  top: "bottom-full left-1/2 mb-8 -translate-x-1/2",
-  bottom: "top-full left-1/2 mt-8 -translate-x-1/2",
-  left: "right-full top-1/2 mr-8 -translate-y-1/2",
-  right: "left-full top-1/2 ml-8 -translate-y-1/2",
-};
+/** The top of the z ladder: a tooltip is transient and names a control, so it
+ * has to stay legible over the Modal or Drawer that holds that control. There
+ * is no tooltip stop of its own on the ladder (Elevation "z"). */
+const BUBBLE_Z = { zIndex: zIndex.toast };
 
 /** Flips to the opposite side when the preferred one is clipped against the
  * viewport (Tooltip Rules "Flips when clipped") — never shifted, so the
@@ -32,11 +32,31 @@ function resolveSide(side: TooltipSide, triggerRect: DOMRect, bubbleRect: DOMRec
     case "top":
       return triggerRect.top - bubbleRect.height - EDGE_GAP < 0 ? "bottom" : "top";
     case "bottom":
-      return triggerRect.bottom + bubbleRect.height + EDGE_GAP > window.innerHeight ? "top" : "bottom";
+      return triggerRect.bottom + bubbleRect.height + EDGE_GAP > window.innerHeight
+        ? "top"
+        : "bottom";
     case "left":
       return triggerRect.left - bubbleRect.width - EDGE_GAP < 0 ? "right" : "left";
     case "right":
       return triggerRect.right + bubbleRect.width + EDGE_GAP > window.innerWidth ? "left" : "right";
+  }
+}
+
+/** Viewport coordinates for the bubble on `side` of the trigger, centred on
+ * the cross axis. The bubble is `fixed`, so these are what
+ * `getBoundingClientRect` reports, with no scroll offset to add. */
+function coordsFor(side: TooltipSide, trigger: DOMRect, bubble: DOMRect) {
+  const centreX = trigger.left + trigger.width / 2 - bubble.width / 2;
+  const centreY = trigger.top + trigger.height / 2 - bubble.height / 2;
+  switch (side) {
+    case "top":
+      return { top: trigger.top - bubble.height - EDGE_GAP, left: centreX };
+    case "bottom":
+      return { top: trigger.bottom + EDGE_GAP, left: centreX };
+    case "left":
+      return { top: centreY, left: trigger.left - bubble.width - EDGE_GAP };
+    case "right":
+      return { top: centreY, left: trigger.right + EDGE_GAP };
   }
 }
 
@@ -73,7 +93,11 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
   const generatedId = useId();
   const tooltipId = id ?? generatedId;
   const [open, setOpen] = useState(false);
-  const [resolvedSide, setResolvedSide] = useState<TooltipSide>(side);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  // The bubble renders in a portal on `document.body`, so no ancestor's
+  // `overflow` can clip it (a collapsed MainRail's labels sit outside the
+  // rail). `document` doesn't exist on the server, so it mounts after hydration.
+  const [mounted, setMounted] = useState(false);
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const bubbleRef = useRef<HTMLSpanElement>(null);
   const showTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -101,13 +125,27 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
 
   useEffect(() => clearShowTimer, []);
 
+  useEffect(() => setMounted(true), []);
+
   useLayoutEffect(() => {
-    if (!open) return;
-    const trigger = wrapperRef.current;
-    const bubble = bubbleRef.current;
-    if (!trigger || !bubble) return;
-    setResolvedSide(resolveSide(side, trigger.getBoundingClientRect(), bubble.getBoundingClientRect()));
-  }, [open, side]);
+    if (!open || !mounted) return;
+    function place() {
+      const trigger = wrapperRef.current;
+      const bubble = bubbleRef.current;
+      if (!trigger || !bubble) return;
+      const triggerRect = trigger.getBoundingClientRect();
+      const bubbleRect = bubble.getBoundingClientRect();
+      setPosition(coordsFor(resolveSide(side, triggerRect, bubbleRect), triggerRect, bubbleRect));
+    }
+    place();
+    // Capture, so a scroll in any ancestor container moves the bubble too.
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+    };
+  }, [open, mounted, side]);
 
   const trigger = cloneElement(children, {
     "aria-describedby": tooltipId,
@@ -136,22 +174,26 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
     },
   });
 
+  const bubble = (
+    <span
+      ref={bubbleRef}
+      id={tooltipId}
+      role="tooltip"
+      data-slot="tooltip"
+      style={{ ...BUBBLE_Z, top: position.top, left: position.left }}
+      className={cn(
+        "pointer-events-none fixed whitespace-nowrap rounded-ds border border-accent-line bg-bg px-8 py-6 text-label text-fg opacity-0 shadow-bubble transition-opacity duration-160",
+        open && "opacity-100",
+      )}
+    >
+      {content}
+    </span>
+  );
+
   return (
-    <span ref={wrapperRef} className={cn("relative inline-flex", className)}>
+    <span ref={wrapperRef} className={cn("inline-flex", className)}>
       {trigger}
-      <span
-        ref={bubbleRef}
-        id={tooltipId}
-        role="tooltip"
-        data-slot="tooltip"
-        className={cn(
-          "pointer-events-none absolute z-20 whitespace-nowrap rounded-ds border border-accent-line bg-bg px-8 py-6 text-label text-fg opacity-0 shadow-bubble transition-opacity duration-160",
-          SIDE_CLASS[resolvedSide],
-          open && "opacity-100",
-        )}
-      >
-        {content}
-      </span>
+      {mounted ? createPortal(bubble, document.body) : null}
     </span>
   );
 }
