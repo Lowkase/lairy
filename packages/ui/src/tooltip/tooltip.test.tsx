@@ -108,6 +108,25 @@ describe("Tooltip", () => {
     expect(bubble.className).toContain("fixed");
   });
 
+  it("disabled renders the trigger bare: no bubble, no aria-describedby, same element on re-enable", () => {
+    const { rerender } = render(
+      <Tooltip content="Duplicate run · D" disabled>
+        <button type="button">Duplicate run</button>
+      </Tooltip>,
+    );
+    const trigger = screen.getByRole("button", { name: "Duplicate run" });
+    expect(trigger).not.toHaveAttribute("aria-describedby");
+    expect(screen.queryByRole("tooltip", { hidden: true })).not.toBeInTheDocument();
+
+    rerender(
+      <Tooltip content="Duplicate run · D">
+        <button type="button">Duplicate run</button>
+      </Tooltip>,
+    );
+    expect(screen.getByRole("button", { name: "Duplicate run" })).toBe(trigger);
+    expect(trigger).toHaveAttribute("aria-describedby");
+  });
+
   it("the bubble never carries pointer events (Rules 'No pointer events')", () => {
     renderTooltip();
     const bubble = screen.getByRole("tooltip", { hidden: true });

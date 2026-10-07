@@ -80,6 +80,11 @@ export interface TooltipProps {
   children: ReactElement<TriggerProps>;
   id?: string;
   className?: string;
+  /** Renders the trigger with no bubble and no `aria-describedby`, but keeps
+   * the same element tree, so a control that only sometimes needs naming
+   * (an icon that gains a visible label when there is room) isn't remounted
+   * — and doesn't lose focus — when the flag flips. */
+  disabled?: boolean;
 }
 
 /**
@@ -89,7 +94,14 @@ export interface TooltipProps {
  * it without moving focus anywhere — focus was never off the trigger to
  * begin with (Accessibility "Keyboard shows it too", "Nothing to chase").
  */
-export function Tooltip({ content, side = "top", children, id, className }: TooltipProps) {
+export function Tooltip({
+  content,
+  side = "top",
+  children,
+  id,
+  className,
+  disabled = false,
+}: TooltipProps) {
   const generatedId = useId();
   const tooltipId = id ?? generatedId;
   const [open, setOpen] = useState(false);
@@ -127,6 +139,11 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
 
   useEffect(() => setMounted(true), []);
 
+  // Disabling mid-hover must not leave a stale bubble to reappear on re-enable.
+  useEffect(() => {
+    if (disabled) hide();
+  }, [disabled]);
+
   useLayoutEffect(() => {
     if (!open || !mounted) return;
     function place() {
@@ -147,32 +164,34 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
     };
   }, [open, mounted, side]);
 
-  const trigger = cloneElement(children, {
-    "aria-describedby": tooltipId,
-    onMouseEnter: (event: MouseEvent) => {
-      callHandler(children.props.onMouseEnter, event);
-      show(SHOW_DELAY);
-    },
-    onMouseLeave: (event: MouseEvent) => {
-      callHandler(children.props.onMouseLeave, event);
-      hide();
-    },
-    onFocus: (event: FocusEvent) => {
-      callHandler(children.props.onFocus, event);
-      show(0);
-    },
-    onBlur: (event: FocusEvent) => {
-      callHandler(children.props.onBlur, event);
-      hide();
-    },
-    onKeyDown: (event: KeyboardEvent) => {
-      callHandler(children.props.onKeyDown, event);
-      if (event.key === "Escape" && open) {
-        event.stopPropagation();
-        hide();
-      }
-    },
-  });
+  const trigger = disabled
+    ? children
+    : cloneElement(children, {
+        "aria-describedby": tooltipId,
+        onMouseEnter: (event: MouseEvent) => {
+          callHandler(children.props.onMouseEnter, event);
+          show(SHOW_DELAY);
+        },
+        onMouseLeave: (event: MouseEvent) => {
+          callHandler(children.props.onMouseLeave, event);
+          hide();
+        },
+        onFocus: (event: FocusEvent) => {
+          callHandler(children.props.onFocus, event);
+          show(0);
+        },
+        onBlur: (event: FocusEvent) => {
+          callHandler(children.props.onBlur, event);
+          hide();
+        },
+        onKeyDown: (event: KeyboardEvent) => {
+          callHandler(children.props.onKeyDown, event);
+          if (event.key === "Escape" && open) {
+            event.stopPropagation();
+            hide();
+          }
+        },
+      });
 
   const bubble = (
     <span
@@ -193,7 +212,7 @@ export function Tooltip({ content, side = "top", children, id, className }: Tool
   return (
     <span ref={wrapperRef} className={cn("inline-flex", className)}>
       {trigger}
-      {mounted ? createPortal(bubble, document.body) : null}
+      {mounted && !disabled ? createPortal(bubble, document.body) : null}
     </span>
   );
 }
