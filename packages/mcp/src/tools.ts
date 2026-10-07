@@ -241,9 +241,17 @@ function significantWords(text: string): string[] {
   );
 }
 
+/** Folds a plain plural ("toasts" → "toast") so a whole-word match still
+ * works across singular and plural, without a real stemmer. */
+function foldPlural(word: string): string {
+  return word.length > 3 && word.endsWith("s") && !word.endsWith("ss") ? word.slice(0, -1) : word;
+}
+
+/** How many of `words` appear in `text` as whole words. Not a substring
+ * test: "act" must not hit "activity" (#118). */
 function wordScore(text: string, words: string[]): number {
-  const lower = text.toLowerCase();
-  return words.reduce((sum, word) => sum + (lower.includes(word) ? 1 : 0), 0);
+  const present = new Set((text.toLowerCase().match(/[a-z0-9]+/g) ?? []).map(foldPlural));
+  return words.reduce((sum, word) => sum + (present.has(foldPlural(word)) ? 1 : 0), 0);
 }
 
 /**

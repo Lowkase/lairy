@@ -176,6 +176,34 @@ describe("MCP server (seam 2: tool surface)", () => {
     });
   });
 
+  describe("search_guidelines whole-word matching (#118)", () => {
+    it("does not match a query word that is only a substring of another word", async () => {
+      const client = await connect();
+      const matches = json<Array<{ matches: Array<{ text: string }> }>>(
+        await client.callTool({ name: "search_guidelines", arguments: { query: "act" } }),
+      );
+      // Every hit must contain "act" (or "acts") as a whole word, never just
+      // inside "action", "activity", "actions" and the like.
+      for (const entry of matches) {
+        for (const field of entry.matches) {
+          expect(field.text.toLowerCase()).toMatch(/\bacts?\b/);
+        }
+      }
+    });
+
+    it("still matches across singular and plural", async () => {
+      const client = await connect();
+      const singular = json<Array<{ id: string }>>(
+        await client.callTool({ name: "search_guidelines", arguments: { query: "toast" } }),
+      );
+      const plural = json<Array<{ id: string }>>(
+        await client.callTool({ name: "search_guidelines", arguments: { query: "toasts" } }),
+      );
+      expect(singular.length).toBeGreaterThan(0);
+      expect(plural.map((m) => m.id)).toEqual(singular.map((m) => m.id));
+    });
+  });
+
   describe("get_tokens", () => {
     it("filters by group, case-insensitively", async () => {
       const client = await connect();
