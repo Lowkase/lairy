@@ -1,9 +1,10 @@
 "use client";
 
 import { shell } from "@lairy/tokens";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { cn } from "../cn";
 import { InlineIcon } from "../icons/inline-icon";
+import { Tooltip } from "../tooltip/tooltip";
 import { MainRailMark } from "./main-rail-mark";
 
 export interface MainRailItem {
@@ -39,6 +40,26 @@ export interface MainRailProps {
    * shell) so the two landmarks stay distinguishable. */
   navLabel?: string;
   className?: string;
+}
+
+/** Names an icon-only control while the rail is collapsed — the label is
+ * `sr-only` there, so the Tooltip is how a sighted operator learns it. It
+ * stays mounted when expanded (disabled) so toggling the rail never remounts
+ * the control, which would drop its keyboard focus. */
+function RailTooltip({
+  label,
+  collapsed,
+  children,
+}: {
+  label: string;
+  collapsed: boolean;
+  children: ReactElement<Record<string, unknown>>;
+}) {
+  return (
+    <Tooltip content={label} side="right" disabled={!collapsed} className="flex w-full">
+      {children}
+    </Tooltip>
+  );
 }
 
 /**
@@ -86,53 +107,53 @@ export function MainRail({
             const isActive = item.id === activeId;
             return (
               <li key={item.id}>
-                <a
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  title={collapsed ? item.label : undefined}
-                  className={cn(
-                    "group relative flex items-center gap-12 rounded-ds px-8 py-8 text-fg transition-colors duration-160 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-                    !isActive && "hover:bg-panel-2",
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
+                <RailTooltip label={item.label} collapsed={collapsed}>
+                  <a
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "absolute left-0 top-1/2 h-16 w-0 -translate-y-1/2 border-l-2",
-                      isActive ? "border-accent" : "border-transparent",
+                      "relative flex w-full items-center gap-12 rounded-ds px-8 py-8 text-fg transition-colors duration-160 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+                      !isActive && "hover:bg-panel-2",
                     )}
-                  />
-                  <span className="flex size-22 shrink-0 items-center justify-center">{item.icon}</span>
-                  <span className={cn("truncate text-label tracking-tight-8", collapsed && "sr-only")}>
-                    {item.label}
-                  </span>
-                  {collapsed ? (
+                  >
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute left-full ml-8 whitespace-nowrap rounded-ds border border-border-2 bg-bg px-8 py-4 text-label text-fg opacity-0 shadow-bubble transition-opacity duration-160 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      className={cn(
+                        "absolute left-0 top-1/2 h-16 w-0 -translate-y-1/2 border-l-2",
+                        isActive ? "border-accent" : "border-transparent",
+                      )}
+                    />
+                    <span className="flex size-22 shrink-0 items-center justify-center">
+                      {item.icon}
+                    </span>
+                    <span
+                      className={cn("truncate text-label tracking-tight-8", collapsed && "sr-only")}
                     >
                       {item.label}
                     </span>
-                  ) : null}
-                </a>
+                  </a>
+                </RailTooltip>
               </li>
             );
           })}
         </ul>
 
-        <button
-          type="button"
-          onClick={() => onCollapsedChange(!collapsed)}
-          title={collapsed ? "Expand" : undefined}
-          className="mx-8 mb-8 flex shrink-0 items-center gap-12 rounded-ds px-8 py-8 text-dim transition-colors duration-160 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-        >
-          <span className="flex size-22 shrink-0 items-center justify-center">
-            <InlineIcon name="arrow" className={collapsed ? "-scale-x-100" : undefined} />
-          </span>
-          <span className={cn("text-label tracking-tight-8", collapsed && "sr-only")}>
-            {collapsed ? "Expand" : "Collapse"}
-          </span>
-        </button>
+        <div className="mx-8 mb-8 flex shrink-0">
+          <RailTooltip label="Expand" collapsed={collapsed}>
+            <button
+              type="button"
+              onClick={() => onCollapsedChange(!collapsed)}
+              className="flex w-full shrink-0 items-center gap-12 rounded-ds px-8 py-8 text-dim transition-colors duration-160 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <span className="flex size-22 shrink-0 items-center justify-center">
+                <InlineIcon name="arrow" className={collapsed ? "-scale-x-100" : undefined} />
+              </span>
+              <span className={cn("text-label tracking-tight-8", collapsed && "sr-only")}>
+                {collapsed ? "Expand" : "Collapse"}
+              </span>
+            </button>
+          </RailTooltip>
+        </div>
       </nav>
     </div>
   );
