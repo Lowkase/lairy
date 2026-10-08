@@ -72,3 +72,6 @@ These do not block the decision above, because D works with a packed tarball alo
 - The published shape differs from the in-repo shape. The seam test is what keeps that honest: it installs the packed tarball into a fresh app and must pass without `transpilePackages`. Any change to `publishConfig` or `files` is covered by it.
 - `dist/` must include the CSS, so `build` has a copy step that can drift from `src/css/`; the seam test's CSS imports cover it.
 - The package stays `private` until the publishing destination and versioning policy are decided, so no accidental publish can happen in the meantime.
+- Packing must use `pnpm pack` or `pnpm publish`: `npm pack` ignores `publishConfig` export overrides and would ship the source entry points. The seam test packs with pnpm for that reason.
+- Native Node ESM needs explicit `.js` extensions on relative imports. The source stays extensionless, because a `.js` specifier pointing at a `.ts` file does not resolve under Turbopack in this workspace, so `build` adds the extensions to the compiled `.js` and `.d.ts` after `tsc` (`packages/tokens/scripts/add-js-extensions.mjs`).
+- `pnpm pack` still includes the original `main` file (`src/index.ts`) in the tarball, even though `files` lists only `dist`. It is unused and harmless.

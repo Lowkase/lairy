@@ -1,7 +1,7 @@
 import { execFile, spawn, type ChildProcess } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { promisify } from "node:util";
 import { expect, test } from "@playwright/test";
 
@@ -94,16 +94,8 @@ function scaffoldFixtureApp(dir: string): void {
     ),
   );
 
-  // @lairy/tokens ships raw TypeScript (packages/tokens/package.json's
-  // "exports" point at src, not a compiled dist) — a consuming app needs
-  // Next to run its own transform over it, same as apps/docs does for
-  // itself (apps/docs/next.config.ts). Confirmed necessary independent of
-  // how the package is installed (flagged in the PR as a follow-up: the
-  // package isn't yet shaped for external consumption without this).
-  writeFileSync(
-    join(dir, "next.config.mjs"),
-    `export default { transpilePackages: ["@lairy/tokens"] };\n`,
-  );
+  // No next.config: the packed @lairy/tokens ships compiled JS (ADR-0011), so
+  // a consuming app needs no `transpilePackages` for it.
 
   writeFileSync(
     join(dir, "postcss.config.mjs"),
@@ -178,15 +170,15 @@ test.describe("Callout installs from the registry (seam 5)", () => {
       await test.step("install @lairy/tokens locally", async () => {
         // A packed tarball, not a workspace symlink: the fixture lives
         // outside this repo's directory tree, and Next's bundler won't
-        // follow a node_modules symlink that escapes it. This also happens
-        // to be a closer stand-in for how a real published package lands.
-        const { stdout } = await execFileAsync(
-          "npm",
-          ["pack", "--pack-destination", fixtureDir],
-          { cwd: TOKENS_DIR },
-        );
-        const tarballName = stdout.trim().split("\n").pop();
-        if (!tarballName) throw new Error("npm pack did not report a tarball filename.");
+        // follow a node_modules symlink that escapes it. `pnpm pack`, not
+        // `npm pack`: only pnpm applies the package's `publishConfig`
+        // overrides (ADR-0011), so this is what a consumer really receives.
+        const { stdout } = await execFileAsync("pnpm", ["pack", "--pack-destination", fixtureDir], {
+          cwd: TOKENS_DIR,
+        });
+        const tarballPath = stdout.trim().split("\n").pop();
+        if (!tarballPath) throw new Error("pnpm pack did not report a tarball path.");
+        const tarballName = basename(tarballPath);
         await execFileAsync(
           "npm",
           ["install", join(fixtureDir, tarballName), "--no-audit", "--no-fund"],
