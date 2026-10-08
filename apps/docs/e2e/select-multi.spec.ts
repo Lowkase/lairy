@@ -126,7 +126,8 @@ test.describe("Select (Multi) dev route", () => {
     const overflow = page.locator('[data-slot="select-multi-overflow"]');
     await expect(page.getByRole("combobox", { name: "Stages" })).toHaveCount(2);
     await expect(overflow).toHaveCount(1);
-    await expect(overflow).toHaveText(/^\+\d+ more$/);
+    // Font metrics differ per OS: where not even one token fits, the chip is the bare count.
+    await expect(overflow).toHaveText(/^(\+\d+ more|\d+ selected)$/);
   });
 
   test("an errored field ties its message to the field via aria-describedby and aria-invalid", async ({ page }) => {
