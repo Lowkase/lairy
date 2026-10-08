@@ -32,6 +32,7 @@ import { TABS_EXAMPLES } from "./tabs-examples";
 import { TEXT_EXAMPLES } from "./text-examples";
 import { TEXT_INPUT_EXAMPLES } from "./text-input-examples";
 import { TEXTAREA_EXAMPLES } from "./textarea-examples";
+import { TOAST_EXAMPLES } from "./toast-examples";
 import { TOOLTIP_EXAMPLES } from "./tooltip-examples";
 import { USAGE_CARD_EXAMPLES } from "./usage-card-examples";
 
@@ -61,6 +62,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   text: TEXT_EXAMPLES,
   "text-input": TEXT_INPUT_EXAMPLES,
   textarea: TEXTAREA_EXAMPLES,
+  toast: TOAST_EXAMPLES,
   tooltip: TOOLTIP_EXAMPLES,
   "usage-card": USAGE_CARD_EXAMPLES,
 };

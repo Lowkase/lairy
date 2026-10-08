@@ -189,3 +189,9 @@ export const drawer = {
   "widthMd": "480px",
   "widthLg": "720px"
 } as const;
+
+export const toastTokens = {
+  "width": "320px",
+  "top": "78px",
+  "dismissAfter": "3200ms"
+} as const;

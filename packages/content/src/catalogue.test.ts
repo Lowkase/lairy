@@ -150,9 +150,10 @@ describe("catalogue (duplicate ids and dangling relationship targets)", () => {
     expect(entry?.relationships).toHaveLength(4);
   });
 
-  it("Toast exists as a draft stub, linked from Callout as often-confused-with", () => {
+  it("Toast is a full entry, still linked from Callout as often-confused-with", () => {
     const toast = getComponent("toast");
-    expect(toast?.meta.status).toBe("draft");
+    expect(toast?.meta.status).toBe("stable");
+    expect(toast?.variants.map((v) => v.name)).toEqual(["Success", "Fail", "Info", "Neutral"]);
     const callout = getComponent("callout");
     const relationship = callout?.relationships.find((r) => r.target === "toast");
     expect(relationship?.kind).toBe("often-confused-with");
@@ -295,8 +296,8 @@ describe("props extraction (LDS-009)", () => {
     expect(tone?.guidance).toContain("Match the tone to the state");
   });
 
-  it("getComponentProps is undefined for a draft component with no ui implementation", () => {
-    expect(getComponentProps("toast")).toBeUndefined();
+  it("getComponentProps is undefined for an id with no ui implementation", () => {
+    expect(getComponentProps("no-such-component")).toBeUndefined();
   });
 });
 
