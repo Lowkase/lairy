@@ -92,12 +92,12 @@ describe("SelectMulti", () => {
     renderMulti({ defaultValue: ["ingest"] });
     const field = screen.getByRole("combobox");
     await user.click(field);
-    await user.keyboard(" ");
+    await user.keyboard("{ArrowDown} ");
 
     await user.keyboard("{Escape}");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(field).toHaveFocus();
-    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(tokens()).toEqual(["Ingest✕", "Normalize✕"]);
   });
 
   it("holds focus inside the open menu: Tab cycles through the footer and wraps, never leaves", async () => {
@@ -106,10 +106,16 @@ describe("SelectMulti", () => {
     await user.click(screen.getByRole("combobox"));
     const menu = screen.getByRole("listbox").parentElement as HTMLElement;
 
+    const seen: (string | null)[] = [];
     for (let i = 0; i < 6; i++) {
       await user.tab();
       expect(menu).toContainElement(document.activeElement as HTMLElement);
+      seen.push(document.activeElement?.textContent ?? null);
     }
+    // The footer's buttons are reached, and the cycle wraps back round to them.
+    expect(seen).toContain("All");
+    expect(seen).toContain("Clear");
+    expect(seen.filter((t) => t === "All").length).toBeGreaterThan(1);
   });
 
   it("each token's remove button takes its value out and returns focus to the field", async () => {

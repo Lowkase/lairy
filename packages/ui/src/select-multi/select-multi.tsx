@@ -98,7 +98,7 @@ function Tick() {
 const tokenClass =
   "inline-flex shrink-0 items-center gap-6 whitespace-nowrap rounded-ds border border-accent-line bg-accent-soft py-4 pl-8 pr-6 font-body text-small text-fg";
 const removeClass =
-  "flex size-16 shrink-0 items-center justify-center rounded-ds text-label text-mute enabled:hover:bg-panel-2 enabled:hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft";
+  "flex size-16 shrink-0 items-center justify-center rounded-ds text-label text-mute enabled:hover:bg-panel-2 enabled:hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line";
 const overflowClass =
   "shrink-0 whitespace-nowrap rounded-ds border border-border-2 bg-panel-2 py-4 px-8 font-body text-small text-dim";
 
@@ -406,7 +406,7 @@ export function SelectMulti({
                     key={text}
                     type="button"
                     onClick={run}
-                    className="rounded-ds px-8 py-4 text-micro uppercase tracking-tight-10 text-dim hover:bg-panel-2 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft"
+                    className="rounded-ds px-8 py-4 text-micro uppercase tracking-tight-10 text-dim hover:bg-panel-2 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
                   >
                     {text}
                   </button>
