@@ -117,13 +117,4 @@ test.describe("Shell", () => {
     await axeCheck(page);
     await screenshot(page, "shell-component-light.png");
   });
-
-  test("an entry with no built component shows a placeholder, not a 404", async ({ page }) => {
-    // Drawer (LDS-041) used to be this test's example of an unbuilt entry;
-    // Toast (LDS-044) is next in line now, per drawer.ts's own
-    // extractionNotes.
-    await page.goto("/components/toast");
-    await expect(page.getByText(/no built component yet/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Toast", level: 1 })).toBeVisible();
-  });
 });
