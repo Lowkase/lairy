@@ -862,6 +862,33 @@ function buildSelectItem(): RegistryItem {
   };
 }
 
+function buildSelectMultiItem(): RegistryItem {
+  const entry = getComponent("select-multi");
+  if (!entry) throw new Error('registry: content entry "select-multi" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "select-multi",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import. select-multi.tsx has
+    // no shadcn counterpart (ADR-0004: "popover plus listbox"); it is built on
+    // Radix Popover (via the umbrella `radix-ui` package) with its own listbox.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn", "radix-ui"],
+    files: [
+      {
+        path: "packages/ui/src/select-multi/select-multi.tsx",
+        target: "components/ui/select-multi/select-multi.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/select-multi/select-multi.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
@@ -887,6 +914,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   tooltip: buildTooltipItem,
   popover: buildPopoverItem,
   select: buildSelectItem,
+  "select-multi": buildSelectMultiItem,
   modal: buildModalItem,
   drawer: buildDrawerItem,
 };
