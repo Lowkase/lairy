@@ -23,6 +23,7 @@ import { POPOVER_EXAMPLES } from "./popover-examples";
 import { PROGRESS_EXAMPLES } from "./progress-examples";
 import { RADIO_EXAMPLES } from "./radio-examples";
 import { SCROLLBAR_EXAMPLES } from "./scrollbar-examples";
+import { SELECT_EXAMPLES } from "./select-examples";
 import { SUBNAV_EXAMPLES } from "./subnav-examples";
 import { SWITCH_EXAMPLES } from "./switch-examples";
 import { TABLE_EXAMPLES } from "./table-examples";
@@ -50,6 +51,7 @@ const EXAMPLE_REGISTRIES: Record<string, Record<string, ComponentType>> = {
   progress: PROGRESS_EXAMPLES,
   radio: RADIO_EXAMPLES,
   scrollbar: SCROLLBAR_EXAMPLES,
+  select: SELECT_EXAMPLES,
   subnav: SUBNAV_EXAMPLES,
   switch: SWITCH_EXAMPLES,
   table: TABLE_EXAMPLES,

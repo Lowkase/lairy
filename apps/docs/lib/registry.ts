@@ -834,6 +834,34 @@ function buildPopoverItem(): RegistryItem {
   };
 }
 
+function buildSelectItem(): RegistryItem {
+  const entry = getComponent("select");
+  if (!entry) throw new Error('registry: content entry "select" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "select",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import, not an aggregate of
+    // every component's dependencies. select.tsx is scaffolded from shadcn's
+    // own `select` item (ADR-0004, built on Radix Select), restyled with
+    // Lairy tokens only.
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn", "radix-ui"],
+    files: [
+      {
+        path: "packages/ui/src/select/select.tsx",
+        target: "components/ui/select/select.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/select/select.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
@@ -858,6 +886,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   header: buildHeaderItem,
   tooltip: buildTooltipItem,
   popover: buildPopoverItem,
+  select: buildSelectItem,
   modal: buildModalItem,
   drawer: buildDrawerItem,
 };

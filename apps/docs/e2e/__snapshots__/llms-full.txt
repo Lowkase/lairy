@@ -1639,6 +1639,99 @@ It exists so any pane that overflows can be scrolled without inventing a new way
 
 ---
 
+## Select
+
+Status: stable · Version: 1.1.0 · Updated: 8 Oct 2026 · /components/select
+
+Purpose: A select collapses one choice out of many into a single field, and spends a click to get the space back.
+
+### Description
+
+A select collapses one choice out of many into a single field, and spends a click to get the space back.
+
+It is the same one-of-many question a Radio group asks, traded the other way round: the options are hidden until asked for, so the field always shows the current answer and never the alternatives. That trade is worth making from about six options up, or whenever the list can grow after launch. Below that, hiding the choices costs the operator more than the rows would.
+
+### Anatomy
+
+1. Field — The closed control, and the only part visible most of the time. It shares the text input’s box exactly — same height, same 10px/13px padding, same 2px corner — so a form of mixed controls still reads as one row of boxes.
+2. Value — The current answer in 14px --fg, or the placeholder in --mute when nothing is chosen. It is always the chosen option’s own words, never a count or a summary, because the field is the only place that answer appears.
+3. Caret — A single glyph on the right that rotates 180° and turns amber while the menu is open. It is the whole affordance: there is no second button, and the entire field is the hit target.
+4. Menu — A floating listbox on --bg with a --border-2 hairline and the deep panel shadow, matched to the field’s width and anchored 4px below it. It flips above the field when the viewport is short rather than scrolling the page.
+5. Option — One value per 9px/11px row, with an amber tick on the current one and a --panel-2 fill under hover and keyboard focus alike. Selecting closes the menu — a select commits on the click.
+
+### States
+
+- Default: Closed with a value. This is the state the field lives in, so the value has to be legible at a glance and never abbreviated.
+- Placeholder: Nothing chosen yet. The text is a verb phrase in --mute so it never reads as a value, and it is never the field’s label doing double duty.
+- Hover: Pointer anywhere on the field. The border lifts to --fg and the caret follows, confirming the whole box is the target rather than the glyph.
+- Focus: Reached by keyboard, menu still closed. The soft amber ring is the system focus treatment and appears on nothing else.
+- Open: Menu showing. The field keeps the amber border for as long as the menu is up, so the two read as one object even with the shadow between them.
+- Error: A required field submitted empty. The border and caret both turn, and a line of text underneath says which field and why — colour never carries it alone.
+- Disabled: Not changeable now. The value stays readable at 45% so the operator can still see what it is set to, and something adjacent explains what would unlock it.
+
+There is no read-only variant distinct from disabled, and no searchable variant. Past roughly twenty options the field stops being the answer and the choice belongs in a modal picker with real search, rather than a select that quietly grows a text input.
+
+### Use when
+
+- Six or more options, exactly one of which will be true.
+- The list is data rather than design — it can grow without a redesign.
+- The chosen value matters more day to day than the alternatives do.
+- The row is dense — a toolbar or a table filter — and rows are not available.
+
+### Use something else when
+
+- radio: Two to five options that want comparing — that is a Radio group.
+- select-multi: Several values can be true at once — that is Select (Multi).
+- popover: The rows are commands rather than values — that is a Popover menu.
+- chip: The choice narrows a visible list — those are Chips.
+
+### Content rules
+
+- Label the field with the noun it sets — Stage, Owner, Region — above the box, never inside it as a placeholder that vanishes on the first pick.
+- Write the placeholder as an instruction rather than a value: “Choose a stage”, not “None”, which is itself a legitimate option and would be ambiguous.
+- Keep options to two or three words in sentence case, and make them parallel — all nouns or all verbs — so the list scans as one set of alternatives.
+- Order options the way the operator thinks: by pipeline order, frequency or size, and only alphabetically when the list is long and unordered by nature.
+- If “None” or “Any” is a real answer, put it in the list as the first row rather than relying on an empty field to mean it.
+
+### Examples
+
+- [demo] Stage select
+- [good] Label above, value in the field — Label above, the current value in the field — readable without opening anything.
+- [bad] Label doing duty as the placeholder — Never let the label do duty as the placeholder — once a value is picked, the question is gone.
+- [good] A required field that says so in words — An empty required field says so in words underneath, not in the border alone.
+- [bad] Two selects of two options each — Never stack two selects that each hold two options — that is two radio groups paying rent on a click each.
+
+### Accessibility
+
+- Combobox and listbox: The field is a role="combobox" with aria-expanded and aria-controls pointing at the role="listbox" menu; each row is an option carrying aria-selected. The field is labelled by the visible label, not by placeholder text.
+- Keyboard opens and moves: Enter, Space or Down opens the menu at the current value; arrows move the active option, Enter commits, Escape closes and returns focus to the field with the old value intact. Tab closes and moves on — it never leaves an orphaned menu behind.
+- Focus and selection differ: The active row under the keyboard and the currently selected row are two different things, so the tick marks selection while the --panel-2 fill marks position. Never let the fill alone imply what is chosen.
+- Errors are announced: The message under the field is tied to it with aria-describedby and the field takes aria-invalid, so a screen reader hears the reason with the control rather than as a loose sentence somewhere in the form.
+
+### Tokens
+
+- --border-2: Resting field border, menu hairline
+- --accent-line: Field border while focused or open
+- --accent: Caret when open, tick on the current option
+- --bg: Field and menu surface
+- --panel-2: Hover and active-option fill
+- --mute: Placeholder text, resting caret
+- --alarm-line: Error border
+
+### Related
+
+- radio (alternative): Use instead under about six options. A radio group spends rows to show the alternatives; a select spends a click to hide them.
+- select-multi (often-confused-with): Differs in that the menu stays open and the chosen set becomes tokens in the field. One value or many is the only question that decides between them.
+- popover (often-confused-with): Looks the same open, but its rows are actions that do something. If a row does not set the field’s value, it belongs in a popover menu.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Menu width locked to the field; searchable and read-only variants ruled out in favour of a modal picker past twenty options.
+- v1.0.1 (21 Aug 2026): Selection now closes the menu; active-row fill separated from the selected tick.
+- v1.0.0 (13 Aug 2026): Select introduced as a custom listbox sharing the text input’s box.
+
+---
+
 ## Navigation (Subnav)
 
 Status: stable · Version: 1.0.0 · Updated: 5 Oct 2026 · /components/subnav
