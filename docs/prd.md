@@ -259,7 +259,7 @@ Decisions that are hard to reverse, surprising without context, and a real trade
 ## 12. Open questions (decide when the relevant issue arrives)
 
 - **Q1** Is 14px a spacing step? (token decisions ticket)
-- **Q2** Where do `@lairy/tokens` and future packages publish — GitHub Packages (private) or public npm? (publishing target ticket)
+- ~~**Q2** Where do `@lairy/tokens` and future packages publish — GitHub Packages (private) or public npm?~~ Answered: public npm under the `@lairy` scope (ADR-0012, LDS-045). `@lairy/tokens@0.1.0` is published.
 - **Q3** Hosting for the docs app, registry and a remote MCP endpoint. (post-M5)
 - **Q4** Do Small (13) and Section (17) need their own tracking/leading values, or inherit? (token decisions ticket)
 
