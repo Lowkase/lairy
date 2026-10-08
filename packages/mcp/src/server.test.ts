@@ -363,5 +363,12 @@ describe("MCP server (seam 2: tool surface)", () => {
     );
     // What to use instead, and how to write it.
     expect(entry.contentRules.some((rule) => rule.text.includes('"Export failed"'))).toBe(true);
+
+    // Why not a toast, from Toast's own entry rather than the neighbour's.
+    const toast = json<{ description: { boundary: string }; variants: Array<{ name: string }> }>(
+      await client.callTool({ name: "get_component", arguments: { id: "toast" } }),
+    );
+    expect(toast.description.boundary).toContain("gone in 3.2 seconds");
+    expect(toast.variants.map((v) => v.name)).toEqual(["Success", "Fail", "Info", "Neutral"]);
   });
 });

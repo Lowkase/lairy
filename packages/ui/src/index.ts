@@ -25,5 +25,6 @@ export * from "./tabs/tabs";
 export * from "./text/text";
 export * from "./text-input/text-input";
 export * from "./textarea/textarea";
+export * from "./toast/toast";
 export * from "./tooltip/tooltip";
 export * from "./usage-card/usage-card";

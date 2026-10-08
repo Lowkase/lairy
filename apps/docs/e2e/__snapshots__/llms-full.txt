@@ -2469,6 +2469,99 @@ The handle is vertical only, and there is no auto-growing variant. A box that re
 
 ---
 
+## Toast
+
+Status: stable · Version: 1.1.0 · Updated: 25 Aug 2026 · /components/toast
+
+Purpose: A transient message reporting that something just happened. It says so once and leaves.
+
+### Description
+
+A toast reports what just happened, in the corner, and leaves on its own.
+
+It is the cheapest surface in the system: it takes no focus, blocks nothing, and asks for nothing. That is also its limit — anything the operator must read or answer cannot be a toast, because it will be gone in 3.2 seconds and it was never in their way. A decision belongs in a Modal; a standing condition belongs in the panel that owns it, not in a corner that empties itself.
+
+### Anatomy
+
+1. Surface — A 320px --bg card with a hairline in the intent colour, docked to the top right under the header and sliding in over 180ms. It sits on --bg rather than --panel so it reads as being in front of the workspace without a shadow doing the work.
+2. Rail — A 2px bar down the left edge in the intent colour. This is the intent, and the only place it is allowed to be a fill: two pixels of colour is enough to sort four kinds of message at a glance.
+3. Title — The outcome in 14px --fg, past tense, five to seven words: “Workflow approved”, “Run failed”. If the operator reads nothing else, this line has to be the whole message.
+4. Dot — A 7px disc in the intent colour beside the title, repeating what the rail says. It is deliberate redundancy: the rail is easy to miss at the edge of vision, and colour must never be the only carrier.
+5. Detail — One 11.5px --mute line for the consequence — counts, durations, what happens next. Optional, never more than a line, and never the place the actual news lives.
+
+### Variants
+
+- Success (--accent, --accent-line): Something the operator asked for finished. Amber, because success here means an action completed — this is the one report that shares the acting colour.
+- Fail (--alarm, --alarm-line): Something stopped and will not finish. It does not auto-dismiss, and it may carry one amber link to where the operator can look — never a decision.
+- Info (--accent-2, --accent-2-line): A fact the system wants on the record: a schedule, a queue position, a sweep. Ice, because it refers to something rather than acting on it.
+- Neutral (--mute, --border): A routine confirmation with no colour claim at all — saved, copied, closed. Most toasts should be this one; reaching for a colour is a decision, not a default.
+
+There is no Warning intent, for the same reason there is no warning badge: a caution nobody has to act on is noise, and one they do have to act on is a failure or a modal. Intent is carried by a 2px rail and a dot — never by a filled background, which would make a corner report louder than the work behind it.
+
+### Use when
+
+- Something finished and the operator would otherwise not know.
+- The outcome is worth a sentence but not worth their attention.
+- The result arrived out of band — a background run, a sync, a queue.
+- Missing the message costs nothing, because the state is legible elsewhere.
+
+### Use something else when
+
+- modal: The operator has to decide something — that is a Modal.
+- callout: The message must survive being missed — that belongs in the panel that owns the state.
+- badge: It annotates a row or a field — that is a Badge or an inline error.
+- progress: Work is still running — that is Progress, which stays until it finishes.
+
+### Content rules
+
+- Write the title as an outcome in the past tense — “Workflow approved”, not “Approving workflow” or “Success!”. The event already happened; that is why there is a toast.
+- Name the object, not the operation: “3 runs exported” beats “Export complete”, because the number is what the operator was actually waiting on.
+- Keep the detail line to one clause of consequence, and drop it entirely when the title already says everything.
+- Never put a question, a form, or two competing actions in a toast. One link to somewhere the operator can look is the maximum.
+- Collapse repeats of the same event into one counted message rather than firing a second toast — the count is the news the second time.
+
+### Examples
+
+- [demo] Fire one
+- [demo] Four intents
+- [good] Outcome, consequence, rail — Outcome in the title, the consequence underneath, and a rail carrying the intent.
+- [bad] A filled surface — Never fill the surface with the intent colour — a corner report outshouting the workspace is a lie about its importance.
+- [good] A failure with one link — A failure may carry one amber link to where the operator can look — and it does not auto-dismiss.
+- [bad] A question in a toast — Never ask a question in a toast — it takes no focus and leaves on a timer, so the answer is whatever the timeout chose.
+- [good] A counted repeat — Repeats of the same event collapse into one counted toast rather than a stack.
+- [bad] The same event, stacked — Never stack past three, and never repeat one event — a column of toasts is a queue nobody asked to read.
+
+### Accessibility
+
+- Announced, never focused: The container is an aria-live region — polite for success, info and neutral, assertive for failures — and focus never moves into it. A toast that steals focus takes the operator out of the field they were typing in.
+- The timer is not the only way: Auto-dismiss is 3.2s, paused on hover and on keyboard focus anywhere inside, and failures do not dismiss at all. Anything that matters after the timer is also legible in the panel that owns it.
+- Colour is never alone: Intent is the rail, the dot and the words together — “Run failed” says what the colour says. Salmon on --bg measures 6.2:1 and ice 5.9:1, but neither is asked to carry the meaning by itself.
+- Dismiss is reachable: The ✕ is a real button labelled “Dismiss”, 26px and reachable by Tab while the toast is up. Escape clears the whole stack, so a keyboard operator is never stuck waiting out a timer.
+
+### Tokens
+
+- --bg: Toast surface
+- --accent, --accent-line: Success rail and dot, action links
+- --accent-2, --accent-2-line: Info rail and dot
+- --mute: Neutral rail, detail line, dismiss glyph
+- --border: Neutral hairline
+- --fg: Title
+- --alarm, --alarm-line: Fail rail, dot and hairline
+
+### Related
+
+- modal (often-confused-with): Where anything that needs an answer goes. The test is simple: if the message would be a problem to miss, it was never a toast.
+- progress (composes-with): Covers the time before the toast. Progress stays while work runs; the toast is the one line that reports how it ended.
+- badge (alternative): Where a standing condition belongs. A toast reports a transition once; a badge keeps saying what is true.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Warning intent ruled out; failures no longer auto-dismiss; repeats collapse into one counted toast.
+- v1.0.1 (20 Aug 2026): Filled backgrounds replaced by the 2px rail and dot; stack capped at three.
+- v1.0.0 (13 Aug 2026): Toast introduced top right at 320px with a 3.2s dismiss.
+
+---
+
 ## Tooltip
 
 Status: stable · Version: 1.2.0 · Updated: 19 Sept 2026 · /components/tooltip

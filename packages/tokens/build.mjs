@@ -26,6 +26,7 @@ const shellTokens = readTokens("tokens/shell.json");
 const popoverTokens = readTokens("tokens/popover.json");
 const modalTokens = readTokens("tokens/modal.json");
 const drawerTokens = readTokens("tokens/drawer.json");
+const toastTokens = readTokens("tokens/toast.json");
 
 const camel = (s) => s.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 const val = (t) => t.$value;
@@ -174,6 +175,7 @@ const SHARED = [
   "tokens/popover.json",
   "tokens/modal.json",
   "tokens/drawer.json",
+  "tokens/toast.json",
 ];
 
 const darkSd = buildCssTheme({
@@ -389,6 +391,8 @@ export const popover = ${JSON.stringify(flatObject(popoverTokens.popover), null,
 export const modal = ${JSON.stringify(flatObject(modalTokens.modal), null, 2)} as const;
 
 export const drawer = ${JSON.stringify(flatObject(drawerTokens.drawer), null, 2)} as const;
+
+export const toastTokens = ${JSON.stringify(flatObject(toastTokens.toast), null, 2)} as const;
 `;
 writeFileSync(path.join(dir, "src/tokens.generated.ts"), ts);
 

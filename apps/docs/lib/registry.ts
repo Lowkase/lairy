@@ -889,6 +889,34 @@ function buildSelectMultiItem(): RegistryItem {
   };
 }
 
+function buildToastItem(): RegistryItem {
+  const entry = getComponent("toast");
+  if (!entry) throw new Error('registry: content entry "toast" not found.');
+
+  return {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: "toast",
+    type: "registry:ui",
+    title: entry.meta.name,
+    description: entry.purpose,
+    // Hand-maintained for the same reason buildCalloutItem's is (see its own
+    // comment): what this item's files actually import. toast.tsx has no
+    // runtime dependency beyond the token package, cva and cn: it is plain
+    // elements plus a small module-level store, not shadcn's `sonner`
+    // (see toast.ts's extractionNotes).
+    dependencies: ["@lairy/tokens", "class-variance-authority", "cn"],
+    files: [
+      {
+        path: "packages/ui/src/toast/toast.tsx",
+        target: "components/ui/toast/toast.tsx",
+        type: "registry:ui",
+        content: withLairyCnImport(readSource("packages/ui/src/toast/toast.tsx")),
+      },
+      { ...CN_FILE, content: readSource(CN_FILE.path) },
+    ],
+  };
+}
+
 const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   callout: buildCalloutItem,
   badge: buildBadgeItem,
@@ -917,6 +945,7 @@ const REGISTRY_ITEM_BUILDERS: Record<string, () => RegistryItem> = {
   "select-multi": buildSelectMultiItem,
   modal: buildModalItem,
   drawer: buildDrawerItem,
+  toast: buildToastItem,
 };
 
 export function listRegistryItemNames(): string[] {

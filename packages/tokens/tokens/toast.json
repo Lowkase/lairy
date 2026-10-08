@@ -1,0 +1,19 @@
+{
+  "toast": {
+    "width": {
+      "$type": "dimension",
+      "$value": "320px",
+      "$description": "Toast anatomy #1 — a 320px card. No Spacing-ramp step is close enough to snap to (ramp: 4, 6, 8, 12, 16, 18, 22, 32, 44) — the same component-specific exception as --modal-width-* and --popover-panel-width. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-044)."
+    },
+    "top": {
+      "$type": "dimension",
+      "$value": "78px",
+      "$description": "Toast anatomy #1 — docked to the top right 'under the header' (the live overlay's top: 78px, which is the 52px header plus 26px). No Spacing-ramp step is close enough to snap to. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-044)."
+    },
+    "dismiss-after": {
+      "$type": "duration",
+      "$value": "3200ms",
+      "$description": "Toast Accessibility 'The timer is not the only way' — auto-dismiss is 3.2s, paused on hover and keyboard focus; failures do not dismiss at all. Not on the Motion scale (140/180/260/500ms) because it is a reading time, not a transition. Proposed as-is, flagged in the PR (LDS-044)."
+    }
+  }
+}
