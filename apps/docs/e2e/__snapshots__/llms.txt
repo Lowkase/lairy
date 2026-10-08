@@ -21,6 +21,7 @@
 - [Radio](/components/radio): A set of mutually exclusive options, all visible at once, exactly one of them chosen.
 - [Scrollbar](/components/scrollbar): The browser's own scroll control, restyled to two greys — never a custom-built replacement.
 - [Select](/components/select): A select collapses one choice out of many into a single field, and spends a click to get the space back.
+- [Select (Multi)](/components/select-multi): A multi-select holds several values in one field, each one a token the operator can take back out.
 - [Navigation (Subnav)](/components/subnav): The column of pages inside one workspace, docked to the right of the main rail. The one navigation that changes with the route.
 - [Switch](/components/switch): Turns one setting on or off, and the change takes effect the moment it moves.
 - [Table](/components/table): A list of records the operator works on, not a grid of numbers they read.

@@ -1732,6 +1732,97 @@ There is no read-only variant distinct from disabled, and no searchable variant.
 
 ---
 
+## Select (Multi)
+
+Status: stable · Version: 1.1.0 · Updated: 8 Oct 2026 · /components/select-multi
+
+Purpose: A multi-select holds several values in one field, each one a token the operator can take back out.
+
+### Description
+
+A multi-select holds several values in one field, each one a token the operator can take back out.
+
+Everything it does differently from Select follows from one fact: the answer is a set, so the set has to stay visible and stay editable. That is why picking does not close the menu, why the chosen values come back as removable tokens rather than as a count, and why the field is allowed to be taller than a text input. It is still a form control, not a filter bar — if the choice narrows a list in front of the operator, those are Chips.
+
+### Anatomy
+
+1. Field — A fixed 42px box — four pixels taller than the single select, and never taller than that. The height is fixed on purpose: a field that grows a row per pick reflows the form underneath the operator while they are working in it.
+2. Token — One chosen value, in the amber-soft box with an --accent-line hairline, carrying its own ✕. The tokens are the answer, which is why they name their values in full and are never collapsed into “3 selected”.
+3. Overflow — A counted --panel-2 chip standing in for the tokens that no longer fit the measured width. It is the pressure valve that lets the field stay one row tall, and opening the menu shows the full set again.
+4. Menu — The same listbox as Select — field width, --border-2 hairline, deep shadow — with a square 16px checkbox on every row and its metadata right-aligned in --faint. Picking does not close it, because the answer is a set and sets are built up.
+5. Footer — A hairline-separated row with the live count on the left and ALL / CLEAR on the right. It exists because bulk moves are the two things a multi-select is asked for that a single select never is.
+
+### States
+
+- Empty: No values yet. The placeholder is a plural instruction — “Select stages” — so it reads as a prompt for a set rather than for one value.
+- Focus: Reached by keyboard with the menu still closed. The field takes the soft amber ring, and the caret turns amber the moment the menu opens.
+- Overflow: More tokens chosen than fit the measured width. The remainder becomes one counted chip rather than a second row, and the count is exact.
+- Error: A required field submitted with an empty set. The border and caret turn and a line underneath says how many are needed — never the border alone.
+- Disabled: Not editable now. Tokens stay legible but lose their ✕, so the set can still be read while nothing about it can be changed.
+
+There is no state for a partially valid set and no per-token error. Validation belongs to the field as a whole, because the operator submits a set rather than a sequence of picks — and the specimens for every state are rendered live in the panel below.
+
+### Use when
+
+- Several values out of seven or more can be true at once.
+- The chosen set has to stay readable after the menu closes.
+- Values are removed as often as they are added — tokens make that one click.
+- The list is data and can grow, so a column of checkboxes would not hold.
+
+### Use something else when
+
+- select: Exactly one value is allowed — that is Select.
+- checkbox: Under about seven options with room for rows — those are Checkboxes.
+- chip: The set narrows a list already on screen — those are Chips.
+- popover: The rows run commands rather than setting values — that is a Popover menu.
+
+### Content rules
+
+- Label the field with the plural noun it collects — Stages, Owners, Regions — so the operator knows a set is expected before they open it.
+- Write the placeholder as a plural instruction: “Select stages”, never “Stage” or “None selected”, which read as a single value and a state respectively.
+- Keep option labels to two or three words, since each one has to survive being shown twice — once as a menu row, once as a token in a narrow field.
+- Show metadata in the menu rows rather than on the tokens: the row is where the operator decides, and the token only has to identify what was decided.
+- Count in the footer with the total — “3 of 5” — so the operator can see at a glance whether ALL would change anything.
+
+### Examples
+
+- [demo] Stage multi-select
+- [good] Fixed height, counted overflow — Fixed height: tokens that no longer fit collapse into a counted overflow chip.
+- [bad] A field that grows row by row — Never let the field grow row by row — the form reflows under the operator as they pick.
+- [bad] Dials in a multi-select menu — Never use dials in a multi-select menu — round means one-of everywhere else in the system.
+- [bad] The set replaced by a count — Never replace the set with a count — the operator has to reopen the menu to learn what they chose.
+
+### Accessibility
+
+- Multiselectable listbox: The field is a role="combobox" with aria-expanded; the menu is a role="listbox" with aria-multiselectable and each row carries aria-checked. The plural label is what the field is named by, not the placeholder.
+- The menu stays put: Space toggles the active row and leaves the menu open and focus where it was, so a keyboard operator builds the set in one pass. Escape closes and returns focus to the field with the set intact; Tab closes and moves on.
+- Tokens are reachable: Each ✕ is a real button labelled “Remove Ingest” rather than a bare glyph, and Backspace with the field focused removes the last token — the shortcut is a convenience, never the only way.
+- Changes are announced: The count line is a live region, so adding or clearing values is spoken as “3 of 5 selected” instead of leaving a keyboard operator to infer the state from a field they cannot see.
+
+### Tokens
+
+- --accent-line: Token border, field border when open
+- --accent-soft: Token fill
+- --accent: Caret when open, checked box fill
+- --border-2: Resting field border, menu hairline, overflow chip
+- --panel-2: Overflow chip fill, row hover
+- --mute: Placeholder, token remove glyph
+- --alarm-line: Error border
+
+### Related
+
+- select (often-confused-with): Differs only in cardinality, and everything else follows: one value, so the menu closes on the pick and the field shows a word instead of tokens.
+- checkbox (alternative): Use instead under about seven options. Rows of boxes cost space but no clicks, and they show the whole set of possibilities at once.
+- chip (often-confused-with): Looks like the tokens but does the opposite job: chips narrow a list in front of the operator and commit nothing to a form.
+
+### Changelog
+
+- v1.1.0 (25 Aug 2026): Field height locked at 42px with measured overflow collapse; footer count paired with the total.
+- v1.0.1 (22 Aug 2026): Selection no longer closes the menu; ALL and CLEAR added to the footer.
+- v1.0.0 (14 Aug 2026): Multi introduced with removable tokens and square boxes in the menu.
+
+---
+
 ## Navigation (Subnav)
 
 Status: stable · Version: 1.0.0 · Updated: 5 Oct 2026 · /components/subnav
