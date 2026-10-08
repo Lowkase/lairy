@@ -1,6 +1,6 @@
 # ADR-0012: Where `@lairy/tokens` and future packages publish
 
-**Status:** Proposed — waiting on Cory (PRD Q2, LDS-045)
+**Status:** Accepted — public npm, `@lairy` scope (PRD Q2, LDS-045)
 **Date:** 2026-10-08
 
 ## Context
@@ -84,11 +84,13 @@ If Cory wants private distribution, choose GitHub Packages knowing it costs a re
 
 Proposal: semver, where a removed or renamed token is a major, a new token or changed value is a minor, and a fix is a patch. Pre-1.0, minors may break and say so in the release notes. The agent who changes tokens bumps the version in the same PR; a tag `tokens-vX.Y.Z` triggers the release workflow. Not decided here beyond the proposal.
 
-## After the decision
+## Decision
 
-The remaining LDS-045 work, done in a follow-up commit once Cory chooses:
+**Public npm**, scope `@lairy` (the npm org exists). Versioning follows the semver policy above.
 
-1. Update `packages/tokens/package.json` (`private`, `publishConfig`, `repository`, name if needed).
-2. Add the release workflow.
-3. Cory runs the first publish or approves the workflow run. An agent does not publish: it is irreversible and needs credentials only Cory holds.
-4. Verify `@lairy/tokens@0.1.0` installs in a clean directory, then mark this ADR Accepted and answer Q2 in the PRD.
+Done in this ticket: `private` removed, `publishConfig.access` set to `public`, `repository` added, and `.github/workflows/release-tokens.yml` publishes on a `tokens-vX.Y.Z` tag using npm trusted publishing.
+
+Still manual, by Cory:
+
+1. First publish of v0.1.0 from a local machine: `npm login`, `pnpm pack` in `packages/tokens` (not `npm pack`, which ignores `publishConfig`), then `npm publish <tarball> --access public`. A package must exist before npm lets you configure trusted publishing.
+2. On npmjs.com, add a trusted publisher for the package: repo `Lowkase/lairy`, workflow `release-tokens.yml`. Later releases publish from a pushed tag.
