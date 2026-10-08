@@ -1,0 +1,44 @@
+name: Release tokens
+
+on:
+  push:
+    tags: ["tokens-v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC) and provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install -g npm@^11.5.1
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Tag matches package version
+        run: |
+          version=$(node -p "require('./packages/tokens/package.json').version")
+          test "${GITHUB_REF_NAME}" = "tokens-v${version}"
+
+      - run: pnpm --filter @lairy/tokens run typecheck
+      - run: pnpm --filter @lairy/tokens run test
+
+      # pnpm pack applies publishConfig (dist exports); npm pack would not (ADR-0011).
+      - name: Pack
+        working-directory: packages/tokens
+        run: pnpm pack --pack-destination "$RUNNER_TEMP"
+
+      - name: Publish
+        run: npm publish "$RUNNER_TEMP"/lairy-tokens-*.tgz --access public --provenance
