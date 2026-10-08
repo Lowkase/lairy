@@ -16,6 +16,7 @@ export * from "./popover/popover";
 export * from "./progress/progress";
 export * from "./radio/radio";
 export * from "./scrollbar/scrollbar";
+export * from "./select/select";
 export * from "./subnav/subnav";
 export * from "./switch/switch";
 export * from "./table/table";

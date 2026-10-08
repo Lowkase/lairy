@@ -32,7 +32,8 @@
     "./textarea/examples": "./src/textarea/examples/index.ts",
     "./tooltip/examples": "./src/tooltip/examples/index.ts",
     "./usage-card/examples": "./src/usage-card/examples/index.ts",
-    "./popover/examples": "./src/popover/examples/index.ts"
+    "./popover/examples": "./src/popover/examples/index.ts",
+    "./select/examples": "./src/select/examples/index.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
