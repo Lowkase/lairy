@@ -52,6 +52,7 @@ export function PopoverContent({ className, align = "start", sideOffset = SIDE_O
         sideOffset={sideOffset}
         style={{ width: popoverTokens.panelWidth }}
         className={cn(
+          // eslint-disable-next-line lairy/no-removed-focus-outline -- Focus is moved to this non-interactive container; its interactive children carry the focus ring.
           "z-40 flex flex-col gap-8 rounded-ds border border-border-2 bg-bg p-12 shadow-menu outline-none data-[state=open]:animate-panel-in",
           className,
         )}
@@ -124,6 +125,7 @@ export function PopoverMenuContent({
         sideOffset={sideOffset}
         style={{ width: popoverTokens.panelWidth }}
         className={cn(
+          // eslint-disable-next-line lairy/no-removed-focus-outline -- Focus is moved to this non-interactive container; its interactive children carry the focus ring.
           "z-40 flex flex-col gap-1 rounded-ds border border-border-2 bg-bg p-6 shadow-menu outline-none data-[state=open]:animate-panel-in",
           className,
         )}
@@ -143,6 +145,7 @@ export function PopoverMenuContent({
  * highlight fill and the row's own verb, never colour alone.
  */
 const popoverMenuItem = cva(
+  // eslint-disable-next-line lairy/no-removed-focus-outline -- The highlighted state replaces the outline (data-[highlighted]).
   "flex cursor-pointer items-center rounded-ds px-12 py-8 text-small outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-38",
   {
     variants: {

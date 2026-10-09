@@ -54,9 +54,11 @@ export const accessibility = FoundationEntrySchema.parse({
   principles: [
     {
       text: "Focus is never removed, only replaced. Every interactive element carries the focus-ring class and takes one of the two treatments above — there is no element in the system whose focus state is the browser default outline, and none whose outline is set to none without a replacement.",
+      enforceable: { kind: "lint", id: "no-removed-focus-outline" },
     },
     {
       text: "Tab order follows source order, which is the reading order: dock, then header, then subnav, then content. Nothing is given a positive tabindex, so the order cannot drift out of step with the layout.",
+      enforceable: { kind: "lint", id: "no-positive-tabindex" },
     },
     {
       text: "Opening an overlay moves focus into it and holds it there; Escape closes it and returns focus to the trigger that opened it. A menu, popover, modal, drawer and the command bar all behave identically in this respect.",

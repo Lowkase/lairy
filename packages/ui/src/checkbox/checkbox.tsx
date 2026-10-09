@@ -110,6 +110,7 @@ export function Checkbox({
         htmlFor={inputId}
         data-slot="checkbox-row"
         className={cn(
+          // eslint-disable-next-line lairy/no-arbitrary-tailwind-value -- Hit-area expansion, offset by matching padding.
           "flex min-h-32 items-center gap-12 rounded-ds py-8 px-12 -my-8 -mx-12",
           disabled ? "cursor-not-allowed" : "cursor-pointer",
         )}

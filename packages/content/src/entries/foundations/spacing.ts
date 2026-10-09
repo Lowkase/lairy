@@ -77,9 +77,11 @@ export const spacing = FoundationEntrySchema.parse({
     },
     {
       text: "No negative margins and no magic offsets. If something has to overlap, it is positioned deliberately and documented on the component that does it.",
+      enforceable: { kind: "lint", id: "no-arbitrary-tailwind-value" },
     },
     {
       text: "Anything not on the ramp is a bug, including a value one pixel away from a step. The ramp is the only source, and it is short enough to hold in your head.",
+      enforceable: { kind: "lint", id: "no-off-scale-spacing" },
     },
   ],
   accessibilityNotes: [

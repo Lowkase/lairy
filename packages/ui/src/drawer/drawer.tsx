@@ -82,6 +82,7 @@ export function DrawerContent({ className, size = "md", ...props }: DrawerConten
         data-slot="drawer-content"
         aria-modal="true"
         className={cn(
+          // eslint-disable-next-line lairy/no-removed-focus-outline -- Focus is moved to this non-interactive container; its interactive children carry the focus ring.
           "fixed inset-y-0 right-0 flex flex-col overflow-hidden border-l border-accent bg-bg shadow-overlay-horizontal outline-none data-[state=open]:animate-drawer-in",
           className,
         )}

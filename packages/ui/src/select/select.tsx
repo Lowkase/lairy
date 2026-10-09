@@ -143,6 +143,7 @@ export function Select({
                   value={option.value}
                   disabled={option.disabled}
                   data-slot="select-option"
+                  // eslint-disable-next-line lairy/no-removed-focus-outline -- The highlighted state replaces the outline (data-[highlighted]).
                   className="flex cursor-pointer items-center justify-between gap-12 rounded-ds px-12 py-8 text-body text-fg outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-38 data-[highlighted]:bg-panel-2"
                 >
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>

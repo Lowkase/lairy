@@ -86,6 +86,7 @@ export const color = FoundationEntrySchema.parse({
   principles: [
     {
       text: "Surfaces are alpha over the ground, never a second opaque hex. A panel that hard-codes its own grey works in one theme and looks pasted on in the other.",
+      enforceable: { kind: "lint", id: "no-hardcoded-color" },
     },
     {
       text: "One amber focus per view. If two elements are amber, neither reads as the answer — demote the weaker one to a bordered secondary and the hierarchy returns.",

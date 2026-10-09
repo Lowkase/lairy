@@ -338,6 +338,7 @@ export function SelectMulti({
               width: "var(--radix-popover-trigger-width)",
               maxHeight: "var(--radix-popover-content-available-height)",
             }}
+            // eslint-disable-next-line lairy/no-removed-focus-outline -- Focus is moved to this non-interactive container; its interactive children carry the focus ring.
             className="z-40 flex flex-col overflow-hidden rounded-ds border border-border-2 bg-bg p-4 shadow-menu outline-none data-[state=open]:animate-panel-in"
           >
             <div
@@ -349,6 +350,7 @@ export function SelectMulti({
               aria-activedescendant={activeValue !== undefined ? optionId(activeValue) : undefined}
               tabIndex={-1}
               onKeyDown={onListKeyDown}
+              // eslint-disable-next-line lairy/no-removed-focus-outline -- Programmatic focus target; the active option (aria-activedescendant) is highlighted instead.
               className="min-h-0 overflow-y-auto outline-none"
             >
               {options.map((option) => {

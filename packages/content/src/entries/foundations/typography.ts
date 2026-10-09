@@ -74,6 +74,7 @@ export const typography = FoundationEntrySchema.parse({
   principles: [
     {
       text: "No half steps: A size that is not on the scale is a mistake, not a nuance. If a heading feels wrong at 28px the answer is 34 or 19, never 24.",
+      enforceable: { kind: "lint", id: "no-off-scale-size" },
     },
     {
       text: "Weight is fixed: Grotesk is 600 and mono is 400 everywhere. The scale changes size and tracking; it never reaches for a weight to make a point.",

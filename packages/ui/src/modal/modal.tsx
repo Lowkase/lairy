@@ -56,6 +56,7 @@ const OVERLAY_CLASS =
  */
 function modalSurfaceClassName(size: ModalSize, className?: string) {
   return cn(
+    // eslint-disable-next-line lairy/no-removed-focus-outline -- Focus is moved to this non-interactive container; its interactive children carry the focus ring.
     "fixed left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-ds border border-border-2 bg-panel-2 shadow-overlay outline-none data-[state=open]:animate-panel-in",
     className,
   );
