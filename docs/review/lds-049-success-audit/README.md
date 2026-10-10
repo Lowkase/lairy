@@ -4,13 +4,13 @@ Evidence for each `docs/prd.md` §13 criterion, gathered on `main` at a467ec4 pl
 
 ## Verdict
 
-| # | Criterion | Result |
-|---|-----------|--------|
-| 1a | 9 foundations and 28 non-chart components have content entries, docs pages and registry items | **Met** |
-| 1b | Both themes pass axe with no serious violations | **Not met**: 3 docs pages, 4 page-theme combinations (issues #136, #137, #138) |
-| 2 | A fresh Next.js app installs a Lairy component through the CLI and renders it correctly with `@lairy/tokens` | **Met** |
-| 3 | Claude Code on the MCP server answers the export-failed question from content alone | **Met** |
-| 4 | ESLint plugin and `validate` catch a hard-coded colour, an off-scale size and a second primary action in a callout | **Met** (split by design, see below) |
+| #   | Criterion                                                                                                          | Result                                                                         |
+| --- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| 1a  | 9 foundations and 28 non-chart components have content entries, docs pages and registry items                      | **Met**                                                                        |
+| 1b  | Both themes pass axe with no serious violations                                                                    | **Not met**: 3 docs pages, 4 page-theme combinations (issues #136, #137, #138) |
+| 2   | A fresh Next.js app installs a Lairy component through the CLI and renders it correctly with `@lairy/tokens`       | **Met**                                                                        |
+| 3   | Claude Code on the MCP server answers the export-failed question from content alone                                | **Met**                                                                        |
+| 4   | ESLint plugin and `validate` catch a hard-coded colour, an off-scale size and a second primary action in a callout | **Met** (split by design, see below)                                           |
 
 ## 1a · Entries, pages, registry items
 
