@@ -7,6 +7,7 @@
 export function TextareaBadHorizontalResizeExample() {
   return (
     <textarea
+      aria-label="Reason"
       rows={2}
       defaultValue="Dragged wider than the form."
       className="block w-full rounded-ds border border-border bg-bg px-12 py-8 font-body text-body text-fg"
