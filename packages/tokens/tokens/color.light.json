@@ -67,7 +67,7 @@
   },
   "accent": {
     "$type": "color",
-    "$value": "#9a6208",
+    "$value": "#8f5c07",
     "$description": "Amber, light theme.",
     "$extensions": { "lairy": { "themeable": true, "role": "amber" } }
   },

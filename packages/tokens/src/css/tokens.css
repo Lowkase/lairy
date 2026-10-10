@@ -133,7 +133,7 @@
   --panel-2: rgba(0, 0, 0, 0.05); /** Surface, emphasised over --panel, light theme. */
   --bracket: rgba(0, 0, 0, 0.45); /** The corner-bracket mark drawn around visualization frames and telemetry panels, light theme. */
   --glow: rgba(120, 135, 145, 0.12); /** The ambient radial-gradient tint behind the workspace header, light theme. */
-  --accent: #9a6208; /** Amber, light theme. */
+  --accent: #8f5c07; /** Amber, light theme. */
   --accent-soft: rgba(154, 98, 8, 0.1); /** Amber fill, light theme. */
   --accent-line: rgba(154, 98, 8, 0.42); /** Amber border/line, light theme. */
   --accent-2: #0d6d92; /** Ice, light theme. */

@@ -34,7 +34,7 @@
 
 | Token | Value | Use for | Never for | Rationale |
 |---|---|---|---|---|
-| `--accent` | dark `#f7bd63` · light `#9a6208` | Live, alert, primary action. | A second, simultaneous focus in the same view — if two elements are amber, neither reads as the answer; demote the weaker one instead (colorContent). | — |
+| `--accent` | dark `#f7bd63` · light `#8f5c07` | Live, alert, primary action. | A second, simultaneous focus in the same view — if two elements are amber, neither reads as the answer; demote the weaker one instead (colorContent). | — |
 | `--accent-line` | dark `rgba(247, 189, 99, 0.5)` · light `rgba(154, 98, 8, 0.42)` | Accent border. | — | — |
 | `--accent-soft` | dark `rgba(247, 189, 99, 0.16)` · light `rgba(154, 98, 8, 0.1)` | Accent fill. | — | — |
 

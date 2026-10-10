@@ -239,7 +239,7 @@ describe("MCP server (seam 2: tool surface)", () => {
       const result = await client.callTool({ name: "get_tokens", arguments: { group: "Accent" } });
       const tokens = json<Array<{ name: string; value: { dark: string; light: string } }>>(result);
       const accent = tokens.find((t) => t.name === "--accent");
-      expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#9a6208" });
+      expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#8f5c07" });
     });
 
     it("resolves a themeable token's value to the requested theme", async () => {
@@ -250,7 +250,7 @@ describe("MCP server (seam 2: tool surface)", () => {
       });
       const tokens = json<Array<{ name: string; value: string }>>(result);
       const accent = tokens.find((t) => t.name === "--accent");
-      expect(accent?.value).toBe("#9a6208");
+      expect(accent?.value).toBe("#8f5c07");
     });
 
     it("leaves a non-themeable token's single value alone even when a theme is requested", async () => {
