@@ -36,7 +36,7 @@ function json<T>(result: { content: Array<{ type: string; text?: string }> }): T
 }
 
 describe("MCP server (seam 2: tool surface)", () => {
-  it("exposes list_entries, get_component, get_foundation, get_tokens, suggest_alternative and search_guidelines (docs/prd.md §9)", async () => {
+  it("exposes list_entries, get_component, get_foundation, get_tokens, suggest_alternative, search_guidelines and validate (docs/prd.md §9)", async () => {
     const client = await connect();
     const { tools } = await client.listTools();
     expect(tools.map((tool) => tool.name).sort()).toEqual([
@@ -46,6 +46,7 @@ describe("MCP server (seam 2: tool surface)", () => {
       "list_entries",
       "search_guidelines",
       "suggest_alternative",
+      "validate",
     ]);
   });
 
@@ -370,5 +371,76 @@ describe("MCP server (seam 2: tool surface)", () => {
     );
     expect(toast.description.boundary).toContain("gone in 3.2 seconds");
     expect(toast.variants.map((v) => v.name)).toEqual(["Success", "Fail", "Info", "Neutral"]);
+  });
+
+  describe("validate", () => {
+    const run = async (code: string) => {
+      const client = await connect();
+      const result = await client.callTool({ name: "validate", arguments: { code } });
+      return json<
+        Array<{ rule: string; kind: string; ruleText: string; entryId: string; line: number }>
+      >(result);
+    };
+
+    it("passes a clean snippet", async () => {
+      expect(
+        await run(`export const A = () => <div className="p-8 text-small bg-panel" />;`),
+      ).toEqual([]);
+    });
+
+    it("catches a hard-coded colour, with the rule text and owning entry", async () => {
+      const [violation, ...rest] = await run(
+        `export const A = () => <div style={{ color: "#ff0000" }} />;`,
+      );
+      expect(rest).toEqual([]);
+      expect(violation).toMatchObject({
+        rule: "no-hardcoded-color",
+        kind: "lint",
+        entryId: "color",
+        line: 1,
+      });
+      expect(violation?.ruleText.length).toBeGreaterThan(0);
+    });
+
+    it("catches an off-scale size", async () => {
+      const violations = await run(`export const A = () => <p style={{ fontSize: "10.5px" }} />;`);
+      expect(violations.map((v) => v.rule)).toContain("no-off-scale-size");
+      expect(violations.find((v) => v.rule === "no-off-scale-size")?.entryId).toBe("typography");
+    });
+
+    it("catches a second primary action in a Callout", async () => {
+      const violations = await run(`
+export const A = () => (
+  <Callout tone="warning" title="Approaching rate limit">
+    Body.
+    <Button variant="primary">Upgrade</Button>
+    <Button variant="primary">Contact sales</Button>
+  </Callout>
+);`);
+      expect(violations).toHaveLength(1);
+      expect(violations[0]).toMatchObject({
+        rule: "callout-single-primary-action",
+        kind: "validator",
+        entryId: "callout",
+      });
+      expect(violations[0]?.ruleText).toMatch(/At most one action reads as primary/);
+    });
+
+    it("catches a later action marked primary, and accepts the documented shape", async () => {
+      const bad = await run(
+        `export const A = () => <Callout tone="info" title="T" actions={[{ label: "A" }, { label: "B", variant: "primary" }]}>x</Callout>;`,
+      );
+      expect(bad.map((v) => v.rule)).toEqual(["callout-single-primary-action"]);
+      const good = await run(
+        `export const A = () => <Callout tone="info" title="T" actions={[{ label: "A" }, { label: "B" }]}>x</Callout>;`,
+      );
+      expect(good).toEqual([]);
+    });
+
+    it("reports an unparseable snippet as an error", async () => {
+      const client = await connect();
+      const result = await client.callTool({ name: "validate", arguments: { code: "const = ;" } });
+      expect(result.isError).toBe(true);
+    });
   });
 });
