@@ -4,13 +4,13 @@ Evidence for each `docs/prd.md` §13 criterion, gathered on `main` at a467ec4 pl
 
 ## Verdict
 
-| #   | Criterion                                                                                                          | Result                                                                         |
-| --- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| 1a  | 9 foundations and 28 non-chart components have content entries, docs pages and registry items                      | **Met**                                                                        |
-| 1b  | Both themes pass axe with no serious violations                                                                    | **Not met**: 3 docs pages, 4 page-theme combinations (issues #136, #137, #138) |
-| 2   | A fresh Next.js app installs a Lairy component through the CLI and renders it correctly with `@lairy/tokens`       | **Met**                                                                        |
-| 3   | Claude Code on the MCP server answers the export-failed question from content alone                                | **Met**                                                                        |
-| 4   | ESLint plugin and `validate` catch a hard-coded colour, an off-scale size and a second primary action in a callout | **Met** (split by design, see below)                                           |
+| #   | Criterion                                                                                                          | Result                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| 1a  | 9 foundations and 28 non-chart components have content entries, docs pages and registry items                      | **Met**                                               |
+| 1b  | Both themes pass axe with no serious violations                                                                    | **Met** after #136, #137 and #138 were fixed (see 1b) |
+| 2   | A fresh Next.js app installs a Lairy component through the CLI and renders it correctly with `@lairy/tokens`       | **Met**                                               |
+| 3   | Claude Code on the MCP server answers the export-failed question from content alone                                | **Met**                                               |
+| 4   | ESLint plugin and `validate` catch a hard-coded colour, an off-scale size and a second primary action in a callout | **Met** (split by design, see below)                  |
 
 ## 1a · Entries, pages, registry items
 
@@ -22,11 +22,10 @@ Evidence for each `docs/prd.md` §13 criterion, gathered on `main` at a467ec4 pl
 
 - Existing per-component specs run axe on `/dev/<component>` example routes in both themes (all 28 have one), and `foundations.spec.ts` covers the foundation pages. All 219 existing Playwright tests pass.
 - Those specs do not visit the published `/components/[slug]` pages. `apps/docs/e2e/success-audit.spec.ts` (new) runs axe (serious and critical) on all 28 component and 9 foundation pages in both themes, with transitions disabled so axe never samples mid-fade.
-- It found real violations, each now an issue and annotated in the spec with `test.fail` so the suite stays green and flips red once fixed:
-  - #136 `/components/textarea`, both themes: the bad examples render unlabelled textareas (`label`).
-  - #137 `/components/badge`, light: accent badge 4.42:1 (`color-contrast`).
-  - #138 `/components/tabs`, light: alarm count chip `text-bg` on `bg-alarm` 2.03:1 (`color-contrast`).
-- The other 71 page-theme combinations pass.
+- It found real violations on three pages, fixed in the follow-up PR (no `test.fail` markers remain; all 74 page-theme checks pass):
+  - #136 Textarea bad examples were unlabelled: the two raw `<textarea>` examples now carry `aria-label`.
+  - #137 Badge Success label was bare `--accent`, 4.42:1 on `--panel` in light: the label is now `text-fg`, accent-line border carries the tone (same call as Fail), recorded in `badge.ts` `extractionNotes`. `--accent` itself is unchanged; the token decision stays on the backlog.
+  - #138 Tabs bad-example chip used `text-bg` on `--alarm`: now `text-alarm-ink`.
 
 ## 2 · Install test
 
@@ -44,4 +43,4 @@ Evidence for each `docs/prd.md` §13 criterion, gathered on `main` at a467ec4 pl
 
 ## What Cory needs to decide
 
-Sign off the criteria as above, or hold M5 until #136–#138 are fixed. Criterion 1b is the only one not met.
+Sign off the criteria as above. Open question for the token backlog: light `--accent` text is under 4.5:1 on `--panel`/`--panel-2`, which is why Badge, Tabs, Main rail, Subnav and Header all keep that label on `text-fg`.

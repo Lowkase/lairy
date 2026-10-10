@@ -11,7 +11,7 @@ const badgeVariants = cva(
       tone: {
         neutral: "border-border text-mute",
         info: "border-accent-2-line text-accent-2",
-        success: "border-accent-line text-accent",
+        success: "border-accent-line text-fg",
         // Label stays --fg rather than --alarm: bare --alarm text (#ff8f6b)
         // fails AA against --bg in the light theme (2.03:1, confirmed by
         // axe), the same documented gap packages/content's alarm.ts
