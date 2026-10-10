@@ -56,6 +56,7 @@ The design system is the product. Apps built with it (starting with Lairy, the p
 **Foundations (9):** Color, Typography, Spacing, Radius, Icons, Elevation, Motion, Visualization, Accessibility.
 
 **Components (35):**
+
 - Content and containers: Text, Cards, Usage card, Callout, Empty state, Loading, Progress, Scrollbar
 - Actions and inputs: Buttons, Text input, Textarea, Checkbox, Radio, Switch, Select, Select (Multi), Chips
 - Status: Badges, Toast
@@ -91,23 +92,23 @@ Dependency direction: `tokens` ← `ui` ← `docs`; `content` references token n
 
 ### 6.2 Stack
 
-| Concern | Choice |
-|---|---|
-| Package management | pnpm workspaces |
-| Task orchestration | Turborepo |
-| Docs app | Next.js, current stable, App Router, TypeScript strict |
-| Fonts | `next/font/google`: Space Grotesk (400–700), IBM Plex Mono (400–600), self-hosted |
-| Styling | Tailwind CSS v4, theme generated from tokens, **default theme removed** |
-| Variants | class-variance-authority (cva) + `cn` (clsx + tailwind-merge) |
-| Behaviour primitives | Radix UI |
-| Component scaffolds | shadcn/ui CLI and registry format |
-| Tokens | DTCG JSON compiled with Style Dictionary |
-| Content validation | Zod |
-| Props extraction | react-docgen-typescript |
-| Unit/behaviour tests | Vitest + Testing Library |
-| Visual + a11y tests | Playwright + @axe-core/playwright |
-| MCP | Official TypeScript MCP SDK, stdio transport |
-| CI | GitHub Actions |
+| Concern              | Choice                                                                            |
+| -------------------- | --------------------------------------------------------------------------------- |
+| Package management   | pnpm workspaces                                                                   |
+| Task orchestration   | Turborepo                                                                         |
+| Docs app             | Next.js, current stable, App Router, TypeScript strict                            |
+| Fonts                | `next/font/google`: Space Grotesk (400–700), IBM Plex Mono (400–600), self-hosted |
+| Styling              | Tailwind CSS v4, theme generated from tokens, **default theme removed**           |
+| Variants             | class-variance-authority (cva) + `cn` (clsx + tailwind-merge)                     |
+| Behaviour primitives | Radix UI                                                                          |
+| Component scaffolds  | shadcn/ui CLI and registry format                                                 |
+| Tokens               | DTCG JSON compiled with Style Dictionary                                          |
+| Content validation   | Zod                                                                               |
+| Props extraction     | react-docgen-typescript                                                           |
+| Unit/behaviour tests | Vitest + Testing Library                                                          |
+| Visual + a11y tests  | Playwright + @axe-core/playwright                                                 |
+| MCP                  | Official TypeScript MCP SDK, stdio transport                                      |
+| CI                   | GitHub Actions                                                                    |
 
 ### 6.3 Outputs generated from content
 
@@ -160,17 +161,17 @@ The prototype's documented foundations win over its markup wherever they disagre
 
 Scale in rem (base 16px), assembled from the Typography page's own rules (its `dsType()` table plus the hierarchy rule "hero 48 > doc title 34 > workspace title 28 > section title 17 > module title 13"):
 
-| Style | Size | Family | Weight | Tracking | Leading | Use |
-|---|---|---|---|---|---|---|
-| Display | 48 | Space Grotesk | 600 | -.02em | 1.08 | Page hero only |
-| Doc title | 34 | Space Grotesk | 600 | -.02em | 1.1 | Docs page title |
-| Title | 28 | Space Grotesk | 600 | -.02em | 1.15 | Workspace name |
-| Metric | 28 | Space Grotesk | 600 | -.01em | 1.1 | Numbers in stat cards |
-| Section | 17 | Space Grotesk | 600 | per prototype | per prototype | Section titles |
-| Body | 14 | IBM Plex Mono | 400 | 0 | 1.6 | Rows, paragraphs |
-| Small | 13 | IBM Plex Mono | 400 | per prototype | 1.5 | Module titles, hints, buttons, card body |
-| Label | 12 | IBM Plex Mono | 400 | .16em | 1.4 | Uppercase panel headers, chips |
-| Micro | 11 | IBM Plex Mono | 400 | .2em | 1.4 | Uppercase codes, badges, table headers |
+| Style     | Size | Family        | Weight | Tracking      | Leading       | Use                                      |
+| --------- | ---- | ------------- | ------ | ------------- | ------------- | ---------------------------------------- |
+| Display   | 48   | Space Grotesk | 600    | -.02em        | 1.08          | Page hero only                           |
+| Doc title | 34   | Space Grotesk | 600    | -.02em        | 1.1           | Docs page title                          |
+| Title     | 28   | Space Grotesk | 600    | -.02em        | 1.15          | Workspace name                           |
+| Metric    | 28   | Space Grotesk | 600    | -.01em        | 1.1           | Numbers in stat cards                    |
+| Section   | 17   | Space Grotesk | 600    | per prototype | per prototype | Section titles                           |
+| Body      | 14   | IBM Plex Mono | 400    | 0             | 1.6           | Rows, paragraphs                         |
+| Small     | 13   | IBM Plex Mono | 400    | per prototype | 1.5           | Module titles, hints, buttons, card body |
+| Label     | 12   | IBM Plex Mono | 400    | .16em         | 1.4           | Uppercase panel headers, chips           |
+| Micro     | 11   | IBM Plex Mono | 400    | .2em          | 1.4           | Uppercase codes, badges, table headers   |
 
 - **Hard floor: 11px (Micro).** Nothing smaller anywhere. Sentence-length text is Small (13) or larger.
 - **Default mapping for off-scale markup values:** 10.5 → Micro; 11.5 → Label; 12.5 → Small; 13.5 → Body; 15 → Body; 19 → Section. 8–10px → Micro, **except** text inside chart SVGs, which renders in viewBox units: evaluate its rendered size and flag.
@@ -233,28 +234,28 @@ Added in M5: `validate({ code })` — runs Lairy lint rules and enforceable vali
 
 Decisions that are hard to reverse, surprising without context, and a real trade-off are recorded as ADRs in `docs/adr/`. The rest are listed here.
 
-| # | Decision | Where |
-|---|---|---|
-| D1 | Standalone design system app; apps built with it are separate projects | This PRD, §1 |
-| D2 | Single source of truth as structured TypeScript + Zod content; all outputs generated | ADR-0001 |
-| D3 | Relationships are typed references — build rejects dangling links; MCP can traverse the graph | This PRD |
-| D4 | Examples are real TSX files — they compile, so they can't go stale | This PRD |
-| D5 | Props extracted from source — documented API can never disagree with the real one | This PRD |
-| D6 | Rules can be tagged enforceable — one sentence serves docs, agent guidance and a failing check | This PRD |
-| D7 | Tokens as a package; components as a copy-in registry | ADR-0002 |
-| D8 | Tailwind v4 with the default theme removed | ADR-0003 |
-| D9 | shadcn for infrastructure and scaffolds only; visuals entirely Lairy | ADR-0004 |
-| D10 | Radix for behaviour primitives — focus, keyboard and ARIA are where hand-rolled components fail | This PRD |
-| D11 | Prototype is the spec, never source; documented foundations win over its markup | ADR-0005 |
-| D12 | 11px type floor | ADR-0006 |
-| D13 | Alarm colour is non-themeable | ADR-0007 |
-| D14 | Keep the prototype's CSS variable names | ADR-0008 |
-| D15 | Prototype prose carried verbatim, except size/spacing literals mapped to tokens | ADR-0009 |
-| D16 | Screenshot comparison is a review aid, not a gate — the port intentionally corrects sizes and spacing | This PRD |
-| D17 | ~~Knowledge layer (tokens, content, MCP) before components~~ Superseded: tracer-bullet slices, starting with Callout through every layer | ADR-0010 |
+| #   | Decision                                                                                                                                        | Where                 |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| D1  | Standalone design system app; apps built with it are separate projects                                                                          | This PRD, §1          |
+| D2  | Single source of truth as structured TypeScript + Zod content; all outputs generated                                                            | ADR-0001              |
+| D3  | Relationships are typed references — build rejects dangling links; MCP can traverse the graph                                                   | This PRD              |
+| D4  | Examples are real TSX files — they compile, so they can't go stale                                                                              | This PRD              |
+| D5  | Props extracted from source — documented API can never disagree with the real one                                                               | This PRD              |
+| D6  | Rules can be tagged enforceable — one sentence serves docs, agent guidance and a failing check                                                  | This PRD              |
+| D7  | Tokens as a package; components as a copy-in registry                                                                                           | ADR-0002              |
+| D8  | Tailwind v4 with the default theme removed                                                                                                      | ADR-0003              |
+| D9  | shadcn for infrastructure and scaffolds only; visuals entirely Lairy                                                                            | ADR-0004              |
+| D10 | Radix for behaviour primitives — focus, keyboard and ARIA are where hand-rolled components fail                                                 | This PRD              |
+| D11 | Prototype is the spec, never source; documented foundations win over its markup                                                                 | ADR-0005              |
+| D12 | 11px type floor                                                                                                                                 | ADR-0006              |
+| D13 | Alarm colour is non-themeable                                                                                                                   | ADR-0007              |
+| D14 | Keep the prototype's CSS variable names                                                                                                         | ADR-0008              |
+| D15 | Prototype prose carried verbatim, except size/spacing literals mapped to tokens                                                                 | ADR-0009              |
+| D16 | Screenshot comparison is a review aid, not a gate — the port intentionally corrects sizes and spacing                                           | This PRD              |
+| D17 | ~~Knowledge layer (tokens, content, MCP) before components~~ Superseded: tracer-bullet slices, starting with Callout through every layer        | ADR-0010              |
 | D18 | Tickets in GitHub Issues; a branch and PR per ticket; tickets labelled `review:cory` wait for Cory, others merge after code review and green CI | `docs/build-guide.md` |
-| D19 | Claude Code proposes the phone shell; Cory reviews before dependent work — no phone design exists to port | This PRD, §8.6 |
-| D20 | Own icon set, ported from the prototype — the glyphs are part of Lairy's identity | This PRD, §8.7 |
+| D19 | Claude Code proposes the phone shell; Cory reviews before dependent work — no phone design exists to port                                       | This PRD, §8.6        |
+| D20 | Own icon set, ported from the prototype — the glyphs are part of Lairy's identity                                                               | This PRD, §8.7        |
 
 ## 12. Open questions (decide when the relevant issue arrives)
 
@@ -268,4 +269,4 @@ Decisions that are hard to reverse, surprising without context, and a real trade
 - All 9 foundations and 28 non-chart components have content entries, docs pages and registry items; both themes pass axe with no serious violations.
 - A fresh Next.js app can install a Lairy component through the CLI and render it correctly with `@lairy/tokens`.
 - Claude Code, connected to the MCP server, can answer "what should I use to tell someone an export failed, and why not a toast?" from content alone.
-- The ESLint plugin and `validate` tool catch a hard-coded colour, an off-scale size and a second primary action in a callout.
+- The ESLint plugin and `validate` tool together catch a hard-coded colour, an off-scale size and a second primary action in a callout. Rules tagged `enforceable: lint` are caught by ESLint; the second-primary check is tagged `enforceable: validator`, so `validate` catches it (and the other two, since it runs the lint rules too).
