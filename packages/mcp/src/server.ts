@@ -9,6 +9,7 @@ import {
   searchGuidelines,
   suggestAlternative,
 } from "./tools";
+import { validate } from "./validate";
 
 function ok(data: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
@@ -144,6 +145,25 @@ export function createServer(): McpServer {
       },
     },
     ({ group, theme }) => ok(getTokens({ group, theme })),
+  );
+
+  server.registerTool(
+    "validate",
+    {
+      title: "Validate a snippet",
+      description:
+        "Checks a TSX snippet against the catalogue's enforceable rules: the Lairy lint rules (hard-coded colour, off-scale size or spacing, arbitrary Tailwind values, positive tabindex, removed focus outline) and validator checks such as at most one primary action in a Callout. Returns each violation with the rule's own text, the id of the entry that owns it and its position. An empty list means the snippet passed.",
+      inputSchema: {
+        code: z.string().min(1).describe("A TSX/JSX snippet to check."),
+      },
+    },
+    ({ code }) => {
+      try {
+        return ok(validate({ code }));
+      } catch (error) {
+        return failed(error);
+      }
+    },
   );
 
   return server;

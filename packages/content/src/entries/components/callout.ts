@@ -111,6 +111,7 @@ export const callout = ComponentEntrySchema.parse({
     },
     {
       text: "At most one action reads as primary. A second action, if present, is always the lesser one — dismiss, view, cancel.",
+      enforceable: { kind: "validator", id: "callout-single-primary-action" },
     },
     {
       text: "Match the tone to the state, not to how urgent the writer feels — a routine reminder is Info even in a stressful week.",

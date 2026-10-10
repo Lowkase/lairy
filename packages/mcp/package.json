@@ -15,14 +15,17 @@
   },
   "dependencies": {
     "@lairy/content": "workspace:*",
+    "@lairy/eslint-plugin": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.31.0",
+    "eslint": "^10.11.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@modelcontextprotocol/inspector": "^2.8.0",
     "@types/node": "^26.6.3",
     "tsx": "^4.8.1",
-    "typescript": "^6.0.3",
     "vitest": "^5.0.2"
   }
 }
