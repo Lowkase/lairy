@@ -127,7 +127,11 @@ export function MainRail({
                       {item.icon}
                     </span>
                     <span
-                      className={cn("truncate text-label tracking-tight-8", collapsed && "sr-only")}
+                      className={cn(
+                        "truncate text-label tracking-tight-8",
+                        isActive && "text-accent",
+                        collapsed && "sr-only",
+                      )}
                     >
                       {item.label}
                     </span>

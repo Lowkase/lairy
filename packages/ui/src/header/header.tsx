@@ -126,7 +126,7 @@ export function Header({
         <span aria-hidden="true" className="flex shrink-0 items-center justify-center text-accent">
           {moduleIcon}
         </span>
-        <span className="truncate font-heading text-label font-semibold tracking-tight-20 text-fg">
+        <span className="truncate font-heading text-label font-semibold tracking-tight-20 text-accent">
           {moduleLabel.toUpperCase()}
         </span>
         {!compact && moduleCode ? (
