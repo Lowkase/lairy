@@ -268,4 +268,4 @@ Decisions that are hard to reverse, surprising without context, and a real trade
 - All 9 foundations and 28 non-chart components have content entries, docs pages and registry items; both themes pass axe with no serious violations.
 - A fresh Next.js app can install a Lairy component through the CLI and render it correctly with `@lairy/tokens`.
 - Claude Code, connected to the MCP server, can answer "what should I use to tell someone an export failed, and why not a toast?" from content alone.
-- The ESLint plugin and `validate` tool catch a hard-coded colour, an off-scale size and a second primary action in a callout.
+- The ESLint plugin and `validate` tool together catch a hard-coded colour, an off-scale size and a second primary action in a callout. Rules tagged `enforceable: lint` are caught by ESLint; the second-primary check is tagged `enforceable: validator`, so `validate` catches it (and the other two, since it runs the lint rules too).
