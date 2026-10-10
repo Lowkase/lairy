@@ -198,7 +198,13 @@ test.describe("Callout installs from the registry (seam 5)", () => {
             fixtureDir,
             "--yes",
           ],
-          { cwd: fixtureDir },
+          {
+            cwd: fixtureDir,
+            // npx unpacks into a shared `_npx` cache; this spec and its
+            // sibling run in parallel and raced there on CI (TAR_ENTRY_ERROR
+            // ENOENT, #146), so each run gets a cache of its own.
+            env: { ...process.env, npm_config_cache: join(fixtureDir, ".npm-cache") },
+          },
         );
         expect(stdout).toContain("components/ui/callout/callout.tsx");
 
