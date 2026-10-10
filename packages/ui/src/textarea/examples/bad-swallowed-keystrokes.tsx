@@ -6,6 +6,7 @@
 export function TextareaBadSwallowedKeystrokesExample() {
   return (
     <textarea
+      aria-label="Reason"
       rows={2}
       maxLength={46}
       defaultValue="A very long reason that stops dead at the lim"

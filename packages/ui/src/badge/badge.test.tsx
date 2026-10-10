@@ -23,7 +23,7 @@ describe("Badge", () => {
   it.each([
     ["neutral", "border-border", "text-mute"],
     ["info", "border-accent-2-line", "text-accent-2"],
-    ["success", "border-accent-line", "text-accent"],
+    ["success", "border-accent-line", "text-fg"],
     // Fail's label is --fg, not --alarm: bare --alarm text fails AA against
     // --bg in the light theme (confirmed by axe in apps/docs/e2e/badge.spec.ts).
     // The border alone carries the tone.
