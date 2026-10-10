@@ -32,7 +32,7 @@ export const color = {
   "panel2": "rgba(0, 0, 0, 0.05)",
   "bracket": "rgba(0, 0, 0, 0.45)",
   "glow": "rgba(120, 135, 145, 0.12)",
-  "accent": "#9a6208",
+  "accent": "#8f5c07",
   "accentSoft": "rgba(154, 98, 8, 0.1)",
   "accentLine": "rgba(154, 98, 8, 0.42)",
   "accent2": "#0d6d92",

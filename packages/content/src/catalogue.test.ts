@@ -340,7 +340,7 @@ describe("token catalogue (LDS-013)", () => {
     const accent = getToken("--accent");
     expect(accent?.group).toBe("Accent");
     expect(accent?.themeable).toBe(true);
-    expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#9a6208" });
+    expect(accent?.value).toEqual({ dark: "#f7bd63", light: "#8f5c07" });
   });
 
   it("every non-themeable token carries a rationale", () => {
