@@ -1,3 +1,4 @@
+/* eslint-disable lairy/no-hardcoded-color -- prose quotes prototype colour values as evidence, not styling */
 export type Decision = {
   id: string;
   title: string;

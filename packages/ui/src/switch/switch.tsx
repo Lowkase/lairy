@@ -86,6 +86,7 @@ export function Switch({
       htmlFor={inputId}
       data-slot="switch-row"
       className={cn(
+        // eslint-disable-next-line lairy/no-arbitrary-tailwind-value -- Hit-area expansion, offset by matching padding.
         "flex min-h-44 items-center justify-between gap-12 rounded-ds px-12 -mx-12 hover:bg-panel-2",
         disabled ? "cursor-not-allowed" : "cursor-pointer",
         className,

@@ -103,6 +103,7 @@ export function Radio({
               htmlFor={optionId}
               data-slot="radio-row"
               className={cn(
+                // eslint-disable-next-line lairy/no-arbitrary-tailwind-value -- Hit-area expansion, offset by matching padding.
                 "flex items-center gap-12 rounded-ds py-8 px-12 -mx-12",
                 optionDisabled ? "cursor-not-allowed" : "cursor-pointer hover:bg-panel-2",
               )}

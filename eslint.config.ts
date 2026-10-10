@@ -1,9 +1,8 @@
-// @ts-check
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import globals from "globals";
-import tailwindcss from "eslint-plugin-tailwindcss";
+import { recommended as lairy } from "@lairy/eslint-plugin";
 
 export default tseslint.config(
   {
@@ -26,15 +25,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
-    // Tailwind's theme removal (ADR-0003) blocks off-system named utilities
-    // (bg-blue-500, rounded-lg). It can't block arbitrary-value syntax
-    // (text-[10.5px]), which bypasses the theme entirely — that's lint's job
-    // until the full Lairy plugin (LDS-047) replaces this narrow rule.
+    // Lairy's own rules (LDS-047). Each quotes the content rule it enforces.
+    // Tests and examples deliberately write bad code, so they are exempt.
+    ...lairy,
     files: ["packages/ui/**/*.{ts,tsx}", "apps/docs/**/*.{ts,tsx}"],
-    plugins: { tailwindcss },
-    rules: {
-      "tailwindcss/no-arbitrary-value": "error",
-    },
+    ignores: ["**/*.test.{ts,tsx}", "**/examples/**", "**/e2e/**"],
   },
   eslintConfigPrettier,
 );
