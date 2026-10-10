@@ -22,13 +22,15 @@ interface OwnedRule {
   rule: Rule;
 }
 
-/** Every content rule tagged `enforceable`, by kind and id, with its owning entry. */
-function enforceableRules(): Map<string, OwnedRule> {
+const ruleKey = (kind: Violation["kind"], id: string) => `${kind}:${id}`;
+
+/** Every content rule tagged `enforceable`, by `kind:id`, with its owning entry. */
+export function enforceableRules(): Map<string, OwnedRule> {
   const found = new Map<string, OwnedRule>();
   const add = (entryId: string, rules: Rule[]) => {
     for (const rule of rules) {
       if (rule.enforceable)
-        found.set(`${rule.enforceable.kind}:${rule.enforceable.id}`, { entryId, rule });
+        found.set(ruleKey(rule.enforceable.kind, rule.enforceable.id), { entryId, rule });
     }
   };
   for (const entry of listFoundations()) add(entry.meta.id, entry.principles);
@@ -69,16 +71,86 @@ function isPrimaryProperty(node: ts.Node): boolean {
   );
 }
 
+/** Local names a module binds `name` to: `name` itself, plus any
+ * `import { name as Alias }`. A snippet has no module graph to follow beyond
+ * that. */
+function localNames(source: ts.SourceFile, name: string): Set<string> {
+  const names = new Set([name]);
+  source.forEachChild((node) => {
+    const bindings = ts.isImportDeclaration(node) ? node.importClause?.namedBindings : undefined;
+    if (!bindings || !ts.isNamedImports(bindings)) return;
+    for (const specifier of bindings.elements) {
+      if ((specifier.propertyName ?? specifier.name).text === name) names.add(specifier.name.text);
+    }
+  });
+  return names;
+}
+
+/** The array literal an `actions` value stands for: the literal itself, or the
+ * initialiser of a same-file `const` it names. Anything else (a prop, a call)
+ * can't be read statically. */
+function actionsArray(
+  expr: ts.Expression,
+  source: ts.SourceFile,
+): ts.ArrayLiteralExpression | undefined {
+  if (ts.isArrayLiteralExpression(expr)) return expr;
+  if (!ts.isIdentifier(expr)) return undefined;
+  let found: ts.ArrayLiteralExpression | undefined;
+  source.forEachChild((node) => {
+    if (!ts.isVariableStatement(node)) return;
+    for (const decl of node.declarationList.declarations) {
+      if (
+        ts.isIdentifier(decl.name) &&
+        decl.name.text === expr.text &&
+        decl.initializer &&
+        ts.isArrayLiteralExpression(decl.initializer)
+      ) {
+        found = decl.initializer;
+      }
+    }
+  });
+  return found;
+}
+
 /** Callout Content rule 4: the first action is implicitly primary, so a
  * second primary — an explicit `variant: "primary"` on a later action, or any
- * `<Button variant="primary">` placed in the callout — is a violation. */
+ * `<Button variant="primary">` placed in the callout — is a violation. Every
+ * primary beyond the first is reported. */
 const calloutSinglePrimaryAction: Check = (source) => {
   const out: ReturnType<Check> = [];
+  const calloutNames = localNames(source, "Callout");
+  const buttonNames = localNames(source, "Button");
+  const isCallout = (node: ts.Node) =>
+    (ts.isJsxElement(node) && calloutNames.has(jsxName(node.openingElement))) ||
+    (ts.isJsxSelfClosingElement(node) && calloutNames.has(jsxName(node)));
+
+  /** Primary Buttons under `node`, in this Callout only: a nested Callout is
+   * its own check, and of two exclusive ternary branches only the larger counts. */
+  const buttons = (node: ts.Node): ts.Node[] => {
+    if (isCallout(node)) return [];
+    if (ts.isConditionalExpression(node)) {
+      const whenTrue = buttons(node.whenTrue);
+      const whenFalse = buttons(node.whenFalse);
+      return [
+        ...buttons(node.condition),
+        ...(whenFalse.length > whenTrue.length ? whenFalse : whenTrue),
+      ];
+    }
+    const here =
+      (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) &&
+      buttonNames.has(jsxName(node)) &&
+      stringAttribute(node, "variant") === "primary"
+        ? [node]
+        : [];
+    const below: ts.Node[] = [];
+    ts.forEachChild(node, (child) => void below.push(...buttons(child)));
+    return [...here, ...below];
+  };
 
   const inspect = (callout: ts.JsxElement | ts.JsxSelfClosingElement) => {
     const opening = ts.isJsxElement(callout) ? callout.openingElement : callout;
     const primaries: ts.Node[] = [];
-    let implicit = 0;
+    let implicit = false;
 
     for (const attr of opening.attributes.properties) {
       if (!ts.isJsxAttribute(attr) || attr.name.getText() !== "actions") continue;
@@ -86,43 +158,29 @@ const calloutSinglePrimaryAction: Check = (source) => {
         attr.initializer && ts.isJsxExpression(attr.initializer)
           ? attr.initializer.expression
           : undefined;
-      if (expr && ts.isArrayLiteralExpression(expr)) {
-        implicit = expr.elements.length > 0 ? 1 : 0;
-        expr.elements.forEach((element, index) => {
-          if (!ts.isObjectLiteralExpression(element)) return;
-          const marked = element.properties.find(isPrimaryProperty);
-          if (marked && index > 0) primaries.push(marked);
-        });
-      }
+      const array = expr && actionsArray(expr, source);
+      if (!array) continue;
+      implicit = array.elements.length > 0;
+      // A spread stands for earlier actions of unknown number, so anything
+      // after it is "later" like any element past index 0.
+      array.elements.forEach((element, index) => {
+        if (index === 0 || !ts.isObjectLiteralExpression(element)) return;
+        const marked = element.properties.find(isPrimaryProperty);
+        if (marked) primaries.push(marked);
+      });
     }
 
-    const visit = (node: ts.Node) => {
-      if (
-        (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) &&
-        jsxName(node) === "Button" &&
-        stringAttribute(node, "variant") === "primary"
-      ) {
-        primaries.push(node);
-      }
-      ts.forEachChild(node, visit);
-    };
-    if (ts.isJsxElement(callout)) callout.children.forEach(visit);
+    if (ts.isJsxElement(callout))
+      callout.children.forEach((child) => primaries.push(...buttons(child)));
+    primaries.sort((a, b) => a.getStart(source) - b.getStart(source));
 
-    if (implicit + primaries.length > 1) {
-      out.push({
-        node: primaries[0] ?? opening,
-        message: "This Callout has more than one primary action.",
-      });
+    for (const extra of implicit ? primaries : primaries.slice(1)) {
+      out.push({ node: extra, message: "This Callout has more than one primary action." });
     }
   };
 
   const walk = (node: ts.Node) => {
-    if (
-      (ts.isJsxElement(node) && jsxName(node.openingElement) === "Callout") ||
-      (ts.isJsxSelfClosingElement(node) && jsxName(node) === "Callout")
-    ) {
-      inspect(node);
-    }
+    if (isCallout(node)) inspect(node as ts.JsxElement | ts.JsxSelfClosingElement);
     ts.forEachChild(node, walk);
   };
   walk(source);
@@ -165,22 +223,32 @@ export function validate(input: { code: string }): Violation[] {
     "snippet.tsx",
   );
 
+  const toViolation = (
+    kind: Violation["kind"],
+    id: string,
+    match: OwnedRule,
+    message: string,
+    line: number,
+    column: number,
+  ): Violation => ({
+    rule: id,
+    kind,
+    ruleText: match.rule.text,
+    entryId: match.entryId,
+    message,
+    line,
+    column,
+  });
+
   for (const message of messages) {
     if (message.fatal) throw new Error(`Could not parse the snippet: ${message.message}`);
-    const id = message.ruleId?.startsWith(LINT_PREFIX)
-      ? message.ruleId.slice(LINT_PREFIX.length)
-      : undefined;
-    const match = id ? owned.get(`lint:${id}`) : undefined;
-    if (!id || !match) continue;
-    violations.push({
-      rule: id,
-      kind: "lint",
-      ruleText: match.rule.text,
-      entryId: match.entryId,
-      message: message.message,
-      line: message.line,
-      column: message.column,
-    });
+    if (!message.ruleId?.startsWith(LINT_PREFIX)) continue;
+    const id = message.ruleId.slice(LINT_PREFIX.length);
+    const match = owned.get(ruleKey("lint", id));
+    // A plugin rule with no content tag is a build-time inconsistency; dropping
+    // the hit would let the snippet pass validate while failing lint.
+    if (!match) throw new Error(`Lint rule "${id}" has no content rule tagged enforceable: lint.`);
+    violations.push(toViolation("lint", id, match, message.message, message.line, message.column));
   }
 
   const source = ts.createSourceFile(
@@ -191,19 +259,11 @@ export function validate(input: { code: string }): Violation[] {
     ts.ScriptKind.TSX,
   );
   for (const [id, check] of Object.entries(validators)) {
-    const match = owned.get(`validator:${id}`);
+    const match = owned.get(ruleKey("validator", id));
     if (!match) continue;
     for (const { node, message } of check(source)) {
       const { line, character } = source.getLineAndCharacterOfPosition(node.getStart(source));
-      violations.push({
-        rule: id,
-        kind: "validator",
-        ruleText: match.rule.text,
-        entryId: match.entryId,
-        message,
-        line: line + 1,
-        column: character + 1,
-      });
+      violations.push(toViolation("validator", id, match, message, line + 1, character + 1));
     }
   }
 
