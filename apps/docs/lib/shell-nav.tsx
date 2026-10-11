@@ -16,6 +16,7 @@ import type { ShellSection } from "@/components/shell";
  */
 
 const SECTION_META: Record<ShellSection, { label: string; code: string; icon: ReactNode }> = {
+  overview: { label: "Overview", code: "SYS·00", icon: <Glyph name="apps" size="rail" /> },
   foundations: { label: "Foundations", code: "SYS·01", icon: <Glyph name="book" size="rail" /> },
   components: { label: "Components", code: "SYS·02", icon: <Glyph name="grid" size="rail" /> },
   patterns: { label: "Patterns", code: "SYS·03", icon: <Glyph name="rings" size="rail" /> },
@@ -26,6 +27,7 @@ export function shellSectionMeta(section: ShellSection) {
 }
 
 function firstHref(section: ShellSection): string {
+  if (section === "overview") return "/";
   if (section === "foundations") {
     const first = listFoundations()[0];
     return first ? `/foundations/${first.meta.id}` : "/foundations";
@@ -41,7 +43,7 @@ function firstHref(section: ShellSection): string {
 /** The main rail's own fixed item set — one per section, order fixed
  * (mainNavRules "Order is fixed"). */
 export function shellMainRailItems(): MainRailItem[] {
-  return (["foundations", "components", "patterns"] as const).map((id) => ({
+  return (["overview", "foundations", "components", "patterns"] as const).map((id) => ({
     id,
     label: SECTION_META[id].label,
     icon: SECTION_META[id].icon,
@@ -51,7 +53,7 @@ export function shellMainRailItems(): MainRailItem[] {
 
 /** The subnav's own single group for the active section — every entry in
  * that section, in catalogue order. */
-export function shellSubnavGroup(section: ShellSection): SubnavGroup {
+export function shellSubnavGroup(section: Exclude<ShellSection, "overview">): SubnavGroup {
   if (section === "foundations") {
     return {
       id: "foundations",

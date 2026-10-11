@@ -7,6 +7,7 @@ import { listComponents, listFoundations } from "@lairy/content";
 // per-component specs run axe on /dev example routes; this sweeps the
 // published /components/[slug] and /foundations/[slug] pages themselves.
 const pages = [
+  "/",
   ...listComponents().map((e) => `/components/${e.meta.id}`),
   ...listFoundations().map((e) => `/foundations/${e.meta.id}`),
 ];
