@@ -4,7 +4,7 @@ import { Header, MainRail, Subnav, type MainRailItem, type SubnavGroup } from "@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { PhonePagesOverlay, PhoneTabBar } from "./phone-shell";
 
-export type ShellSection = "foundations" | "components" | "patterns";
+export type ShellSection = "overview" | "foundations" | "components" | "patterns";
 
 function formatDate(d: Date): string {
   return d
@@ -42,8 +42,10 @@ export interface ShellProps {
    * (apps/docs/lib/shell-nav.tsx) — the Shell itself never imports
    * `@lairy/content` (see shell-nav.tsx's own comment for why). */
   items: MainRailItem[];
-  /** The active section's own subnav group, resolved server-side. */
-  group: SubnavGroup;
+  /** The active section's own subnav group, resolved server-side. Omitted
+   * on a page with no sub-pages (Overview): the subnav, the phone "Pages"
+   * trigger and its overlay are then not rendered at all. */
+  group?: SubnavGroup;
   /** The current entry's id, for the active marker in both rails
    * (main-rail.ts Accessibility "Current page", subnav.ts the same). */
   activeId?: string;
@@ -120,16 +122,18 @@ export function Shell({
         theme={theme}
         onThemeChange={setTheme}
         trailingAction={
-          <button
-            ref={pagesTriggerRef}
-            type="button"
-            aria-haspopup="dialog"
-            aria-expanded={pagesOpen}
-            onClick={() => setPagesOpen(true)}
-            className="min-h-44 shrink-0 rounded-ds border border-border-2 py-8 px-16 text-label uppercase tracking-tight-8 text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-          >
-            Pages
-          </button>
+          group ? (
+            <button
+              ref={pagesTriggerRef}
+              type="button"
+              aria-haspopup="dialog"
+              aria-expanded={pagesOpen}
+              onClick={() => setPagesOpen(true)}
+              className="min-h-44 shrink-0 rounded-ds border border-border-2 py-8 px-16 text-label uppercase tracking-tight-8 text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              Pages
+            </button>
+          ) : undefined
         }
       />
 
@@ -141,22 +145,24 @@ export function Shell({
           collapsed={collapsed}
           onCollapsedChange={setCollapsed}
         />
-        <Subnav
-          className="hidden tablet:flex"
-          label={moduleLabel}
-          groups={[group]}
-          activeId={activeId}
-          defaultExpandedId={group.id}
-          hidden={subnavHidden}
-          onHiddenChange={setSubnavHidden}
-        />
+        {group ? (
+          <Subnav
+            className="hidden tablet:flex"
+            label={moduleLabel}
+            groups={[group]}
+            activeId={activeId}
+            defaultExpandedId={group.id}
+            hidden={subnavHidden}
+            onHiddenChange={setSubnavHidden}
+          />
+        ) : null}
         <main className="min-w-0 flex-1 overflow-y-auto">
           <div className="px-16 py-16 tablet:px-18 tablet:py-32">{children}</div>
         </main>
         <PhoneTabBar items={items} activeId={section} />
       </div>
 
-      {pagesOpen ? (
+      {group && pagesOpen ? (
         <PhonePagesOverlay
           label={`${moduleLabel} pages`}
           group={group}
