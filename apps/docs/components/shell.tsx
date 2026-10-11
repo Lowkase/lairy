@@ -88,78 +88,85 @@ export function Shell({
   }, [theme]);
 
   return (
-    <div className="flex h-screen flex-col bg-bg">
-      {/* Tablet and up: the desktop header (date, clock, module code,
-       * identity). Phone gets its own compact instance below — two
-       * instances, CSS-toggled, rather than one header trying to be both
-       * (docs/prd.md §8.6, LDS-037). */}
-      <Header
+    <div className="flex h-screen bg-bg">
+      {/* Tablet and up: the rail runs the full height and its brand cell sits
+       * level with the header, which starts where the rail ends (Navigation
+       * (Main) Relationships "Header"). Phone swaps it for the bottom tab
+       * bar below. */}
+      <MainRail
         className="hidden tablet:flex"
-        moduleIcon={moduleIcon}
-        moduleLabel={moduleLabel}
-        moduleCode={moduleCode}
-        date={now ? formatDate(now) : ""}
-        time={now ? formatTime(now) : ""}
-        identityLabel="Appearance"
-        theme={theme}
-        onThemeChange={setTheme}
-      />
-      {/* Below tablet: the approved phone shell (LDS-036) — module icon,
-       * label and a "Pages" trigger for the full-screen subnav overlay.
-       * The identity control stays (compact only drops date/clock/code):
-       * LDS-036 flagged appearance as undecided at phone width; reusing
-       * the same, already-accessible control here resolves it without a
-       * second implementation. */}
-      <Header
-        className="tablet:hidden"
-        compact
-        moduleIcon={moduleIcon}
-        moduleLabel={moduleLabel}
-        moduleCode={moduleCode}
-        date={now ? formatDate(now) : ""}
-        time={now ? formatTime(now) : ""}
-        identityLabel="Appearance"
-        theme={theme}
-        onThemeChange={setTheme}
-        trailingAction={
-          group ? (
-            <button
-              ref={pagesTriggerRef}
-              type="button"
-              aria-haspopup="dialog"
-              aria-expanded={pagesOpen}
-              onClick={() => setPagesOpen(true)}
-              className="min-h-44 shrink-0 rounded-ds border border-border-2 py-8 px-16 text-label uppercase tracking-tight-8 text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            >
-              Pages
-            </button>
-          ) : undefined
-        }
+        items={items}
+        activeId={section}
+        collapsed={collapsed}
+        onCollapsedChange={setCollapsed}
       />
 
-      <div className="flex min-h-0 flex-1 flex-col tablet:flex-row">
-        <MainRail
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Tablet and up: the desktop header (date, clock, module code,
+         * identity). Phone gets its own compact instance below — two
+         * instances, CSS-toggled, rather than one header trying to be both
+         * (docs/prd.md §8.6, LDS-037). */}
+        <Header
           className="hidden tablet:flex"
-          items={items}
-          activeId={section}
-          collapsed={collapsed}
-          onCollapsedChange={setCollapsed}
+          moduleIcon={moduleIcon}
+          moduleLabel={moduleLabel}
+          moduleCode={moduleCode}
+          date={now ? formatDate(now) : ""}
+          time={now ? formatTime(now) : ""}
+          identityLabel="Appearance"
+          theme={theme}
+          onThemeChange={setTheme}
         />
-        {group ? (
-          <Subnav
-            className="hidden tablet:flex"
-            label={moduleLabel}
-            groups={[group]}
-            activeId={activeId}
-            defaultExpandedId={group.id}
-            hidden={subnavHidden}
-            onHiddenChange={setSubnavHidden}
-          />
-        ) : null}
-        <main className="min-w-0 flex-1 overflow-y-auto">
-          <div className="px-16 py-16 tablet:px-18 tablet:py-32">{children}</div>
-        </main>
-        <PhoneTabBar items={items} activeId={section} />
+        {/* Below tablet: the approved phone shell (LDS-036) — module icon,
+         * label and a "Pages" trigger for the full-screen subnav overlay.
+         * The identity control stays (compact only drops date/clock/code):
+         * LDS-036 flagged appearance as undecided at phone width; reusing
+         * the same, already-accessible control here resolves it without a
+         * second implementation. */}
+        <Header
+          className="tablet:hidden"
+          compact
+          moduleIcon={moduleIcon}
+          moduleLabel={moduleLabel}
+          moduleCode={moduleCode}
+          date={now ? formatDate(now) : ""}
+          time={now ? formatTime(now) : ""}
+          identityLabel="Appearance"
+          theme={theme}
+          onThemeChange={setTheme}
+          trailingAction={
+            group ? (
+              <button
+                ref={pagesTriggerRef}
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={pagesOpen}
+                onClick={() => setPagesOpen(true)}
+                className="min-h-44 shrink-0 rounded-ds border border-border-2 py-8 px-16 text-label uppercase tracking-tight-8 text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                Pages
+              </button>
+            ) : undefined
+          }
+        />
+
+        <div className="flex min-h-0 flex-1 flex-col tablet:flex-row">
+          {group ? (
+            <Subnav
+              className="hidden tablet:flex"
+              label={moduleLabel}
+              groups={[group]}
+              activeId={activeId}
+              defaultExpandedId={group.id}
+              hidden={subnavHidden}
+              onHiddenChange={setSubnavHidden}
+            />
+          ) : null}
+          <main className="min-w-0 flex-1 overflow-y-auto">
+            <div className="px-16 py-16 tablet:px-18 tablet:py-32">{children}</div>
+          </main>
+          <PhoneTabBar items={items} activeId={section} />
+        </div>
       </div>
 
       {group && pagesOpen ? (

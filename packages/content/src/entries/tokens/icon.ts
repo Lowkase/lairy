@@ -18,6 +18,15 @@ const raw = [
       "A dimension, not a colour — it holds one value for both themes by design; there is no dark/light axis to vary. It predates the Icons foundation size scale below and stays a standalone exception rather than being folded into it: 17px is Callout's own harvested value, not an instance of the Inline icon scale's 16px box.",
   },
   {
+    name: "--icon-identity",
+    group: "Icon",
+    value: icon.identity,
+    themeable: false,
+    useFor: ["The Header's identity-square icon width and height (19×19), harvested from the prototype's avatar button."],
+    rationale:
+      "A dimension, not a colour — one value for both themes by design. Sits between the 16px inline box and the 22px rail glyph, so it is a component-specific exception like --icon-callout rather than a step on the Icons foundation's scale. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-155).",
+  },
+  {
     name: "--icon-glyph-rail",
     group: "Icon",
     value: icon.glyphRail,
