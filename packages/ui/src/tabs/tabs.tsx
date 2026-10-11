@@ -104,7 +104,7 @@ export function Tabs({ label, tabs, value, defaultValue, onChange, id, className
               className={cn(
                 // eslint-disable-next-line lairy/no-arbitrary-tailwind-value -- Pulls the active tab's 2px border over the list's 1px border.
                 "-mb-px flex items-center gap-6 rounded-ds border-b-2 py-8 px-12 font-body text-label uppercase tracking-tight-14 transition-colors duration-160 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-                isSelected ? "border-accent text-fg" : "border-transparent text-mute hover:text-fg",
+                isSelected ? "border-accent text-accent" : "border-transparent text-mute hover:text-fg",
               )}
             >
               {tab.label}
