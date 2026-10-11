@@ -78,11 +78,11 @@ export function PhoneTabBar({ items, activeId }: PhoneTabBarProps) {
         {items.map((item) => {
           const isActive = item.id === activeId;
           return (
-            <li key={item.id} className="flex-1">
+            <li key={item.id} className="flex-auto">
               <a
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-h-44 flex-col items-center justify-center gap-4 py-8 transition-colors duration-160 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
+                className={`flex min-h-44 flex-col items-center justify-center gap-4 px-4 py-8 transition-colors duration-160 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
                   isActive ? "text-fg" : "text-dim"
                 }`}
               >

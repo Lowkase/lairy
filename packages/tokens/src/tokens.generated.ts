@@ -122,6 +122,7 @@ export const tracking = {
 
 export const icon = {
   "callout": "17px",
+  "identity": "19px",
   "glyphRail": "22px",
   "glyphTile": "34px",
   "inline": "16px",
@@ -171,7 +172,8 @@ export const shell = {
   "railWidth": "216px",
   "railWidthCollapsed": "56px",
   "subnavWidth": "214px",
-  "headerHeight": "52px"
+  "headerHeight": "52px",
+  "minWidth": "320px"
 } as const;
 
 export const popover = {

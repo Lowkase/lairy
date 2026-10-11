@@ -166,7 +166,7 @@ export function Header({
           <HeaderIdentityIcon />
           <span
             aria-hidden="true"
-            className="absolute -bottom-2 -right-2 size-8 animate-pulse rounded-full border-2 border-bg bg-accent"
+            className="absolute -bottom-4 -right-4 size-8 animate-pulse rounded-full border-2 border-bg bg-accent"
           />
         </button>
 
@@ -179,7 +179,7 @@ export function Header({
           >
             <div className="flex items-center gap-12 border-b border-border p-16">
               <span className="flex size-32 shrink-0 items-center justify-center rounded-ds border border-border-2 text-fg">
-                <HeaderIdentityIcon />
+                <HeaderIdentityIcon variant="menu" />
               </span>
               <div className="min-w-0">
                 <div className="truncate text-body text-fg">{identityLabel}</div>

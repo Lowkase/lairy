@@ -94,7 +94,7 @@ export function MainRail({
           </span>
           <span
             className={cn(
-              "truncate font-heading text-label font-semibold tracking-tight-20",
+              "truncate font-heading text-section font-semibold tracking-tight-20",
               collapsed && "sr-only",
             )}
           >

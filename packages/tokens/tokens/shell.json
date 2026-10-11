@@ -19,6 +19,11 @@
       "$type": "dimension",
       "$value": "52px",
       "$description": "Header bar height (headerRules \"Fixed 52px\") — also the main rail's own brand-lockup row height, so the header's top edge and the rail's first hairline land flush. No Spacing-ramp step is close enough to snap to. Flagged in the PR (LDS-035)."
+    },
+    "min-width": {
+      "$type": "dimension",
+      "$value": "320px",
+      "$description": "Narrowest width the shell lays out at; below it the page scrolls horizontally rather than compressing the main navigation (the phone tab bar's four labels stop fitting around here). 320px is WCAG 1.4.10 Reflow's own reference width. No Spacing-ramp step applies — a layout floor, not a spacing value. Proposed as-is pending the token decisions ticket, flagged in the PR (LDS-155)."
     }
   }
 }

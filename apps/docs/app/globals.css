@@ -11,3 +11,39 @@ body {
   background: var(--bg);
   color: var(--fg);
 }
+
+/* The shell's minimum width (docs/prd.md §8.6, LDS-155): below it the page
+   scrolls sideways rather than squeezing the main navigation. On `html`, so
+   everything inside inherits it. */
+html {
+  min-width: var(--shell-min-width);
+}
+
+/* The Scrollbar component's own definition (packages/ui/src/scrollbar), but
+   global as in the prototype: the browser's own control restyled to two
+   greys, in both themes — thin, a --border-2 thumb that goes --mute on
+   hover, a 2px-radius thumb inset from a transparent track. The lane is
+   Space-12 and the thumb is inset Space-4 each side, the ramp steps nearest
+   the prototype's 10px lane and 3px inset (Scrollbar extractionNotes). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+::-webkit-scrollbar {
+  width: var(--space-12);
+  height: var(--space-12);
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  background-clip: padding-box;
+  border: var(--space-4) solid transparent;
+  border-radius: var(--radius);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mute);
+  background-clip: padding-box;
+}
