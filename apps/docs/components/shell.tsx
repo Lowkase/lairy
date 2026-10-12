@@ -3,6 +3,7 @@
 import { Header, MainRail, Subnav, type MainRailItem, type SubnavGroup } from "@lairy/ui";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { PhonePagesOverlay, PhoneTabBar } from "./phone-shell";
+import { usePersistedBoolean } from "./use-persisted-boolean";
 
 export type ShellSection = "overview" | "foundations" | "components" | "patterns";
 
@@ -74,7 +75,8 @@ export function Shell({
   initialTheme = "dark",
 }: ShellProps) {
   const [theme, setTheme] = useState<"dark" | "light">(initialTheme);
-  const [collapsed, setCollapsed] = useState(false);
+  // Remembered across pages: the rail links are full page loads (LDS-157).
+  const [collapsed, setCollapsed] = usePersistedBoolean("lairy.main-rail.collapsed");
   const [subnavHidden, setSubnavHidden] = useState(false);
   const [pagesOpen, setPagesOpen] = useState(false);
   const pagesTriggerRef = useRef<HTMLButtonElement>(null);
