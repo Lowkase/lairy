@@ -80,15 +80,8 @@ export function generateStaticParams() {
   return listComponents().map((entry) => ({ slug: entry.meta.id }));
 }
 
-export default async function ComponentPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ theme?: string }>;
-}) {
+export default async function ComponentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { theme } = await searchParams;
   const entry = getComponent(slug);
   if (!entry) notFound();
 
@@ -110,7 +103,6 @@ export default async function ComponentPage({
       items={shellMainRailItems()}
       group={shellSubnavGroup("components")}
       activeId={slug}
-      initialTheme={theme === "light" ? "light" : "dark"}
     >
       <div className="flex flex-col gap-32">
         <PageHeader

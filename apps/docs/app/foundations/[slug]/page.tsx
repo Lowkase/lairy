@@ -59,15 +59,8 @@ function ContrastTable({ theme }: { theme: "dark" | "light" }) {
   );
 }
 
-export default async function FoundationPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ theme?: string }>;
-}) {
+export default async function FoundationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { theme } = await searchParams;
   const entry = getFoundation(slug);
   if (!entry) notFound();
 
@@ -83,7 +76,6 @@ export default async function FoundationPage({
       items={shellMainRailItems()}
       group={shellSubnavGroup("foundations")}
       activeId={slug}
-      initialTheme={theme === "light" ? "light" : "dark"}
     >
       <div className="flex flex-col gap-32">
         <PageHeader
