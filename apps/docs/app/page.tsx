@@ -1,6 +1,7 @@
 import { Card, Text } from "@lairy/ui";
-import { headers } from "next/headers";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { RegistryCommand } from "@/components/registry-command";
 import { Shell } from "@/components/shell";
 import { principles, sections } from "@/lib/overview";
 import { shellMainRailItems, shellSectionMeta } from "@/lib/shell-nav";
@@ -12,7 +13,7 @@ const STATEMENT =
 const LINK =
   "text-accent underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
 
-function Command({ label, children }: { label: string; children: string }) {
+function Command({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-4">
       <Text variant="caption">{label}</Text>
@@ -23,18 +24,8 @@ function Command({ label, children }: { label: string; children: string }) {
   );
 }
 
-/** The origin this page is being served from, so the registry command is
- * right in dev and right once the docs are hosted (docs/prd.md §12 Q3). */
-async function currentOrigin(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
-}
-
-export default async function OverviewPage() {
+export default function OverviewPage() {
   const meta = shellSectionMeta("overview");
-  const origin = await currentOrigin();
   return (
     <Shell
       section="overview"
@@ -86,7 +77,7 @@ export default async function OverviewPage() {
               <div className="flex flex-col gap-12">
                 <Command label="Tokens">npm install @lairy/tokens</Command>
                 <Command label="A component, copied in as source">
-                  {`npx shadcn@latest add ${origin}/r/callout.json`}
+                  <RegistryCommand name="callout" />
                 </Command>
               </div>
             </Card>

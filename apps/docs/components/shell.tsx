@@ -82,6 +82,14 @@ export function Shell({
   const pagesTriggerRef = useRef<HTMLButtonElement>(null);
   const now = useClock();
 
+  // `?theme=` (the /dev/compare iframes) is read here, not on the server:
+  // reading search params server-side would make every docs page render on
+  // demand, and the site is fully static (LDS-159).
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("theme");
+    if (requested === "light" || requested === "dark") setTheme(requested);
+  }, []);
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme === "light" ? "light" : "";
     return () => {
